@@ -58,7 +58,6 @@ class NewsTableViewCell: UITableViewCell {
 extension UILabel {
 
     var isTruncated: Bool {
-
         guard let labelText = text else {
             return false
         }

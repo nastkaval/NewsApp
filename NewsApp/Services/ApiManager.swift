@@ -13,7 +13,6 @@ class ApiManager {
     
     static var shared = ApiManager()
     let host = "http://newsapi.org/v2/everything?"
-   
     
     private func get(url: URL, parameters: [String: Any]?, headers: HTTPHeaders?, successHandler: @escaping(AFDataResponse<Any>) -> (), fail: @escaping(Error) -> ()) -> Void {
         
@@ -33,9 +32,10 @@ class ApiManager {
             }
         })
     }
+    
     func getNews(from: String, to: String?, success: @escaping(_ news: [NewsEntity]) -> (), failed: @escaping(Error) -> ()) {
         var request = "\(host)" + "q=apple&sortBy=publishedAt&" + "from=\(from)&"
-//        request.append("apiKey=8d22efe4f9f04f1ebb9b841c51e54904")
+        
         if to != nil {
             request.append("to=\(to!)&")
         }
@@ -64,7 +64,6 @@ class ApiManager {
             }
         }) { (error) in
             failed(error)
-            
         }
     }
 }

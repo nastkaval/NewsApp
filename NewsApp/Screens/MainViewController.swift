@@ -29,7 +29,6 @@ class MainViewController: UIViewController {
         refreshControlSettings()
         tableViewSettings()
         getTodayNews()
-        
     }
     
     //MARK: - Actions
