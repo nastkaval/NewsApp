@@ -38,7 +38,7 @@ class NewsTableViewCell: UITableViewCell {
         titleNews.text = postNews.title
         descriptionNews.text = postNews.descriptionNews
         authorPostNews.text = postNews.author
-        showMoreButton.isHidden = descriptionNews.numberOfLines == 3 ? false : true
+        showMoreButton.isHidden = descriptionNews.isTruncated ? false : true
         
         if let escapedString = postNews.urlToImage.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) {
             if let url = URL(string: escapedString) {
@@ -52,5 +52,23 @@ class NewsTableViewCell: UITableViewCell {
             formatter.dateFormat = "MM-dd-yyyy HH:mm"
             postTimeNews.text = formatter.string(from: date)
         }
+    }
+}
+
+extension UILabel {
+
+    var isTruncated: Bool {
+
+        guard let labelText = text else {
+            return false
+        }
+
+        let labelTextSize = (labelText as NSString).boundingRect(
+            with: CGSize(width: frame.size.width, height: .greatestFiniteMagnitude),
+            options: .usesLineFragmentOrigin,
+            attributes: [.font: font as Any],
+            context: nil).size
+
+        return labelTextSize.height > bounds.size.height
     }
 }
