@@ -10,64 +10,49 @@ import UIKit
 import AlamofireImage
 
 class NewsTableViewCell: UITableViewCell {
-
-    //MARK:- Outlets
-    @IBOutlet weak var imageNews: UIImageView!
-    @IBOutlet weak var titleNews: UILabel!
-    @IBOutlet weak var descriptionNews: UILabel!
-    @IBOutlet weak var postTimeNews: UILabel!
-    @IBOutlet weak var authorPostNews: UILabel!
-    @IBOutlet weak var showMoreButton: UIButton!
+  
+  //MARK:- Outlets
+  @IBOutlet weak var imageNews: UIImageView!
+  @IBOutlet weak var titleNews: UILabel!
+  @IBOutlet weak var descriptionNews: UILabel!
+  @IBOutlet weak var postTimeNews: UILabel!
+  @IBOutlet weak var authorPostNews: UILabel!
+  @IBOutlet weak var showMoreButton: UIButton!
+  
+  //MARK: - LifeCycle
+  override func awakeFromNib() {
+    super.awakeFromNib()
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    self.imageNews.image = UIImage(named: "image.imagePlaceholder")
     
-    //MARK: - LifeCycle
-    override func awakeFromNib() {
-        super.awakeFromNib()
+  }
+  override func setSelected(_ selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
+  }
+  
+  //MARK: - Functions
+  func setUI(postNews: NewsEntity) {
+    titleNews.text = postNews.title
+    descriptionNews.text = postNews.descriptionNews
+    authorPostNews.text = postNews.author
+    showMoreButton.isHidden = descriptionNews.isTruncated ? false : true
+    
+    if let escapedString = postNews.urlToImage.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
+      if let url = URL(string: escapedString) {
+        self.imageNews.af.setImage(withURL: url)
+      }
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        self.imageNews.image = UIImage(named: "image.imagePlaceholder")
-        
+    if let date = postNews.fullDate {
+      let formatter = DateFormatter()
+      formatter.timeZone = TimeZone(abbreviation: TimeZone.current.abbreviation() ?? "")
+      formatter.dateFormat = "MM-dd-yyyy HH:mm"
+      postTimeNews.text = formatter.string(from: date)
     }
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-    
-    //MARK: - Functions
-    func setUI(postNews: NewsEntity) {
-        titleNews.text = postNews.title
-        descriptionNews.text = postNews.descriptionNews
-        authorPostNews.text = postNews.author
-        showMoreButton.isHidden = descriptionNews.isTruncated ? false : true
-        
-        if let escapedString = postNews.urlToImage.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) {
-            if let url = URL(string: escapedString) {
-                self.imageNews.af.setImage(withURL: url)
-            }
-        }
-        
-        if let date = postNews.fullDate {
-            let formatter = DateFormatter()
-            formatter.timeZone = TimeZone(abbreviation: TimeZone.current.abbreviation() ?? "")
-            formatter.dateFormat = "MM-dd-yyyy HH:mm"
-            postTimeNews.text = formatter.string(from: date)
-        }
-    }
+  }
 }
 
-extension UILabel {
 
-    var isTruncated: Bool {
-        guard let labelText = text else {
-            return false
-        }
-
-        let labelTextSize = (labelText as NSString).boundingRect(
-            with: CGSize(width: frame.size.width, height: .greatestFiniteMagnitude),
-            options: .usesLineFragmentOrigin,
-            attributes: [.font: font as Any],
-            context: nil).size
-
-        return labelTextSize.height > bounds.size.height
-    }
-}
