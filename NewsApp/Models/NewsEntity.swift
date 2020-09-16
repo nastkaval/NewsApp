@@ -9,7 +9,6 @@
 import Foundation
 
 class NewsEntity {
-  
   var author: String
   var title: String
   var descriptionNews: String
@@ -19,8 +18,7 @@ class NewsEntity {
   var content: String
   var fullDate: Date?
   var day: String?
-  
-  
+
   init(author: String, title: String, descriptionNews: String, url: String, urlToImage: String, publishedAt: String, content: String) {
     self.author = author
     self.title = title
@@ -29,7 +27,6 @@ class NewsEntity {
     self.urlToImage = urlToImage
     self.publishedAt = publishedAt
     self.content = content
-    
     let formatter = DateFormatter()
     formatter.timeZone = TimeZone(abbreviation: TimeZone.current.abbreviation() ?? "")
     formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"

@@ -150,6 +150,7 @@
 				1CDFEE2C24ED550C003D5B65 /* Frameworks */,
 				1CDFEE2D24ED550C003D5B65 /* Resources */,
 				9B56ABCA843286DAD60BE37A /* [CP] Embed Pods Frameworks */,
+				603B1D5E251256FA003AC4B3 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -208,6 +209,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		603B1D5E251256FA003AC4B3 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [ -f ~/com.raywenderlich.swiftlint.yml ]; then\n  if which swiftlint >/dev/null; then\n    swiftlint --config ~/com.raywenderlich.swiftlint.yml\n  fi\nfi\n";
+		};
 		9B56ABCA843286DAD60BE37A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
