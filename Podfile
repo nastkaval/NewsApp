@@ -8,5 +8,6 @@ target 'NewsApp' do
   # Pods for NewsApp
 pod 'Alamofire'
 pod 'AlamofireImage'
+pod 'RealmSwift'
 
 end

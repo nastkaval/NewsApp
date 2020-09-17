@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 // MARK: - UILabel
 extension UILabel {
@@ -35,5 +36,28 @@ extension UIViewController {
 
   @objc func dismissKeyboard() {
     view.endEditing(true)
+  }
+
+  func showAlert(title: String, message: String) {
+    let alertController = UIAlertController(
+      title: title,
+      message: message,
+      preferredStyle: .alert)
+    alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
+    }))
+    self.present(alertController, animated: true, completion: nil)
+  }
+}
+
+// MARK: - Realm
+extension Results {
+  func toArray<T>(ofType: T.Type) -> [T] {
+    var array = [T]()
+    for i in 0 ..< count {
+      if let result = self[i] as? T {
+        array.append(result)
+      }
+    }
+    return array
   }
 }

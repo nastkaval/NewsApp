@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import RealmSwift
 
 class ApiManager {
   static var shared = ApiManager()
@@ -31,13 +32,9 @@ class ApiManager {
       }
   }
 
-  func getNews(currentPage: Int, from: String, to: String?, success: @escaping(_ news: [NewsEntity], _ page: Int) -> Void, failed: @escaping(NSError) -> Void) {
-    var request = "\(host)" + "q=apple&sortBy=publishedAt&" + "from=\(from)&"
-    var page = currentPage
-    if let to = to {
-      request.append("to=\(to)&")
-    }
-    request.append("page=\(page)&")
+  func getNews(success: @escaping () -> Void, failed: @escaping(NSError) -> Void) {
+    var request = "\(host)" + "q=apple&sortBy=publishedAt&" + "from=\(Session.from)&"
+    request.append("page=\(Session.currentPage)&")
     request.append("pageSize=15&")
     request.append("apiKey=8d22efe4f9f04f1ebb9b841c51e54904")
     // swiftlint:disable force_unwrapping
@@ -51,31 +48,36 @@ class ApiManager {
       successHandler: { response in
       if response.response?.statusCode == 426 {
         let error = NSError(domain: "", code: 426, userInfo: nil)
+        Session.nextPage = 0
         failed(error)
       }
 
       if let JSON = response.value as? [String: Any] {
-        var newsEntities: [NewsEntity] = []
         if let newsJSON = JSON["articles"] as? [[String: Any]] {
           print("news count in response == \(newsJSON.count)")
           for dict in newsJSON {
-            let author = dict["author"] as? String ?? ""
-            let title = dict["title"] as? String ?? ""
-            let descriptionNews = dict["description"] as? String ?? ""
-            let url = dict["url"] as? String ?? ""
-            let urlToImage = dict["urlToImage"] as? String ?? ""
-            let publishedAt = dict["publishedAt"] as? String ?? ""
-            let content = dict["content"] as? String ?? ""
-
-            let newsEntity = NewsEntity(author: author, title: title, descriptionNews: descriptionNews, url: url, urlToImage: urlToImage, publishedAt: publishedAt, content: content)
-            newsEntities.append(newsEntity)
+            let newsEntity = NewsEntity()
+            newsEntity.author = dict["author"] as? String ?? ""
+            newsEntity.title = dict["title"] as? String ?? ""
+            newsEntity.descriptionNews = dict["description"] as? String ?? ""
+            newsEntity.url = dict["url"] as? String ?? ""
+            newsEntity.urlToImage = dict["urlToImage"] as? String ?? ""
+            newsEntity.publishedAt = dict["publishedAt"] as? String ?? ""
+            newsEntity.content = dict["content"] as? String ?? ""
+            // swiftlint:disable force_try
+            let realm = try! Realm()
+            // swiftlint:disable force_try
+            try! realm.write {
+              realm.add(newsEntity)
+            }
           }
-          page += 1
-          print("nextPage is \(page)")
-          success(newsEntities, page)
+          Session.nextPage += 1
+          print("nextPage is \(Session.nextPage)")
+          success() 
         }
       }
       }, fail: { error in
+      Session.nextPage = 0
       failed(error as NSError)
       })
   }
