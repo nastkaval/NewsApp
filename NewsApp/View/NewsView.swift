@@ -10,7 +10,11 @@ import UIKit
 import RealmSwift
 import AlamofireImage
 
-class NewsViewController: UIViewController {
+enum AlertMessages {
+  case limitError
+}
+
+class NewsView: UIViewController {
   // MARK: - Properties
   let refreshControl = UIRefreshControl()
   var listNews: [NewsEntity] = []
@@ -31,7 +35,14 @@ class NewsViewController: UIViewController {
     refreshControlSettings()
     tableViewSettings()
     observeRealm()
-    getTodayNews()
+    NewsController.loadNews(isNextPage: nil) { (result) in
+      switch result {
+      case true:
+        self.stopAnimation()
+      case false:
+        self.showAlert(title: "Error", message: "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.")
+      }
+    }
   }
 
   deinit {
@@ -54,31 +65,16 @@ class NewsViewController: UIViewController {
   }
 
   // MARK: - Functions
-  private func getTodayNews() {
-    activityIndicator.startAnimating()
-    ApiManager.shared.getNews(
-      success: {
-      self.stopAnimation()
-      }, failed: { error in
-      self.stopAnimation()
-      if error.code == 426 {
-        self.showAlert(title: "Error", message: "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.")
-      }
-    })
-  }
-
   private func refreshControlSettings() {
     refreshControl.addTarget(self, action: #selector(self.handleRefresh(_:)), for: UIControl.Event.valueChanged)
     newsListTableView.addSubview(refreshControl)
   }
 
   private func tableViewSettings() {
-    let nib = UINib.init(nibName: "NewsTableViewCell", bundle: nil)
-    newsListTableView.register(nib, forCellReuseIdentifier: "NewsTableViewCell")
+    newsListTableView.register(R.nib.newsTableViewCell)
   }
 
   @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-    getTodayNews()
   }
 
   ///RealmSettings
@@ -99,7 +95,7 @@ class NewsViewController: UIViewController {
   }
 
   private func checkOperatorTableViewForEmpty() {
-    notFoundNewsView.isHidden = newsListTableView.visibleCells.isEmpty ? false : true
+    notFoundNewsView.isHidden = !newsListTableView.visibleCells.isEmpty
   }
 
   private func stopAnimation() {
@@ -109,7 +105,7 @@ class NewsViewController: UIViewController {
 }
 
 // MARK: - Extension TableView
-extension NewsViewController: UITableViewDataSource, UITableViewDelegate {
+extension NewsView: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 280
   }
@@ -127,24 +123,21 @@ extension NewsViewController: UITableViewDataSource, UITableViewDelegate {
     cell.titleNews.text = post.title
     cell.descriptionNews.text = post.descriptionNews
     cell.authorPostNews.text = post.author
-    cell.showMoreButton.isHidden = cell.descriptionNews.isTruncated ? false : true
+    cell.showMoreButton.isHidden = !cell.descriptionNews.isTruncated
     // swiftlint:disable force_unwrapping
     if let escapedString = post.urlToImage!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
       if let url = URL(string: escapedString) {
         cell.imageNews.af.setImage(withURL: url)
       }
     }
-    if let date = Constants.DateFormatters.serverDateFormatter.date(from: post.publishedAt) {
-      cell.postTimeNews.text = Constants.DateFormatters.timeDateFormatter.string(from: date)
-    }
+    cell.postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: post.publishedAt ?? Date())
 
     return cell
   }
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if indexPath.row == listNews.count - 1 && Session.nextPage > Session.currentPage && !isFiltering {
-      Session.currentPage = Session.nextPage
-      getTodayNews()
+    if indexPath.row == listNews.count - 1, !isFiltering {
+      NewsController.loadNews(isNextPage: true, completion: nil)
     }
   }
 }

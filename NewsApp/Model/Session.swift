@@ -1,5 +1,5 @@
 //
-//  Session.swift
+//  SessionService.swift
 //  NewsApp
 //
 //  Created by Kovalchuk, Anastasiya on 9/17/20.
@@ -8,11 +8,19 @@
 
 import Foundation
 
-class Session {
-  static var date = Date()
-  static var currentPage: Int = 1
-  static var nextPage: Int = 1
-  static var from: String {
-    return Constants.DateFormatters.dayDateFormatter.string(from: date)
+struct DayDateFormattersConverter {
+  static let dayDateFormatter: DateFormatter = {
+    var dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    return dateFormatter
+  }()
+}
+
+class SessionData {
+  private var date: Date = Date()
+  var nextPage: Int = 1
+  var currentPage: Int = 1
+  var from: String {
+    return DayDateFormattersConverter.dayDateFormatter.string(from: date)
   }
 }

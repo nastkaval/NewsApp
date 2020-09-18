@@ -9,5 +9,6 @@ target 'NewsApp' do
 pod 'Alamofire'
 pod 'AlamofireImage'
 pod 'RealmSwift'
+pod 'R.swift'
 
 end

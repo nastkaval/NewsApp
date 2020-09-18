@@ -20,6 +20,6 @@ class NewsTableViewCell: UITableViewCell {
   // MARK: - LifeCycle
   override func prepareForReuse() {
     super.prepareForReuse()
-    self.imageNews.image = UIImage(named: "image.imagePlaceholder")
+    self.imageNews.image = R.image.imageImagePlaceholder()
   }
 }
