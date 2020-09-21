@@ -13,8 +13,8 @@ class NewsEntity: Object, Decodable {
   @objc dynamic var author: String?
   @objc dynamic var title: String?
   @objc dynamic var descriptionNews: String?
-  @objc dynamic var url: String?
-  @objc dynamic var urlToImage: String?
+  @objc dynamic var urlNewsStr: String?
+  @objc dynamic var urlToImageStr: String?
   @objc dynamic var publishedAt: Date?
   @objc dynamic var content: String?
 
@@ -22,8 +22,8 @@ class NewsEntity: Object, Decodable {
     case author
     case title
     case descriptionNews
-    case url
-    case urlToImage
+    case urlNewsStr
+    case urlToImageStr
     case publishedAt
     case content
   }
@@ -34,8 +34,8 @@ class NewsEntity: Object, Decodable {
     self.author = try container.decode(String.self, forKey: .author)
     self.title = try container.decode(String.self, forKey: .title)
     self.descriptionNews = try container.decode(String.self, forKey: .descriptionNews)
-    self.url = try container.decode(String.self, forKey: .url)
-    self.urlToImage = try container.decode(String.self, forKey: .urlToImage)
+    self.urlNewsStr = try container.decode(String.self, forKey: .urlNewsStr)
+    self.urlToImageStr = try container.decode(String.self, forKey: .urlToImageStr)
     self.publishedAt = try container.decode(Date.self, forKey: .publishedAt)
     self.content = try container.decode(String.self, forKey: .content)
   }

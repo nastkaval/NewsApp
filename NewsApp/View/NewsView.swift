@@ -1,5 +1,5 @@
 //
-//  NewsViewController.swift
+//  NewsView.swift
 //  NewsApp
 //
 //  Created by Kovalchuk, Anastasiya on 9/17/20.
@@ -10,17 +10,26 @@ import UIKit
 import RealmSwift
 import AlamofireImage
 
-enum AlertMessages {
-  case limitError
+protocol NewsViewOutput {
+  func userInterfaceDidLoad()
+  func actionScrollToBottom()
+  func userFilteringNews(keyWord: String)
+  func userCleanFilterNews()
+  func pullToRefresh()
+}
+
+protocol NewsViewInput {
+  var newsArray: [NewsEntity] { get }
+  func newsForIndex(_ index: Int) -> NewsEntity
 }
 
 class NewsView: UIViewController {
   // MARK: - Properties
   let refreshControl = UIRefreshControl()
-  var listNews: [NewsEntity] = []
   var isFiltering: Bool = false
 
-  var notificationToken: NotificationToken? = nil
+  var output: NewsViewOutput!
+  var input: NewsViewInput!
 
   // MARK: - Outlets
   @IBOutlet weak var newsListTableView: UITableView!
@@ -31,37 +40,29 @@ class NewsView: UIViewController {
   // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
+    configureVC()
     hideKeyboardWhenTappedAround()
     refreshControlSettings()
     tableViewSettings()
-    observeRealm()
-    NewsController.loadNews(isNextPage: nil) { (result) in
-      switch result {
-      case true:
-        self.stopAnimation()
-      case false:
-        self.showAlert(title: "Error", message: "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.")
-      }
-    }
+    output.userInterfaceDidLoad()
   }
 
-  deinit {
-    notificationToken?.invalidate()
+  private func configureVC() {
+    let controller = NewsController()
+    controller.output = self
+    self.output = controller
+    self.input = controller
   }
 
   // MARK: - Actions
   @IBAction func editingChangedSearchTextFiled(_ sender: UITextField) {
     if sender.text?.isEmpty == false {
       isFiltering = true
-      // swiftlint:disable force_unwrapping
-      listNews = DatabaseService.filterNews(predicate: sender.text!.lowercased())
+      output.userFilteringNews(keyWord: sender.text!.lowercased())
     } else {
-      listNews = DatabaseService.loadData()
       isFiltering = false
-      checkOperatorTableViewForEmpty()
-      self.view.endEditing(true)
+      output.userCleanFilterNews()
     }
-    newsListTableView.reloadData()
   }
 
   // MARK: - Functions
@@ -75,23 +76,7 @@ class NewsView: UIViewController {
   }
 
   @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-  }
-
-  ///RealmSettings
-  func observeRealm() {
-    // swiftlint:disable force_try
-    let realm = try! Realm()
-    let results = realm.objects(NewsEntity.self)
-    notificationToken = results.observe { [weak self] (changes: RealmCollectionChange) in
-      guard let tableView = self?.newsListTableView else { return }
-      switch changes {
-      case .initial, .update:
-        self?.listNews = DatabaseService.loadData()
-        tableView.reloadData()
-      case .error(let error):
-        fatalError("\(error)")
-      }
-    }
+    output.pullToRefresh()
   }
 
   private func checkOperatorTableViewForEmpty() {
@@ -107,37 +92,41 @@ class NewsView: UIViewController {
 // MARK: - Extension TableView
 extension NewsView: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 280
+    return CGFloat(Constants.heightForCell)
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { //count of slots in table
-    return listNews.count
+    return input.newsArray.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cellIdentifier = "NewsTableViewCell"
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
-    let post = listNews[indexPath.row]
-
-    cell.titleNews.text = post.title
-    cell.descriptionNews.text = post.descriptionNews
-    cell.authorPostNews.text = post.author
-    cell.showMoreButton.isHidden = !cell.descriptionNews.isTruncated
-    // swiftlint:disable force_unwrapping
-    if let escapedString = post.urlToImage!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
-      if let url = URL(string: escapedString) {
-        cell.imageNews.af.setImage(withURL: url)
-      }
-    }
-    cell.postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: post.publishedAt ?? Date())
+    let post = input.newsForIndex(indexPath.row)
+    cell.updateUI(data: post)
 
     return cell
   }
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if indexPath.row == listNews.count - 1, !isFiltering {
-      NewsController.loadNews(isNextPage: true, completion: nil)
+    if indexPath.row == input.newsArray.count - 1, !isFiltering {
+      output.actionScrollToBottom()
     }
   }
+}
+
+extension NewsView: NewsControllerOutput {
+    func displayAlert() {
+      self.showAlert(title: "Error", message: "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.")
+    }
+
+    func displayUpdate() {
+      self.stopAnimation()
+      if isFiltering {
+        checkOperatorTableViewForEmpty()
+      }
+      self.view.endEditing(true)
+      self.newsListTableView.reloadData()
+    }
 }

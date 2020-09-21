@@ -39,7 +39,7 @@ class ApiManager {
       }
   }
 
-  func getNews(from: String, currentPage: Int, success: @escaping () -> Void, failed: @escaping(NSError) -> Void) {
+  func getNews(from: String, currentPage: Int, success: @escaping ([NewsEntity]) -> Void, failed: @escaping(NSError) -> Void) {
     var request = "\(Constants.host)" + "q=apple&sortBy=publishedAt&" + "from=\(from)&"
     request.append("page=\(currentPage)&")
     request.append("pageSize=\(Constants.pageSize)&")
@@ -52,19 +52,29 @@ class ApiManager {
       parameters: nil,
       headers: nil,
       successHandler: { response in
-      if response.response?.statusCode == 426 {
-        let error = NSError(domain: "", code: 426, userInfo: nil)
-        failed(error)
-      }
-      if let JSON = response.value as? [String: Any] {
-        if let newsJSON = JSON["articles"] as? [[String: Any]] {
-          DatabaseService.saveData(newsJSON: newsJSON) {
-            success()
+        if response.response?.statusCode == 426 {
+          let error = NSError(domain: "", code: 426, userInfo: nil)
+          failed(error)
+        }
+        if let JSON = response.value as? [String: Any] {
+          if let newsJSON = JSON["articles"] as? [[String: Any]] {
+            var newsEntities: [NewsEntity] = []
+            for dict in newsJSON {
+              let newsEntity = NewsEntity(
+                value: ["author": dict["author"] as? String ?? "",
+                        "title": dict["title"] as? String ?? "",
+                        "descriptionNews": dict["description"] as? String ?? "",
+                        "urlNewsStr": dict["url"] as? String ?? "",
+                        "urlToImageStr": dict["urlToImage"] as? String ?? "",
+                        "publishedAt": ServerDateFormatterConverter.serverDateFormatter.date(from: dict["publishedAt"] as? String ?? ""),
+                        "content": dict["content"] as? String ?? ""])
+              newsEntities.append(newsEntity)
+            }
+            success(newsEntities)
           }
         }
-      }
       }, fail: { error in
-      failed(error as NSError)
+        failed(error as NSError)
       })
   }
 }

@@ -2,29 +2,74 @@
 //  NewsController.swift
 //  NewsApp
 //
-//  Created by Kovalchuk, Anastasiya on 9/18/20.
+//  Created by Kovalchuk, Anastasiya on 9/21/20.
 //  Copyright © 2020 Nastassia Kavalchuk. All rights reserved.
 //
 
 import Foundation
 
-struct TimeDateFormatters {
-static let hoursMinutesDateFormatter: DateFormatter = {
-      var dateFormatter = DateFormatter()
-      dateFormatter.dateFormat = "HH:mm"
-      return dateFormatter
-    }()
+protocol NewsControllerOutput {
+  func displayAlert()
+  func displayUpdate()
 }
 
 class NewsController {
-  static func loadNews(isNextPage: Bool?, completion: ( (Bool) -> ())?) {
-    WebService.loadNews(isNextPage: isNextPage) { (success, error) in
-      if success != nil {
-        completion?(true)
-      }
-      if error != nil {
-        completion?(false)
-      }
-    }
+  var output: NewsControllerOutput!
+
+  lazy var provider: NewsProvider = { 
+    let provider = NewsProvider()
+    provider.delegate = self
+    return provider
+  }()
+}
+
+extension NewsController: NewsViewOutput {
+  func pullToRefresh() {
+    provider.removeData()
+  }
+
+  func userCleanFilterNews() {
+    provider.getData()
+  }
+
+  func userFilteringNews(keyWord: String) {
+    provider.filterNews(predicate: keyWord)
+  }
+
+  func actionScrollToBottom() {
+    provider.callApi(isNextPage: true)
+  }
+
+  func userInterfaceDidLoad() {
+    provider.callApi(isNextPage: false)
   }
 }
+
+extension NewsController: NewsViewInput {
+  func newsForIndex(_ index: Int) -> NewsEntity {
+    return provider.listNews[index]
+  }
+
+  var newsArray: [NewsEntity] {
+    return provider.listNews
+  }
+}
+
+extension NewsController: NewsProviderDelegate {
+  func apiDidUpdateWithError() {
+    output.displayAlert()
+  }
+
+  func apiDidUpdateSuccess() {
+    output.displayUpdate()
+  }
+
+  func databaseDidUpdate() {
+    output.displayUpdate()
+  }
+
+  func databaseDidFiltered() {
+    output.displayUpdate()
+  }
+}
+
