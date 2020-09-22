@@ -8,8 +8,5 @@
 /* Class = "UILabel"; text = "News not found"; ObjectID = "nha-XI-tdX"; */
 "nha-XI-tdX.text" = "News not found";
 
-"errorMessageLimitedNews" = "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.";
-
-"errorTitle" = "Error";
-
-"okay" = "OK";
+"one1" = "one 1, not localized";
+"one2" = "one 2, not localized";

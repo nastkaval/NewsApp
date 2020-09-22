@@ -7,62 +7,59 @@
 //
 
 import UIKit
-import RealmSwift
-import AlamofireImage
 
-protocol NewsViewOutput {
+protocol TableViewDataSource {
+  func count() -> Int
+  func titleNewsForIndex(_ index: Int) -> String
+  func newsDescriptionForIndex(_ index: Int) -> String
+  func authorPostNewsForIndex(_ index: Int) -> String
+  func imageUrlStrForIndex(_ index: Int) -> String
+  func publishedAtForIndex(_ index: Int) -> Date
+}
+
+protocol NewsViewOutput: class {
   func userInterfaceDidLoad()
-  func actionScrollToBottom()
+  func loadData()
   func userFilteringNews(keyWord: String)
-  func userCleanFilterNews()
   func pullToRefresh()
 }
 
-protocol NewsViewInput {
-  var newsArray: [NewsEntity] { get }
-  func newsForIndex(_ index: Int) -> NewsEntity
+protocol NewsViewInput: class {
+  var newsListTableDataSource: TableViewDataSource { get }
 }
 
 class NewsView: UIViewController {
   // MARK: - Properties
-  let refreshControl = UIRefreshControl()
-  var isFiltering: Bool = false
+  private let heightForCell: Int = 280
+  private let refreshControl = UIRefreshControl()
+  private var dataSource: TableViewDataSource!
 
-  var output: NewsViewOutput!
-  var input: NewsViewInput!
+  weak var output: NewsViewOutput!
+  var input: NewsViewInput! {
+    didSet {
+        dataSource = input.newsListTableDataSource
+    }
+}
 
   // MARK: - Outlets
-  @IBOutlet weak var newsListTableView: UITableView!
-  @IBOutlet weak var searchTextField: UITextField!
-  @IBOutlet weak var notFoundNewsView: UIView!
-  @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+  @IBOutlet private weak var newsListTableView: UITableView!
+  @IBOutlet private weak var searchTextField: UITextField!
+  @IBOutlet private weak var notFoundNewsView: UIView!
+  @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
   // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    configureVC()
+    NewsController().configure(viewController: self)
     hideKeyboardWhenTappedAround()
     refreshControlSettings()
     tableViewSettings()
     output.userInterfaceDidLoad()
   }
 
-  private func configureVC() {
-    let controller = NewsController()
-    controller.output = self
-    self.output = controller
-    self.input = controller
-  }
-
   // MARK: - Actions
   @IBAction func editingChangedSearchTextFiled(_ sender: UITextField) {
-    if sender.text?.isEmpty == false {
-      isFiltering = true
-      output.userFilteringNews(keyWord: sender.text!.lowercased())
-    } else {
-      isFiltering = false
-      output.userCleanFilterNews()
-    }
+    output.userFilteringNews(keyWord: sender.text!)
   }
 
   // MARK: - Functions
@@ -92,40 +89,36 @@ class NewsView: UIViewController {
 // MARK: - Extension TableView
 extension NewsView: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return CGFloat(Constants.heightForCell)
+    return CGFloat(heightForCell)
   }
 
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { //count of slots in table
-    return input.newsArray.count
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return dataSource.count()
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cellIdentifier = "NewsTableViewCell"
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
-    let post = input.newsForIndex(indexPath.row)
-    cell.updateUI(data: post)
+    cell.updateUI(title: dataSource.titleNewsForIndex(indexPath.row), newsDescription: dataSource.newsDescriptionForIndex(indexPath.row), author: dataSource.authorPostNewsForIndex(indexPath.row), imageUrlStr: dataSource.imageUrlStrForIndex(indexPath.row), publishedAt: dataSource.publishedAtForIndex(indexPath.row))
 
     return cell
   }
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if indexPath.row == input.newsArray.count - 1, !isFiltering {
-      output.actionScrollToBottom()
+    if indexPath.row == dataSource.count() - 1 {
+      output.loadData()
     }
   }
 }
 
 extension NewsView: NewsControllerOutput {
-    func displayAlert() {
-      self.showAlert(title: "Error", message: "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.")
+  func displayAlert(title: String, message: String) {
+      self.showAlert(title: title, message: message)
     }
 
     func displayUpdate() {
       self.stopAnimation()
-      if isFiltering {
-        checkOperatorTableViewForEmpty()
-      }
       self.view.endEditing(true)
       self.newsListTableView.reloadData()
     }

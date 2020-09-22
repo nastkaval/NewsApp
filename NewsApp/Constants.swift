@@ -11,6 +11,4 @@ import Foundation
 struct Constants {
   static let host: String = "http://newsapi.org/v2/everything?"
   static let apiKey: String = "8d22efe4f9f04f1ebb9b841c51e54904"
-  static let pageSize: String = "15"
-  static let heightForCell: Int = 280
 }

@@ -9,67 +9,67 @@
 import Foundation
 
 protocol NewsControllerOutput {
-  func displayAlert()
+  func displayAlert(title: String, message: String)
   func displayUpdate()
 }
 
 class NewsController {
   var output: NewsControllerOutput!
+  private var isFiltering: Bool = false
 
-  lazy var provider: NewsProvider = { 
-    let provider = NewsProvider()
-    provider.delegate = self
-    return provider
+  lazy var model: NewsModel = {
+    let model = NewsModel()
+    model.newsModelDelegate = self
+    return model
   }()
-}
 
-extension NewsController: NewsViewOutput {
-  func pullToRefresh() {
-    provider.removeData()
-  }
-
-  func userCleanFilterNews() {
-    provider.getData()
-  }
-
-  func userFilteringNews(keyWord: String) {
-    provider.filterNews(predicate: keyWord)
-  }
-
-  func actionScrollToBottom() {
-    provider.callApi(isNextPage: true)
-  }
-
-  func userInterfaceDidLoad() {
-    provider.callApi(isNextPage: false)
+  func configure(viewController: NewsView) {
+    let controller = NewsController()
+    controller.output = viewController
+    viewController.output = controller
+    viewController.input = controller
   }
 }
 
 extension NewsController: NewsViewInput {
-  func newsForIndex(_ index: Int) -> NewsEntity {
-    return provider.listNews[index]
-  }
-
-  var newsArray: [NewsEntity] {
-    return provider.listNews
+  var newsListTableDataSource: TableViewDataSource {
+    return model
   }
 }
 
-extension NewsController: NewsProviderDelegate {
-  func apiDidUpdateWithError() {
-    output.displayAlert()
+extension NewsController: NewsViewOutput {
+  func pullToRefresh() {
+    model.callApi(isNextPage: false)
   }
 
-  func apiDidUpdateSuccess() {
+  func userFilteringNews(keyWord: String) {
+    if !keyWord.isEmpty, keyWord.count > 2 {
+      isFiltering = true
+      model.filterData(keyWord: keyWord)
+    } else if keyWord.isEmpty {
+      isFiltering = false
+      model.loadData()
+    }
+  }
+  
+  func loadData() {
+    if !isFiltering {
+    model.callApi(isNextPage: true)
+    }
+  }
+
+  func userInterfaceDidLoad() {
+    model.callApi(isNextPage: false)
+  }
+}
+
+extension NewsController: NewsModelDelegate {
+  func dataDidUpdateSuccess() {
     output.displayUpdate()
   }
 
-  func databaseDidUpdate() {
-    output.displayUpdate()
-  }
-
-  func databaseDidFiltered() {
-    output.displayUpdate()
+  func dataDidUpdateWithError(_ errorMessage: String) {
+    output.displayAlert(title: "Error", message: errorMessage)
   }
 }
 

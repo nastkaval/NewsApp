@@ -10,6 +10,20 @@ import Foundation
 import Alamofire
 import RealmSwift
 
+enum DataError: Error {
+  case limitNewsError
+  case serverError
+
+  var description: String {
+    switch self {
+      case .limitNewsError:
+        return "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results."
+      case .serverError:
+        return "The call failed."
+    }
+  }
+}
+
 struct ServerDateFormatterConverter {
   static let serverDateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
@@ -39,10 +53,10 @@ class ApiManager {
       }
   }
 
-  func getNews(from: String, currentPage: Int, success: @escaping ([NewsEntity]) -> Void, failed: @escaping(NSError) -> Void) {
+  func getNews(from: String, currentPage: Int, pageSize: String, success: @escaping ([NewsEntity]) -> Void, failed: @escaping(DataError) -> Void) {
     var request = "\(Constants.host)" + "q=apple&sortBy=publishedAt&" + "from=\(from)&"
     request.append("page=\(currentPage)&")
-    request.append("pageSize=\(Constants.pageSize)&")
+    request.append("pageSize=\(pageSize)&")
     request.append("apiKey=\(Constants.apiKey)")
     // swiftlint:disable force_unwrapping
     let url = URL(string: request)!
@@ -53,28 +67,40 @@ class ApiManager {
       headers: nil,
       successHandler: { response in
         if response.response?.statusCode == 426 {
-          let error = NSError(domain: "", code: 426, userInfo: nil)
-          failed(error)
+          failed(DataError.limitNewsError)
         }
         if let JSON = response.value as? [String: Any] {
           if let newsJSON = JSON["articles"] as? [[String: Any]] {
             var newsEntities: [NewsEntity] = []
             for dict in newsJSON {
-              let newsEntity = NewsEntity(
-                value: ["author": dict["author"] as? String ?? "",
-                        "title": dict["title"] as? String ?? "",
-                        "descriptionNews": dict["description"] as? String ?? "",
-                        "urlNewsStr": dict["url"] as? String ?? "",
-                        "urlToImageStr": dict["urlToImage"] as? String ?? "",
-                        "publishedAt": ServerDateFormatterConverter.serverDateFormatter.date(from: dict["publishedAt"] as? String ?? ""),
-                        "content": dict["content"] as? String ?? ""])
-              newsEntities.append(newsEntity)
+              var dictString: String?
+
+              do {
+              let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+              dictString = String(bytes: jsonData, encoding: String.Encoding.utf8)
+              } catch let error {
+                print(error)
+              }
+
+              guard let json: String = dictString,
+                  let jsonData: Data = json.data(using: .utf8)
+                  else {
+                      print("[JSONSerialization DEBUG] Could not convert JSON string to data")
+                      return
+              }
+
+              do {
+                let news = try JSONDecoder().decode(NewsEntity.self, from: jsonData)
+                newsEntities.append(news)
+              } catch let error {
+                print(error)
+              }
             }
             success(newsEntities)
           }
         }
       }, fail: { error in
-        failed(error as NSError)
+        failed(DataError.serverError)
       })
   }
 }

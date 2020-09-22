@@ -20,6 +20,7 @@ class SessionData {
   private var date: Date = Date()
   var nextPage: Int = 1
   var currentPage: Int = 1
+  var pageSize: String = "15"
   var from: String {
     return DayDateFormattersConverter.dayDateFormatter.string(from: date)
   }

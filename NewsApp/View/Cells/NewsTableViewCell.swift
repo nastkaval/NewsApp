@@ -7,23 +7,25 @@
 //
 
 import UIKit
+import AlamofireImage
 
-struct TimeDateFormatters {
-static let hoursMinutesDateFormatter: DateFormatter = {
+class NewsTableViewCell: UITableViewCell {
+  // MARK: - Struct TimeDateFormatters
+  private struct TimeDateFormatters {
+    static let hoursMinutesDateFormatter: DateFormatter = {
       var dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "HH:mm"
       return dateFormatter
     }()
-}
+  }
 
-class NewsTableViewCell: UITableViewCell {
   // MARK: - Outlets
-  @IBOutlet weak var imageNews: UIImageView!
-  @IBOutlet weak var titleNews: UILabel!
-  @IBOutlet weak var descriptionNews: UILabel!
-  @IBOutlet weak var postTimeNews: UILabel!
-  @IBOutlet weak var authorPostNews: UILabel!
-  @IBOutlet weak var showMoreButton: UIButton!
+  @IBOutlet private weak var imageNews: UIImageView!
+  @IBOutlet private weak var titleNews: UILabel!
+  @IBOutlet private weak var descriptionNews: UILabel!
+  @IBOutlet private weak var postTimeNews: UILabel!
+  @IBOutlet private weak var authorPostNews: UILabel!
+  @IBOutlet private weak var showMoreButton: UIButton!
 
   // MARK: - LifeCycle
   override func prepareForReuse() {
@@ -31,17 +33,16 @@ class NewsTableViewCell: UITableViewCell {
     self.imageNews.image = R.image.imageImagePlaceholder()
   }
 
-  func updateUI(data: NewsEntity) {
-    titleNews.text = data.title
-    descriptionNews.text = data.descriptionNews
-    authorPostNews.text = data.author
+  func updateUI(title: String, newsDescription: String, author: String, imageUrlStr: String, publishedAt: Date) {
+    titleNews.text = title
+    descriptionNews.text = newsDescription
+    authorPostNews.text = author
     showMoreButton.isHidden = !descriptionNews.isTruncated
-    // swiftlint:disable force_unwrapping
-    if let escapedString = data.urlToImageStr!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
+    if let escapedString = imageUrlStr.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
       if let url = URL(string: escapedString) {
         imageNews.af.setImage(withURL: url)
       }
     }
-    postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: data.publishedAt ?? Date())
+    postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: publishedAt)
   }
 }
