@@ -10,16 +10,16 @@ import Foundation
 import Alamofire
 import RealmSwift
 
-enum DataError: Error {
+enum DataError: LocalizedError {
   case limitNewsError
   case serverError
 
   var description: String {
     switch self {
-      case .limitNewsError:
-        return "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results."
-      case .serverError:
-        return "The call failed."
+    case .limitNewsError:
+      return "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results."
+    case .serverError:
+      return "The call failed."
     }
   }
 }
@@ -33,7 +33,7 @@ struct ServerDateFormatterConverter {
 }
 
 class ApiManager {
-  static var shared = ApiManager()
+  static let shared = ApiManager()
 
   private func get(url: URL, parameters: [String: Any]?, headers: HTTPHeaders?, successHandler: @escaping(AFDataResponse<Any>) -> Void, fail: @escaping(Error) -> Void) {
     let getApiQueue = DispatchQueue(label: "apiGetRequest", qos: .userInitiated, attributes: .concurrent)
@@ -53,7 +53,7 @@ class ApiManager {
       }
   }
 
-  func getNews(from: String, currentPage: Int, pageSize: String, success: @escaping ([NewsEntity]) -> Void, failed: @escaping(DataError) -> Void) {
+  func getNews(from: String, currentPage: Int, pageSize: Int, success: @escaping ([NewsEntity]) -> Void, failed: @escaping(DataError) -> Void) {
     var request = "\(Constants.host)" + "q=apple&sortBy=publishedAt&" + "from=\(from)&"
     request.append("page=\(currentPage)&")
     request.append("pageSize=\(pageSize)&")
@@ -76,17 +76,17 @@ class ApiManager {
               var dictString: String?
 
               do {
-              let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
-              dictString = String(bytes: jsonData, encoding: String.Encoding.utf8)
+                let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+                dictString = String(bytes: jsonData, encoding: String.Encoding.utf8)
               } catch let error {
                 print(error)
               }
 
               guard let json: String = dictString,
-                  let jsonData: Data = json.data(using: .utf8)
-                  else {
-                      print("[JSONSerialization DEBUG] Could not convert JSON string to data")
-                      return
+              let jsonData: Data = json.data(using: .utf8)
+              else {
+                print("[JSONSerialization DEBUG] Could not convert JSON string to data")
+                return
               }
 
               do {
@@ -99,7 +99,7 @@ class ApiManager {
             success(newsEntities)
           }
         }
-      }, fail: { error in
+      }, fail: { _ in
         failed(DataError.serverError)
       })
   }

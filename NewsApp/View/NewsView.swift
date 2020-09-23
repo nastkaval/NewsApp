@@ -8,38 +8,33 @@
 
 import UIKit
 
-protocol TableViewDataSource {
-  func count() -> Int
-  func titleNewsForIndex(_ index: Int) -> String
-  func newsDescriptionForIndex(_ index: Int) -> String
-  func authorPostNewsForIndex(_ index: Int) -> String
-  func imageUrlStrForIndex(_ index: Int) -> String
-  func publishedAtForIndex(_ index: Int) -> Date
+protocol ViewModel {
+  var imageUrl: URL { get }
+  var title: String { get }
+  var author: String { get }
+  var descriptionNews: String { get }
+  var publishedAt: Date { get }
 }
 
-protocol NewsViewOutput: class {
+protocol NewsViewOutput {
   func userInterfaceDidLoad()
-  func loadData()
+  func loadDataCurrentPage()
+  func loadDataNextPage()
   func userFilteringNews(keyWord: String)
-  func pullToRefresh()
 }
 
-protocol NewsViewInput: class {
-  var newsListTableDataSource: TableViewDataSource { get }
+protocol NewsViewInput {
+  func provideObject(at index: IndexPath) -> ViewModel
+  func count() -> Int
 }
 
 class NewsView: UIViewController {
   // MARK: - Properties
-  private let heightForCell: Int = 280
+  private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
-  private var dataSource: TableViewDataSource!
 
-  weak var output: NewsViewOutput!
-  var input: NewsViewInput! {
-    didSet {
-        dataSource = input.newsListTableDataSource
-    }
-}
+  var output: NewsViewOutput!
+  var input: NewsViewInput!
 
   // MARK: - Outlets
   @IBOutlet private weak var newsListTableView: UITableView!
@@ -73,7 +68,7 @@ class NewsView: UIViewController {
   }
 
   @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-    output.pullToRefresh()
+    output.loadDataNextPage()
   }
 
   private func checkOperatorTableViewForEmpty() {
@@ -89,37 +84,38 @@ class NewsView: UIViewController {
 // MARK: - Extension TableView
 extension NewsView: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return CGFloat(heightForCell)
+    return heightForCell
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return dataSource.count()
+    return input.count()
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cellIdentifier = "NewsTableViewCell"
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
-    cell.updateUI(title: dataSource.titleNewsForIndex(indexPath.row), newsDescription: dataSource.newsDescriptionForIndex(indexPath.row), author: dataSource.authorPostNewsForIndex(indexPath.row), imageUrlStr: dataSource.imageUrlStrForIndex(indexPath.row), publishedAt: dataSource.publishedAtForIndex(indexPath.row))
+    let news = input.provideObject(at: indexPath)
+    cell.updateUI(title: news.title, newsDescription: news.descriptionNews, author: news.author, imageUrl: news.imageUrl, publishedAt: news.publishedAt)
 
     return cell
   }
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if indexPath.row == dataSource.count() - 1 {
-      output.loadData()
+    if indexPath.row == input.count() - 1 {
+      output.loadDataNextPage()
     }
   }
 }
 
 extension NewsView: NewsControllerOutput {
   func displayAlert(title: String, message: String) {
-      self.showAlert(title: title, message: message)
-    }
+    self.showAlert(title: title, message: message)
+  }
 
-    func displayUpdate() {
-      self.stopAnimation()
-      self.view.endEditing(true)
-      self.newsListTableView.reloadData()
-    }
+  func displayUpdate() {
+    self.stopAnimation()
+    self.view.endEditing(true)
+    self.newsListTableView.reloadData()
+  }
 }

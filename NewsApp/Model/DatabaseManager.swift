@@ -10,10 +10,17 @@ import Foundation
 import RealmSwift
 
 class DatabaseManager {
-  
-  let realm = try! Realm()
 
-  static var shared = DatabaseManager() // Q
+  private var realm: Realm
+  static let shared = DatabaseManager()
+
+  private init() {
+    do {
+      realm = try Realm()
+    } catch {
+      fatalError()
+    }
+  }
 
   func loadData() -> [NewsEntity] {
     return realm.objects(NewsEntity.self).toArray()

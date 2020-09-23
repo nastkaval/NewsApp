@@ -33,16 +33,12 @@ class NewsTableViewCell: UITableViewCell {
     self.imageNews.image = R.image.imageImagePlaceholder()
   }
 
-  func updateUI(title: String, newsDescription: String, author: String, imageUrlStr: String, publishedAt: Date) {
+  func updateUI(title: String, newsDescription: String, author: String, imageUrl: URL, publishedAt: Date) {
     titleNews.text = title
     descriptionNews.text = newsDescription
     authorPostNews.text = author
     showMoreButton.isHidden = !descriptionNews.isTruncated
-    if let escapedString = imageUrlStr.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
-      if let url = URL(string: escapedString) {
-        imageNews.af.setImage(withURL: url)
-      }
-    }
+    imageNews.af.setImage(withURL: imageUrl)
     postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: publishedAt)
   }
 }

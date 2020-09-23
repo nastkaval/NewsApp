@@ -16,7 +16,6 @@ class NewsEntity: Object, Decodable {
   @objc dynamic var urlNewsStr: String = ""
   @objc dynamic var urlToImageStr: String = ""
   @objc dynamic var publishedAtStr: String = ""
-  @objc dynamic var publishedAt: Date?
   @objc dynamic var content: String = ""
 
   enum CodingKeys: String, CodingKey {
@@ -38,7 +37,6 @@ class NewsEntity: Object, Decodable {
     self.urlNewsStr = try container.decode(String.self, forKey: .url)
     self.urlToImageStr = try container.decode(String.self, forKey: .urlToImage)
     self.publishedAtStr = try container.decode(String.self, forKey: .publishedAt)
-    self.publishedAt = ServerDateFormatterConverter.serverDateFormatter.date(from: self.publishedAtStr)
     self.content = try container.decode(String.self, forKey: .content)
   }
 }

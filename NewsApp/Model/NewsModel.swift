@@ -23,31 +23,13 @@ protocol NewsModelDelegate: class {
 }
 
 class NewsModel {
-  var session: SessionData = SessionData()
+  var session = SessionData()
   var isErrorLimit: Bool = false
   private var listNews: [NewsEntity] = []
   public weak var newsModelDelegate: NewsModelDelegate?
-}
 
-extension NewsModel: TableViewDataSource {
-  func titleNewsForIndex(_ index: Int) -> String {
-    return listNews[index].title
-  }
-
-  func newsDescriptionForIndex(_ index: Int) -> String {
-    return listNews[index].descriptionNews
-  }
-
-  func authorPostNewsForIndex(_ index: Int) -> String {
-    return listNews[index].author
-  }
-
-  func imageUrlStrForIndex(_ index: Int) -> String {
-    return listNews[index].urlToImageStr
-  }
-
-  func publishedAtForIndex(_ index: Int) -> Date {
-    return listNews[index].publishedAt! //Q
+  func object(_ index: Int) -> NewsEntity {
+    return listNews[index]
   }
 
   func count() -> Int {
@@ -66,7 +48,7 @@ extension NewsModel: WebServiceDelegate {
       from: session.from,
       currentPage: session.currentPage,
       pageSize: session.pageSize,
-      success: { result in
+      success: { [weak self] result in
         switch isNextPage {
         case true:
           break
@@ -74,16 +56,16 @@ extension NewsModel: WebServiceDelegate {
           DatabaseManager.shared.removeAllData()
         }
         DatabaseManager.shared.saveData(newsEntities: result)
-        self.loadData()
-      }, failed: { error in
+        self?.loadData()
+      }, failed: { [weak self] error in
         switch error {
-          case .limitNewsError:
-          self.isErrorLimit = true
-          case .serverError:
-            break
+        case .limitNewsError:
+          self?.isErrorLimit = true
+        case .serverError:
+          break
         }
-        self.newsModelDelegate?.dataDidUpdateWithError(error.description)
-          self.newsModelDelegate?.dataDidUpdateWithError(error.description)
+        self?.newsModelDelegate?.dataDidUpdateWithError(error.description)
+        self?.newsModelDelegate?.dataDidUpdateWithError(error.description)
       })
   }
 }
