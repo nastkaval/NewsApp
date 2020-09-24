@@ -27,7 +27,7 @@ enum ServerDataError: LocalizedError {
   }
 }
 
-struct ServerDateFormatterConverter {
+enum ServerDateFormatterConverter {
   static let serverDateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -40,7 +40,6 @@ protocol ApiProvider {
 }
 
 class ApiManager {
-
   static let shared = ApiManager()
 
   private func get(url: URL, parameters: [String: Any]?, headers: HTTPHeaders?, successHandler: @escaping(AFDataResponse<Any>) -> Void, fail: @escaping(Error) -> Void) {
@@ -93,40 +92,42 @@ class ApiManager {
   }
 
   private func parseJson(json: [[String: Any]]) -> [NewsEntity]? {
-      var newsEntities: [NewsEntity] = []
-      for dict in json {
-        var dictString: String?
+    var newsEntities: [NewsEntity] = []
+    for dict in json {
+      var dictString: String?
 
-        do {
-          let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
-          dictString = String(bytes: jsonData, encoding: String.Encoding.utf8)
-        } catch let error {
-          print(error)
-        }
-
-        guard let json: String = dictString,
-              let jsonData: Data = json.data(using: .utf8)
-        else {
-          print("[JSONSerialization DEBUG] Could not convert JSON string to data")
-          return nil
-        }
-
-        do {
-          let news = try JSONDecoder().decode(NewsEntity.self, from: jsonData)
-          newsEntities.append(news)
-        } catch let error {
-          print(error)
-        }
+      do {
+        let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+        dictString = String(bytes: jsonData, encoding: String.Encoding.utf8)
+      } catch let error {
+        print(error)
       }
-      return newsEntities
+
+      guard let json: String = dictString,
+      let jsonData: Data = json.data(using: .utf8)
+      else {
+        print("[JSONSerialization DEBUG] Could not convert JSON string to data")
+        return nil
+      }
+
+      do {
+        let news = try JSONDecoder().decode(NewsEntity.self, from: jsonData)
+        newsEntities.append(news)
+      } catch let error {
+        print(error)
+      }
+    }
+    return newsEntities
   }
 }
 
 extension ApiProvider {
   func callApi(session: SessionData, callBack: @escaping (([NewsEntity]?, ServerDataError?) -> Void)) {
-    ApiManager.shared.getNews(session: session) { (result) in
+    ApiManager.shared.getNews(
+      session: session
+    ) { result in
       callBack(result, nil)
-    } failed: { (error) in
+    } failed: { error in //Q
       callBack(nil, error)
     }
   }

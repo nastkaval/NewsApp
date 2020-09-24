@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct DayDateFormattersConverter {
+enum DayDateFormattersConverter {
   static let dayDateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"

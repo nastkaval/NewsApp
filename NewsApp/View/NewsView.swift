@@ -33,6 +33,7 @@ class NewsView: UIViewController {
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
 
+  // swiftlint:disable implicitly_unwrapped_optional
   var output: NewsViewOutput!
   var input: NewsViewInput!
 
@@ -54,7 +55,7 @@ class NewsView: UIViewController {
 
   // MARK: - Actions
   @IBAction func editingChangedSearchTextFiled(_ sender: UITextField) {
-    output.userFilteringNews(keyWord: sender.text!)
+    output.userFilteringNews(keyWord: sender.text!) //Q
   }
 
   // MARK: - Functions

@@ -32,7 +32,7 @@ extension NewsModel {
 
 extension NewsModel: ApiProvider, DatabaseProvider {
   func getData(isNextPage: Bool) {
-    callApi(session: session) { [weak self] (newsArray, error) in
+    callApi(session: session) { [weak self] newsArray, error in
       if let newsArray = newsArray {
         switch isNextPage {
         case true:
@@ -54,7 +54,7 @@ extension NewsModel: ApiProvider, DatabaseProvider {
       }
     }
   }
-  
+
   func successGetData() {
     newsModelDelegate?.dataDidUpdateSuccess()
   }

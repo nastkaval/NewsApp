@@ -16,7 +16,6 @@
 //  var newsArray: [NewsEntity] = []
 //  var currentPage = 1
 //  var nextPage = 0
-//  // swiftlint:disable force_try
 //  var notificationToken: NotificationToken? = nil
 //
 //  // MARK: - Outlets
@@ -43,7 +42,6 @@
 //    var filteredArray: [NewsEntity] = []
 //    if sender.text?.isEmpty == false {
 //      for news in newsArray {
-//        // swiftlint:disable force_unwrapping
 //        if news.title.lowercased().contains("\(sender.text!.lowercased())") {
 //          filteredArray.append(news)
 //          listNews = filteredArray
@@ -97,7 +95,6 @@
 //  }
 //
 //  private func loadNewsFromDatabase() {
-//    // swiftlint:disable force_try
 //    let realm = try! Realm()
 //    let results = realm.objects(NewsEntity.self).toArray(ofType: NewsEntity.self)
 //    self.listNews = results
@@ -136,7 +133,6 @@
 //  }
 //}
 //
-//// MARK: - Extension TableView
 //extension MainViewController: UITableViewDataSource, UITableViewDelegate {
 //  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //    return 280

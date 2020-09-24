@@ -11,7 +11,7 @@ import AlamofireImage
 
 class NewsTableViewCell: UITableViewCell {
   // MARK: - Struct TimeDateFormatters
-  private struct TimeDateFormatters {
+  private enum TimeDateFormatters {
     static let hoursMinutesDateFormatter: DateFormatter = {
       var dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "HH:mm"

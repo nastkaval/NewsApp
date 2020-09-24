@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Constants {
+enum Constants {
   static let host: String = "http://newsapi.org/v2/everything?"
   static let apiKey: String = "8d22efe4f9f04f1ebb9b841c51e54904"
 }

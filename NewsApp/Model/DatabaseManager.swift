@@ -34,7 +34,6 @@ protocol DatabaseProvider {
 }
 
 class DatabaseManager {
-
   private var realm: Realm
   static let shared = DatabaseManager()
 
@@ -55,13 +54,13 @@ class DatabaseManager {
   }
 
   func removeAllData() {
-    try! realm.write {
+    try! realm.write { //Q
       realm.deleteAll()
     }
   }
 
   func saveData(newsEntities: [NewsEntity]) {
-    try! realm.write {
+    try! realm.write { //Q
       realm.add(newsEntities)
     }
   }

@@ -14,6 +14,7 @@ protocol NewsControllerOutput {
 }
 
 class NewsController {
+  // swiftlint:disable implicitly_unwrapped_optional
   var output: NewsControllerOutput!
   private var isFiltering: Bool = false
 
@@ -70,12 +71,12 @@ extension NewsController: NewsViewOutput {
 
 extension NewsEntity: ViewModel {
   var publishedAt: Date {
-    return ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)!
+    return ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)! //Q
   }
 
   var imageUrl: URL {
-    let escapedString = urlToImageStr.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-    let url = URL(string: escapedString)!
+    let escapedString = urlToImageStr.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! //Q
+    let url = URL(string: escapedString)! //Q
     return url
   }
 }
