@@ -8,15 +8,6 @@
 
 import Foundation
 
-protocol WebServiceDelegate: class {
-  func callApi(isNextPage: Bool)
-}
-
-protocol DatabaseServiceDelegate: class {
-  func loadData()
-  func filterData(keyWord: String)
-}
-
 protocol NewsModelDelegate: class {
   func dataDidUpdateSuccess()
   func dataDidUpdateWithError(_ errorMessage: String)
@@ -27,7 +18,9 @@ class NewsModel {
   var isErrorLimit: Bool = false
   private var listNews: [NewsEntity] = []
   public weak var newsModelDelegate: NewsModelDelegate?
+}
 
+extension NewsModel {
   func object(_ index: Int) -> NewsEntity {
     return listNews[index]
   }
@@ -37,47 +30,46 @@ class NewsModel {
   }
 }
 
-extension NewsModel: WebServiceDelegate {
-  func callApi(isNextPage: Bool) {
-    if isNextPage == true, isErrorLimit == false {
-      session.currentPage += 1
-    } else if isNextPage == true, isErrorLimit == true {
-      return
-    }
-    ApiManager.shared.getNews(
-      from: session.from,
-      currentPage: session.currentPage,
-      pageSize: session.pageSize,
-      success: { [weak self] result in
+extension NewsModel: ApiProvider, DatabaseProvider {
+  func getData(isNextPage: Bool) {
+    callApi(session: session) { [weak self] (newsArray, error) in
+      if let newsArray = newsArray {
         switch isNextPage {
         case true:
           break
         case false:
-          DatabaseManager.shared.removeAllData()
+          self?.removeData()
         }
-        DatabaseManager.shared.saveData(newsEntities: result)
-        self?.loadData()
-      }, failed: { [weak self] error in
+        self?.saveData(newsEntities: newsArray)
+        self?.loadNews()
+      }
+      if let error = error {
         switch error {
         case .limitNewsError:
           self?.isErrorLimit = true
         case .serverError:
           break
         }
-        self?.newsModelDelegate?.dataDidUpdateWithError(error.description)
-        self?.newsModelDelegate?.dataDidUpdateWithError(error.description)
-      })
+        self?.failedGetData(errorMessage: error.description)
+      }
+    }
   }
-}
-
-extension NewsModel: DatabaseServiceDelegate {
-  func loadData() {
-    listNews = DatabaseManager.shared.loadData()
-    self.newsModelDelegate?.dataDidUpdateSuccess()
+  
+  func successGetData() {
+    newsModelDelegate?.dataDidUpdateSuccess()
   }
 
-  func filterData(keyWord: String) {
-    listNews = DatabaseManager.shared.loadFilterData(predicate: keyWord)
-    self.newsModelDelegate?.dataDidUpdateSuccess()
+  func failedGetData(errorMessage: String) {
+    newsModelDelegate?.dataDidUpdateWithError(errorMessage)
+  }
+
+  func getFilterNews(keyWord: String) {
+    listNews = filterData(keyWord: keyWord)
+    newsModelDelegate?.dataDidUpdateSuccess()
+  }
+
+  func loadNews() {
+    listNews = loadData()
+    newsModelDelegate?.dataDidUpdateSuccess()
   }
 }

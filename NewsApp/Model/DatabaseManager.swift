@@ -9,6 +9,30 @@
 import Foundation
 import RealmSwift
 
+enum DatabaseDataError: LocalizedError {
+  case initDatabaseError
+  case saveError
+  case cleanDatabaseError
+
+  var description: String {
+    switch self {
+    case .initDatabaseError:
+      return "Realm error init"
+    case .saveError:
+      return "Realm error save"
+    case .cleanDatabaseError:
+      return "Realm error clean database"
+    }
+  }
+}
+
+protocol DatabaseProvider {
+  func saveData(newsEntities: [NewsEntity])
+  func loadData() -> [NewsEntity]
+  func filterData(keyWord: String) -> [NewsEntity]
+  func removeData()
+}
+
 class DatabaseManager {
 
   private var realm: Realm
@@ -18,7 +42,7 @@ class DatabaseManager {
     do {
       realm = try Realm()
     } catch {
-      fatalError()
+      fatalError("Realm can't init")
     }
   }
 
@@ -40,5 +64,20 @@ class DatabaseManager {
     try! realm.write {
       realm.add(newsEntities)
     }
+  }
+}
+
+extension DatabaseProvider {
+  func saveData(newsEntities: [NewsEntity]) {
+    DatabaseManager.shared.saveData(newsEntities: newsEntities)
+  }
+  func loadData() -> [NewsEntity] {
+    return DatabaseManager.shared.loadData()
+  }
+  func removeData() {
+    DatabaseManager.shared.removeAllData()
+  }
+  func filterData(keyWord: String) -> [NewsEntity] {
+    return DatabaseManager.shared.loadFilterData(predicate: keyWord)
   }
 }

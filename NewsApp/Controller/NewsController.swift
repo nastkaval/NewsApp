@@ -44,27 +44,27 @@ extension NewsController: NewsViewInput {
 
 extension NewsController: NewsViewOutput {
   func loadDataCurrentPage() {
-    model.callApi(isNextPage: false)
+    model.getData(isNextPage: false)
   }
 
   func userFilteringNews(keyWord: String) {
     if !keyWord.isEmpty, keyWord.count > 2 {
       isFiltering = true
-      model.filterData(keyWord: keyWord)
+      model.getFilterNews(keyWord: keyWord)
     } else if keyWord.isEmpty {
       isFiltering = false
-      model.loadData()
+      model.loadNews()
     }
   }
 
   func loadDataNextPage() {
     if !isFiltering {
-      model.callApi(isNextPage: true)
+      model.getData(isNextPage: true)
     }
   }
 
   func userInterfaceDidLoad() {
-    model.callApi(isNextPage: false)
+    model.getData(isNextPage: false)
   }
 }
 
