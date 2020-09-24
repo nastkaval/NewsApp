@@ -47,7 +47,7 @@ extension NewsModel: ApiProvider, DatabaseProvider {
         switch error {
         case .limitNewsError:
           self?.isErrorLimit = true
-        case .serverError:
+        case .serverError, .parseError:
           break
         }
         self?.failedGetData(errorMessage: error.description)

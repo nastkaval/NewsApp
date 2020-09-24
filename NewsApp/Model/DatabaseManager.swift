@@ -17,11 +17,11 @@ enum DatabaseDataError: LocalizedError {
   var description: String {
     switch self {
     case .initDatabaseError:
-      return "Realm error init"
+      return R.string.localizable.initDatabaseErrorMessage()
     case .saveError:
-      return "Realm error save"
+      return R.string.localizable.saveErrorMessage()
     case .cleanDatabaseError:
-      return "Realm error clean database"
+      return R.string.localizable.cleanDatabaseErrorMessage()
     }
   }
 }

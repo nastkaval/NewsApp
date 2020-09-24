@@ -86,6 +86,6 @@ extension NewsController: NewsModelDelegate {
   }
 
   func dataDidUpdateWithError(_ errorMessage: String) {
-    output.displayAlert(title: "Error", message: errorMessage)
+    output.displayAlert(title: R.string.localizable.errorTitle(), message: errorMessage)
   }
 }

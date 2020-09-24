@@ -18,11 +18,11 @@ enum ServerDataError: LocalizedError {
   var description: String {
     switch self {
     case .limitNewsError:
-      return "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results."
+      return R.string.localizable.limitNewsErrorMessage()
     case .serverError:
-      return "The call failed."
+      return R.string.localizable.serverErrorMessage()
     case .parseError:
-      return "Parsing failed."
+      return R.string.localizable.parseErrorMessage()
     }
   }
 }

@@ -8,7 +8,10 @@
   Copyright © 2020 Nastassia Kavalchuk. All rights reserved.
 */
 
-"one1.message" = "one 1, not localized";
-
-
-
+"limitNewsErrorMessage" = "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.";
+"serverErrorMessage" = "The call failed.";
+"parseErrorMessage" = "Parsing failed.";
+"initDatabaseErrorMessage" = "Realm error init";
+"saveErrorMessage" = "Realm error save";
+"cleanDatabaseErrorMessage" = "Realm error clean database";
+"errorTitle" = "Error";
