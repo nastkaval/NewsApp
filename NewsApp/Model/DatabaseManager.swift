@@ -12,7 +12,7 @@ import RealmSwift
 enum DatabaseDataError: LocalizedError {
   case initDatabaseError
   case saveError
-  case cleanDatabaseError
+  case removeDatabaseError
 
   var description: String {
     switch self {
@@ -20,63 +20,72 @@ enum DatabaseDataError: LocalizedError {
       return R.string.localizable.initDatabaseErrorMessage()
     case .saveError:
       return R.string.localizable.saveErrorMessage()
-    case .cleanDatabaseError:
+    case .removeDatabaseError:
       return R.string.localizable.cleanDatabaseErrorMessage()
     }
   }
 }
 
-protocol DatabaseProvider {
-  func saveData(newsEntities: [NewsEntity])
-  func loadData() -> [NewsEntity]
-  func filterData(keyWord: String) -> [NewsEntity]
-  func removeData()
+protocol DatabaseProtocol: class {
+  func saveData(newsEntities: [NewsEntity], callBack: @escaping (Result<Any?, DatabaseDataError>) -> Void)
+  func loadData(callBack: @escaping (Result<[NewsEntity], DatabaseDataError>) -> Void)
+  func filterData(keyWord: String, callBack: @escaping (Result<[NewsEntity], DatabaseDataError>) -> Void)
+  func removeData(callBack: @escaping (Result<Any?, DatabaseDataError>) -> Void)
 }
 
-class DatabaseManager {
-  private var realm: Realm
-  static let shared = DatabaseManager()
+final class DatabaseManager: DatabaseProtocol {
+  private static var sharedDatabaseManager: DatabaseManager = {
+    let databaseManager = DatabaseManager()
+    return databaseManager
+  }()
 
-  private init() {
+  static func shared() -> DatabaseManager {
+    return sharedDatabaseManager
+  }
+
+  private init() { }
+
+  func loadData(callBack: @escaping (Result<[NewsEntity], DatabaseDataError>) -> Void) {
     do {
-      realm = try Realm()
+      let realm = try Realm()
+      let newsArray = realm.objects(NewsEntity.self).toArray()
+      return callBack(.success(newsArray))
     } catch {
-      fatalError("Realm can't init")
+      return callBack(.failure(.initDatabaseError))
     }
   }
 
-  func loadData() -> [NewsEntity] {
-    return realm.objects(NewsEntity.self).toArray()
-  }
-
-  func loadFilterData(predicate: String) -> [NewsEntity] {
-    return realm.objects(NewsEntity.self).filter("title contains '\(predicate)'").toArray()
-  }
-
-  func removeAllData() {
-    try! realm.write { //Q
-      realm.deleteAll()
+  func filterData(keyWord: String, callBack: @escaping (Result<[NewsEntity], DatabaseDataError>) -> Void) {
+    do {
+      let realm = try Realm()
+      let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(keyWord)'").toArray()
+      return callBack(.success(newsArray))
+    } catch {
+      return callBack(.failure(.initDatabaseError))
     }
   }
 
-  func saveData(newsEntities: [NewsEntity]) {
-    try! realm.write { //Q
-      realm.add(newsEntities)
+  func removeData(callBack: @escaping (Result<Any?, DatabaseDataError>) -> Void) {
+    do {
+      let realm = try Realm()
+      try realm.write { //https://medium.com/@m4rr/realm-and-the-forced-try-expression-72eeb599b29d
+        realm.deleteAll()
+      }
+      return callBack(.success(nil))
+    } catch {
+      return callBack(.failure(.removeDatabaseError))
     }
   }
-}
 
-extension DatabaseProvider {
-  func saveData(newsEntities: [NewsEntity]) {
-    DatabaseManager.shared.saveData(newsEntities: newsEntities)
-  }
-  func loadData() -> [NewsEntity] {
-    return DatabaseManager.shared.loadData()
-  }
-  func removeData() {
-    DatabaseManager.shared.removeAllData()
-  }
-  func filterData(keyWord: String) -> [NewsEntity] {
-    return DatabaseManager.shared.loadFilterData(predicate: keyWord)
+  func saveData(newsEntities: [NewsEntity], callBack: @escaping (Result<Any?, DatabaseDataError>) -> Void) {
+    do {
+      let realm = try Realm()
+      try realm.write { //https://medium.com/@m4rr/realm-and-the-forced-try-expression-72eeb599b29d
+        realm.add(newsEntities)
+      }
+      return callBack(.success(nil))
+    } catch {
+      return callBack(.failure(.saveError))
+    }
   }
 }

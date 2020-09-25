@@ -27,7 +27,7 @@ enum ServerDataError: LocalizedError {
   }
 }
 
-enum ServerDateFormatterConverter {
+enum ServerDateFormatterConverter { //https://realm.github.io/SwiftLint/convenience_type.html
   static let serverDateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -35,12 +35,26 @@ enum ServerDateFormatterConverter {
   }()
 }
 
-protocol ApiProvider {
-  func callApi(session: SessionData, callBack: @escaping (([NewsEntity]?, ServerDataError?) -> Void))
+protocol ApiManagerProtocol {
+  func callApi(session: SessionData, callBack: @escaping (Result<[NewsEntity], ServerDataError>) -> Void)
 }
 
-class ApiManager {
-  static let shared = ApiManager()
+final class ApiManager {
+  private lazy var parser: ParseHelper = {
+    let parser = ParseHelper()
+    return parser
+  }()
+
+  private static var sharedApiManager: ApiManager = {
+    let apiManager = ApiManager()
+    return apiManager
+  }()
+
+  static func shared() -> ApiManager {
+    return sharedApiManager
+  }
+
+  private init() { }
 
   private func get(url: URL, parameters: [String: Any]?, headers: HTTPHeaders?, successHandler: @escaping(AFDataResponse<Any>) -> Void, fail: @escaping(Error) -> Void) {
     let getApiQueue = DispatchQueue(label: "apiGetRequest", qos: .userInitiated, attributes: .concurrent)
@@ -60,9 +74,9 @@ class ApiManager {
       }
   }
 
-  func getNews(session: SessionData, success: @escaping ([NewsEntity]) -> Void, failed: @escaping(ServerDataError) -> Void) {
+  private func getNews(session: SessionData, completionHandler: @escaping (Result<[NewsEntity], ServerDataError>) -> Void) {
     var request = "\(Constants.host)" + "q=apple&sortBy=publishedAt&" + "from=\(session.from)&"
-    request.append("page=\(session.currentPage)&")
+    request.append("page=\(session.page)&")
     request.append("pageSize=\(session.pageSize)&")
     request.append("apiKey=\(Constants.apiKey)")
     // swiftlint:disable force_unwrapping
@@ -74,61 +88,31 @@ class ApiManager {
       headers: nil,
       successHandler: { [weak self] response in
         if response.response?.statusCode == 426 {
-          failed(ServerDataError.limitNewsError)
+          completionHandler(.failure(.limitNewsError))
           return
         }
         if let JSON = response.value as? [String: Any] {
           if let json = JSON["articles"] as? [[String: Any]] {
-            if let newsEntities = self?.parseJson(json: json) {
-              success(newsEntities)
-            } else {
-              failed(ServerDataError.parseError)
+            if let parseResult = self?.parser.parseJson(json: json) {
+              switch parseResult {
+              case .success(let newsEntities):
+                completionHandler(.success(newsEntities))
+              case .failure(let error):
+                completionHandler(.failure(error))
+              }
             }
           }
         }
       }, fail: { _ in
-        failed(ServerDataError.serverError)
+        completionHandler(.failure(.serverError))
       })
-  }
-
-  private func parseJson(json: [[String: Any]]) -> [NewsEntity]? {
-    var newsEntities: [NewsEntity] = []
-    for dict in json {
-      var dictString: String?
-
-      do {
-        let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
-        dictString = String(bytes: jsonData, encoding: String.Encoding.utf8)
-      } catch let error {
-        print(error)
-      }
-
-      guard let json: String = dictString,
-      let jsonData: Data = json.data(using: .utf8)
-      else {
-        print("[JSONSerialization DEBUG] Could not convert JSON string to data")
-        return nil
-      }
-
-      do {
-        let news = try JSONDecoder().decode(NewsEntity.self, from: jsonData)
-        newsEntities.append(news)
-      } catch let error {
-        print(error)
-      }
-    }
-    return newsEntities
   }
 }
 
-extension ApiProvider {
-  func callApi(session: SessionData, callBack: @escaping (([NewsEntity]?, ServerDataError?) -> Void)) {
-    ApiManager.shared.getNews(
-      session: session
-    ) { result in
-      callBack(result, nil)
-    } failed: { error in //Q
-      callBack(nil, error)
+extension ApiManager: ApiManagerProtocol {
+  func callApi(session: SessionData, callBack: @escaping (Result<[NewsEntity], ServerDataError>) -> Void) {
+    getNews(session: session) { result in
+      callBack(result)
     }
   }
 }

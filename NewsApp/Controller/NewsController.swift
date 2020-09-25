@@ -8,19 +8,19 @@
 
 import Foundation
 
-protocol NewsControllerOutput {
+protocol NewsControllerOutput: class {
   func displayAlert(title: String, message: String)
   func displayUpdate()
 }
 
-class NewsController {
+final class NewsController {
   // swiftlint:disable implicitly_unwrapped_optional
-  var output: NewsControllerOutput!
+  private weak var output: NewsControllerOutput!
   private var isFiltering: Bool = false
 
   lazy var model: NewsModel = {
-    let model = NewsModel()
-    model.newsModelDelegate = self
+    let model = NewsModel(apiManager: ApiManager.shared(), databaseManager: DatabaseManager.shared())
+    model.output = self
     return model
   }()
 
@@ -38,6 +38,7 @@ extension NewsController: NewsViewInput {
     }
     return object
   }
+
   func count() -> Int {
     return model.count()
   }
@@ -48,14 +49,9 @@ extension NewsController: NewsViewOutput {
     model.getData(isNextPage: false)
   }
 
-  func userFilteringNews(keyWord: String) {
-    if !keyWord.isEmpty, keyWord.count > 2 {
+  func filterNews(keyWord: String) {
+    model.getFilterNews(keyWord: keyWord)
       isFiltering = true
-      model.getFilterNews(keyWord: keyWord)
-    } else if keyWord.isEmpty {
-      isFiltering = false
-      model.loadNews()
-    }
   }
 
   func loadDataNextPage() {
@@ -71,22 +67,25 @@ extension NewsController: NewsViewOutput {
 
 extension NewsEntity: ViewModel {
   var publishedAt: Date {
-    return ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)! //Q
+    return publishedAtDate
   }
 
-  var imageUrl: URL {
-    let escapedString = urlToImageStr.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! //Q
-    let url = URL(string: escapedString)! //Q
-    return url
+  var imageUrl: URL? {
+    if let url = URL(string: urlToImageStr) {
+      return url
+    } else {
+      return nil
+    }
   }
 }
 
-extension NewsController: NewsModelDelegate {
-  func dataDidUpdateSuccess() {
+extension NewsController: NewsModelOutput {
+  func dataLoadSuccess() {
+    isFiltering = false
     output.displayUpdate()
   }
 
-  func dataDidUpdateWithError(_ errorMessage: String) {
+  func dataLoadWithError(_ errorMessage: String) {
     output.displayAlert(title: R.string.localizable.errorTitle(), message: errorMessage)
   }
 }

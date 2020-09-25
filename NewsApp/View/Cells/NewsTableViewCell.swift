@@ -11,7 +11,7 @@ import AlamofireImage
 
 class NewsTableViewCell: UITableViewCell {
   // MARK: - Struct TimeDateFormatters
-  private enum TimeDateFormatters {
+  private enum TimeDateFormatters { //https://realm.github.io/SwiftLint/convenience_type.html
     static let hoursMinutesDateFormatter: DateFormatter = {
       var dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "HH:mm"
@@ -33,12 +33,14 @@ class NewsTableViewCell: UITableViewCell {
     self.imageNews.image = R.image.imageImagePlaceholder()
   }
 
-  func updateUI(title: String, newsDescription: String, author: String, imageUrl: URL, publishedAt: Date) {
+  func updateUI(title: String, newsDescription: String, author: String, imageUrl: URL?, publishedAt: Date) {
     titleNews.text = title
     descriptionNews.text = newsDescription
     authorPostNews.text = author
     showMoreButton.isHidden = !descriptionNews.isTruncated
-    imageNews.af.setImage(withURL: imageUrl)
+    if let url = imageUrl {
+    imageNews.af.setImage(withURL: url)
+    }
     postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: publishedAt)
   }
 }

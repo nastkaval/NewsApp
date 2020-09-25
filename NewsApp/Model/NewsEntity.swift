@@ -17,6 +17,7 @@ class NewsEntity: Object, Decodable {
   @objc dynamic var urlToImageStr: String = ""
   @objc dynamic var publishedAtStr: String = ""
   @objc dynamic var content: String = ""
+  @objc dynamic var publishedAtDate = Date()
 
   enum CodingKeys: String, CodingKey {
     case author
@@ -38,5 +39,6 @@ class NewsEntity: Object, Decodable {
     self.urlToImageStr = try container.decode(String.self, forKey: .urlToImage)
     self.publishedAtStr = try container.decode(String.self, forKey: .publishedAt)
     self.content = try container.decode(String.self, forKey: .content)
+    self.publishedAtDate = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr) ?? publishedAtDate // .date(from:..) -> Date?, required unwrap by ! or ??
   }
 }

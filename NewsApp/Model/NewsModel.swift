@@ -8,68 +8,98 @@
 
 import Foundation
 
-protocol NewsModelDelegate: class {
-  func dataDidUpdateSuccess()
-  func dataDidUpdateWithError(_ errorMessage: String)
+protocol NewsModelOutput: class {
+  func dataLoadSuccess()
+  func dataLoadWithError(_ errorMessage: String)
 }
 
-class NewsModel {
-  var session = SessionData()
-  var isErrorLimit: Bool = false
+protocol NewsModelInput: class {
+}
+
+final class NewsModel {
+  private var session = SessionData()
   private var listNews: [NewsEntity] = []
-  public weak var newsModelDelegate: NewsModelDelegate?
-}
+  public weak var output: NewsModelOutput?
+  private let apiManager: ApiManagerProtocol
+  private let databaseManager: DatabaseProtocol
 
-extension NewsModel {
-  func object(_ index: Int) -> NewsEntity {
-    return listNews[index]
+  init(apiManager: ApiManagerProtocol, databaseManager: DatabaseProtocol) {
+    self.apiManager = apiManager
+    self.databaseManager = databaseManager
   }
 
-  func count() -> Int {
-    return listNews.count
-  }
-}
-
-extension NewsModel: ApiProvider, DatabaseProvider {
   func getData(isNextPage: Bool) {
-    callApi(session: session) { [weak self] newsArray, error in
-      if let newsArray = newsArray {
-        switch isNextPage {
-        case true:
-          break
-        case false:
-          self?.removeData()
-        }
-        self?.saveData(newsEntities: newsArray)
-        self?.loadNews()
-      }
-      if let error = error {
-        switch error {
-        case .limitNewsError:
-          self?.isErrorLimit = true
-        case .serverError, .parseError:
-          break
-        }
+    if isNextPage {
+      session.page += 1
+    } else {
+      session.page = 1
+    }
+    apiManager.callApi(session: session) { [weak self] result in
+      switch result {
+      case .success(let newsArray):
+        self?.successGetData(newsEntities: newsArray)
+      case .failure(let error):
         self?.failedGetData(errorMessage: error.description)
       }
     }
   }
 
-  func successGetData() {
-    newsModelDelegate?.dataDidUpdateSuccess()
-  }
-
-  func failedGetData(errorMessage: String) {
-    newsModelDelegate?.dataDidUpdateWithError(errorMessage)
-  }
-
   func getFilterNews(keyWord: String) {
-    listNews = filterData(keyWord: keyWord)
-    newsModelDelegate?.dataDidUpdateSuccess()
+    if !keyWord.isEmpty, keyWord.count > 2 {
+      databaseManager.filterData(keyWord: keyWord) { [weak self] result in
+        switch result {
+        case .success(let newsArray):
+          self?.successGetData(newsEntities: newsArray)
+        case .failure(let error):
+          self?.failedGetData(errorMessage: error.description)
+        }
+      }
+    } else if keyWord.isEmpty {
+      databaseManager.loadData { [weak self] result in
+        switch result {
+        case .success(let newsArray):
+          self?.listNews = newsArray
+        case .failure(let error):
+          self?.failedGetData(errorMessage: error.description)
+        }
+      }
+    }
+  }
+}
+
+extension NewsModel {
+  private func successGetData(newsEntities: [NewsEntity]) {
+    databaseManager.saveData(newsEntities: newsEntities) { [weak self] result in
+      switch result {
+      case .success:
+        break
+      case .failure(let error):
+        self?.failedGetData(errorMessage: error.description)
+      }
+    }
+    databaseManager.loadData { [weak self] result in
+      switch result {
+      case .success(let newsArray):
+        self?.listNews = newsArray
+      case .failure(let error):
+        self?.failedGetData(errorMessage: error.description)
+      }
+    }
+    output?.dataLoadSuccess()
   }
 
-  func loadNews() {
-    listNews = loadData()
-    newsModelDelegate?.dataDidUpdateSuccess()
+  private func failedGetData(errorMessage: String) {
+    output?.dataLoadWithError(errorMessage)
+  }
+}
+
+extension NewsModel {
+  func object(_ index: Int) -> NewsEntity {
+//    if index <= listNews.endIndex { }
+  return listNews[index]
+  }
+
+  func count() -> Int {
+  return listNews.count
   }
 }

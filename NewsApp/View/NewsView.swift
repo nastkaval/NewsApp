@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ViewModel {
-  var imageUrl: URL { get }
+  var imageUrl: URL? { get }
   var title: String { get }
   var author: String { get }
   var descriptionNews: String { get }
@@ -20,7 +20,7 @@ protocol NewsViewOutput {
   func userInterfaceDidLoad()
   func loadDataCurrentPage()
   func loadDataNextPage()
-  func userFilteringNews(keyWord: String)
+  func filterNews(keyWord: String)
 }
 
 protocol NewsViewInput {
@@ -28,7 +28,7 @@ protocol NewsViewInput {
   func count() -> Int
 }
 
-class NewsView: UIViewController {
+final class NewsView: UIViewController {
   // MARK: - Properties
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
@@ -55,7 +55,7 @@ class NewsView: UIViewController {
 
   // MARK: - Actions
   @IBAction func editingChangedSearchTextFiled(_ sender: UITextField) {
-    output.userFilteringNews(keyWord: sender.text!) //Q
+    output.filterNews(keyWord: sender.text ?? "")
   }
 
   // MARK: - Functions
@@ -116,7 +116,6 @@ extension NewsView: NewsControllerOutput {
 
   func displayUpdate() {
     self.stopAnimation()
-    self.view.endEditing(true)
     self.newsListTableView.reloadData()
   }
 }
