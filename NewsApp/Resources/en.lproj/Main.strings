@@ -1,0 +1,9 @@
+
+/* Class = "UILabel"; text = "Sorry, try another search request"; ObjectID = "AR6-4X-Mns"; */
+"AR6-4X-Mns.text" = "Sorry, try another search request";
+
+/* Class = "UILabel"; text = "News"; ObjectID = "WhJ-Br-gRu"; */
+"WhJ-Br-gRu.text" = "News";
+
+/* Class = "UILabel"; text = "News not found"; ObjectID = "nha-XI-tdX"; */
+"nha-XI-tdX.text" = "News not found";
