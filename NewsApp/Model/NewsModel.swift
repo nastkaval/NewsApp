@@ -13,9 +13,6 @@ protocol NewsModelOutput: class {
   func dataLoadWithError(_ errorMessage: String)
 }
 
-protocol NewsModelInput: class {
-}
-
 final class NewsModel {
   private var session = SessionData()
   private var listNews: [NewsEntity] = []
@@ -37,69 +34,74 @@ final class NewsModel {
     apiManager.callApi(session: session) { [weak self] result in
       switch result {
       case .success(let newsArray):
-        self?.successGetData(newsEntities: newsArray)
+        self?.saveDataToDatabase(data: newsArray)
       case .failure(let error):
-        self?.failedGetData(errorMessage: error.description)
+        self?.output?.dataLoadWithError(error.description)
       }
     }
   }
 
   func getFilterNews(keyWord: String) {
     if !keyWord.isEmpty, keyWord.count > 2 {
-      databaseManager.filterData(keyWord: keyWord) { [weak self] result in
+      databaseManager.filterData(keyWord: keyWord) { result in
         switch result {
         case .success(let newsArray):
-          self?.successGetData(newsEntities: newsArray)
+          self.listNews = newsArray
+          self.output?.dataLoadSuccess()
         case .failure(let error):
-          self?.failedGetData(errorMessage: error.description)
+          self.output?.dataLoadWithError(error.description)
         }
       }
     } else if keyWord.isEmpty {
-      databaseManager.loadData { [weak self] result in
-        switch result {
-        case .success(let newsArray):
-          self?.listNews = newsArray
-        case .failure(let error):
-          self?.failedGetData(errorMessage: error.description)
-        }
-      }
+      loadDataFromDatabase()
     }
   }
-}
 
-extension NewsModel {
-  private func successGetData(newsEntities: [NewsEntity]) {
-    databaseManager.saveData(newsEntities: newsEntities) { [weak self] result in
+  private func saveDataToDatabase(data: [NewsEntity]) {
+    databaseManager.saveData(newsEntities: data) { result in
       switch result {
       case .success:
-        break
+        self.loadDataFromDatabase()
       case .failure(let error):
-        self?.failedGetData(errorMessage: error.description)
-      }
+        self.output?.dataLoadWithError(error.description)
+        }
     }
-    databaseManager.loadData { [weak self] result in
-      switch result {
-      case .success(let newsArray):
-        self?.listNews = newsArray
-      case .failure(let error):
-        self?.failedGetData(errorMessage: error.description)
-      }
-    }
-    output?.dataLoadSuccess()
   }
 
-  private func failedGetData(errorMessage: String) {
-    output?.dataLoadWithError(errorMessage)
+  private func loadDataFromDatabase() {
+    databaseManager.loadData { result in
+      switch result {
+      case .success(let newsArray):
+        self.listNews = newsArray
+        self.output?.dataLoadSuccess()
+      case .failure(let error):
+        self.output?.dataLoadWithError(error.description)
+          }
+    }
   }
 }
 
 extension NewsModel {
   func object(_ index: Int) -> NewsEntity {
-//    if index <= listNews.endIndex { }
-  return listNews[index]
+    //    if index <= listNews.endIndex { } Q
+    return listNews[index]
   }
 
   func count() -> Int {
-  return listNews.count
+    return listNews.count
+  }
+}
+
+extension NewsEntity: ViewModel {
+  var publishedAt: Date {
+    return publishedAtDate
+  }
+
+  var imageUrl: URL? {
+    if let url = URL(string: urlToImageStr) {
+      return url
+    } else {
+      return nil
+    }
   }
 }

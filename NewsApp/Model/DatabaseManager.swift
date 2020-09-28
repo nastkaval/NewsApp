@@ -27,10 +27,10 @@ enum DatabaseDataError: LocalizedError {
 }
 
 protocol DatabaseProtocol: class {
-  func saveData(newsEntities: [NewsEntity], callBack: @escaping (Result<Any?, DatabaseDataError>) -> Void)
-  func loadData(callBack: @escaping (Result<[NewsEntity], DatabaseDataError>) -> Void)
-  func filterData(keyWord: String, callBack: @escaping (Result<[NewsEntity], DatabaseDataError>) -> Void)
-  func removeData(callBack: @escaping (Result<Any?, DatabaseDataError>) -> Void)
+  func saveData(newsEntities: [NewsEntity], callBack: (Result<Any?, DatabaseDataError>) -> Void)
+  func loadData(callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
+  func filterData(keyWord: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
+  func removeData(callBack: (Result<Any?, DatabaseDataError>) -> Void)
 }
 
 final class DatabaseManager: DatabaseProtocol {
@@ -45,7 +45,7 @@ final class DatabaseManager: DatabaseProtocol {
 
   private init() { }
 
-  func loadData(callBack: @escaping (Result<[NewsEntity], DatabaseDataError>) -> Void) {
+  func loadData(callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
     do {
       let realm = try Realm()
       let newsArray = realm.objects(NewsEntity.self).toArray()
@@ -55,7 +55,7 @@ final class DatabaseManager: DatabaseProtocol {
     }
   }
 
-  func filterData(keyWord: String, callBack: @escaping (Result<[NewsEntity], DatabaseDataError>) -> Void) {
+  func filterData(keyWord: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
     do {
       let realm = try Realm()
       let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(keyWord)'").toArray()
@@ -65,7 +65,7 @@ final class DatabaseManager: DatabaseProtocol {
     }
   }
 
-  func removeData(callBack: @escaping (Result<Any?, DatabaseDataError>) -> Void) {
+  func removeData(callBack: (Result<Any?, DatabaseDataError>) -> Void) {
     do {
       let realm = try Realm()
       try realm.write { //https://medium.com/@m4rr/realm-and-the-forced-try-expression-72eeb599b29d
@@ -77,7 +77,7 @@ final class DatabaseManager: DatabaseProtocol {
     }
   }
 
-  func saveData(newsEntities: [NewsEntity], callBack: @escaping (Result<Any?, DatabaseDataError>) -> Void) {
+  func saveData(newsEntities: [NewsEntity], callBack: (Result<Any?, DatabaseDataError>) -> Void) {
     do {
       let realm = try Realm()
       try realm.write { //https://medium.com/@m4rr/realm-and-the-forced-try-expression-72eeb599b29d

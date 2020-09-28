@@ -8,12 +8,8 @@
 
 import Foundation
 
-protocol ParseHelperProtocol: class {
-  func parseJson(json: [[String: Any]]) -> (Result<[NewsEntity], ServerDataError>)
-}
-
 class ParseHelper {
-  func parseJson(json: [[String: Any]]) -> (Result<[NewsEntity], ServerDataError>) {
+  func parseJson(json: [[String: Any]], callBack: @escaping (Result<[NewsEntity], ServerDataError>) -> Void) {
     var newsEntities: [NewsEntity] = []
     for dict in json {
       var dictString: String?
@@ -28,7 +24,7 @@ class ParseHelper {
       guard let json: String = dictString,
       let jsonData: Data = json.data(using: .utf8)
       else {
-        return .failure(.parseError)
+        return callBack(.failure(.parseError))
       }
 
       do {
@@ -38,6 +34,6 @@ class ParseHelper {
         print("error")
       }
   }
-    return .success(newsEntities)
+    return callBack(.success(newsEntities))
   }
 }

@@ -65,20 +65,6 @@ extension NewsController: NewsViewOutput {
   }
 }
 
-extension NewsEntity: ViewModel {
-  var publishedAt: Date {
-    return publishedAtDate
-  }
-
-  var imageUrl: URL? {
-    if let url = URL(string: urlToImageStr) {
-      return url
-    } else {
-      return nil
-    }
-  }
-}
-
 extension NewsController: NewsModelOutput {
   func dataLoadSuccess() {
     isFiltering = false

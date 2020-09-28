@@ -93,16 +93,16 @@ final class ApiManager {
         }
         if let JSON = response.value as? [String: Any] {
           if let json = JSON["articles"] as? [[String: Any]] {
-            if let parseResult = self?.parser.parseJson(json: json) {
-              switch parseResult {
+            self?.parser.parseJson(json: json, callBack: { result in
+              switch result {
               case .success(let newsEntities):
                 completionHandler(.success(newsEntities))
               case .failure(let error):
                 completionHandler(.failure(error))
               }
+            })
             }
           }
-        }
       }, fail: { _ in
         completionHandler(.failure(.serverError))
       })
