@@ -15,20 +15,9 @@ protocol NewsControllerOutput: class {
 
 final class NewsController {
   // swiftlint:disable implicitly_unwrapped_optional
-  private weak var output: NewsControllerOutput!
+  weak var output: NewsControllerOutput!
   private var isFiltering: Bool = false
-
-  lazy var model: NewsModel = {
-    let model = NewsModel(apiManager: ApiManager.shared(), databaseManager: DatabaseManager.shared())
-    model.output = self
-    return model
-  }()
-
-  func configure(viewController: NewsView) {
-    self.output = viewController
-    viewController.output = self
-    viewController.input = self
-  }
+  var model: NewsModel!
 }
 
 extension NewsController: NewsViewInput {
