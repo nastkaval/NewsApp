@@ -14,7 +14,7 @@ protocol NewsModelOutput: class {
 }
 
 final class NewsModel {
-  private var session = SessionData() //?
+  private var session = SessionData()
   private var listNews: [NewsEntity] = []
   public weak var output: NewsModelOutput?
 
