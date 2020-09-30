@@ -46,12 +46,12 @@ final class NewsView: UIViewController {
   // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    NewsController().configure(viewController: self)
     hideKeyboardWhenTappedAround()
-    refreshControlSettings()
     tableViewSettings()
+    refreshControlSettings()
     output.userInterfaceDidLoad()
   }
+
 
   // MARK: - Actions
   @IBAction func editingChangedSearchTextFiled(_ sender: UITextField) {

@@ -17,12 +17,17 @@ final class NewsModel {
   private var session = SessionData()
   private var listNews: [NewsEntity] = []
   public weak var output: NewsModelOutput?
+
   private let apiManager: ApiManagerProtocol
   private let databaseManager: DatabaseProtocol
 
   init(apiManager: ApiManagerProtocol, databaseManager: DatabaseProtocol) {
     self.apiManager = apiManager
     self.databaseManager = databaseManager
+  }
+
+  convenience init(dependency: ModelDependencyProtocol) {
+    self.init(apiManager: dependency.apiManager, databaseManager: dependency.databaseManager)
   }
 
   func getData(isNextPage: Bool) {
@@ -105,3 +110,4 @@ extension NewsEntity: ViewModel {
     }
   }
 }
+

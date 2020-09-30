@@ -40,19 +40,9 @@ protocol ApiManagerProtocol {
 }
 
 final class ApiManager {
-  private lazy var parser: ParseHelper = {
-    let parser = ParseHelper()
-    return parser
-  }()
+  private let parser = ParseHelper()
 
-  private static var sharedApiManager: ApiManager = {
-    let apiManager = ApiManager()
-    return apiManager
-  }()
-
-  static func shared() -> ApiManager {
-    return sharedApiManager
-  }
+  static let shared = ApiManager()
 
   private init() { }
 
