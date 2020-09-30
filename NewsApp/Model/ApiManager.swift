@@ -42,14 +42,7 @@ protocol ApiManagerProtocol {
 final class ApiManager {
   private let parser = ParseHelper()
 
-  private static var sharedApiManager: ApiManager = {
-    let apiManager = ApiManager()
-    return apiManager
-  }()
-
-  static func shared() -> ApiManager {
-    return sharedApiManager
-  }
+  static let shared = ApiManager()
 
   private init() { }
 

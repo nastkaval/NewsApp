@@ -15,9 +15,15 @@ protocol NewsControllerOutput: class {
 
 final class NewsController {
   // swiftlint:disable implicitly_unwrapped_optional
-  weak var output: NewsControllerOutput!
+  private weak var output: NewsControllerOutput?
+  private var model: NewsModel
+
   private var isFiltering: Bool = false
-  var model: NewsModel!
+
+  init(model: NewsModel, output: NewsControllerOutput) {
+    self.model = model
+    self.output = output
+  }
 }
 
 extension NewsController: NewsViewInput {
@@ -57,10 +63,10 @@ extension NewsController: NewsViewOutput {
 extension NewsController: NewsModelOutput {
   func dataLoadSuccess() {
     isFiltering = false
-    output.displayUpdate()
+    output?.displayUpdate()
   }
 
   func dataLoadWithError(_ errorMessage: String) {
-    output.displayAlert(title: R.string.localizable.errorTitle(), message: errorMessage)
+    output?.displayAlert(title: R.string.localizable.errorTitle(), message: errorMessage)
   }
 }

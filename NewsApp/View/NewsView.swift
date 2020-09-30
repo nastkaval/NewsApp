@@ -52,6 +52,7 @@ final class NewsView: UIViewController {
     output.userInterfaceDidLoad()
   }
 
+
   // MARK: - Actions
   @IBAction func editingChangedSearchTextFiled(_ sender: UITextField) {
     output.filterNews(keyWord: sender.text ?? "")

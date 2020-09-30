@@ -12,13 +12,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
 
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-    let newsView = Coordinator().instantiate()
     guard let windowScene = (scene as? UIWindowScene) else { return }
-    self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-    window?.windowScene = windowScene
-    window?.rootViewController = newsView
-    window?.makeKeyAndVisible()
-    let appDelegate = UIApplication.shared.delegate as? AppDelegate
-    appDelegate?.window = window
+
+    let newsView = NewsViewCoordinator().instantiate()
+
+    let window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+    window.windowScene = windowScene
+    window.rootViewController = newsView
+    window.makeKeyAndVisible()
+
+    self.window = window
   }
 }

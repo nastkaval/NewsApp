@@ -14,8 +14,8 @@ protocol ModelDependencyProtocol {
 }
 
 class ModelDependency {
-  private let apiManagerDependency: ApiManagerProtocol = ApiManager.shared()
-  private let databaseManagerDependency: DatabaseProtocol = DatabaseManager.shared()
+  private let apiManagerDependency: ApiManagerProtocol = ApiManager.shared
+  private let databaseManagerDependency: DatabaseProtocol = DatabaseManager.shared
 }
 
 extension ModelDependency: ModelDependencyProtocol {

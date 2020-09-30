@@ -34,17 +34,8 @@ protocol DatabaseProtocol: class {
 }
 
 final class DatabaseManager: DatabaseProtocol {
-  private static var sharedDatabaseManager: DatabaseManager = {
-    let databaseManager = DatabaseManager()
-    return databaseManager
-  }()
 
-  static func shared() -> DatabaseManager {
-    return sharedDatabaseManager
-  }
-
-  private init() { }
-
+  static let shared = DatabaseManager()
   func loadData(callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
     do {
       let realm = try Realm()
