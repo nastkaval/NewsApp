@@ -98,6 +98,14 @@ extension NewsModel {
 }
 
 extension NewsEntity: ViewModel {
+  var newsUrl: URL? {
+    if let url = URL(string: urlNewsStr) {
+      return url
+    } else {
+      return nil
+    }
+  }
+
   var publishedAt: Date {
     return publishedAtDate
   }
@@ -110,4 +118,3 @@ extension NewsEntity: ViewModel {
     }
   }
 }
-

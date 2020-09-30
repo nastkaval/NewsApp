@@ -18,6 +18,9 @@ class NewsTableViewCell: UITableViewCell {
       return dateFormatter
     }()
   }
+  // MARK: - Properties
+  typealias IsClicked = (Bool) -> Void
+  var showDetailesView: IsClicked?
 
   // MARK: - Outlets
   @IBOutlet private weak var imageNews: UIImageView!
@@ -33,11 +36,15 @@ class NewsTableViewCell: UITableViewCell {
     self.imageNews.image = R.image.imageImagePlaceholder()
   }
 
+  @IBAction private func showMoreButtonClicked(_ sender: UIButton) {
+    showDetailesView?(true)
+  }
+
   func updateUI(title: String, newsDescription: String, author: String, imageUrl: URL?, publishedAt: Date) {
     titleNews.text = title
     descriptionNews.text = newsDescription
     authorPostNews.text = author
-    showMoreButton.isHidden = !descriptionNews.isTruncated
+//    showMoreButton.isHidden = !descriptionNews.isTruncated
     if let url = imageUrl {
     imageNews.af.setImage(withURL: url)
     }

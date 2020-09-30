@@ -10,9 +10,9 @@ import UIKit
 
 class NewsViewCoordinator {
   func instantiate() -> NewsView {
-    let view = R.storyboard.main().instantiateViewController(withIdentifier: "NewsView") as! NewsView
+    let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.newsView.identifier) as! NewsView
     let model = NewsModel(dependency: ModelDependency())
-    let controller = NewsController(model: model, output: view)
+    let controller = NewsController(view: view, model: model, output: view)
     view.output = controller
     view.input = controller
     model.output = controller

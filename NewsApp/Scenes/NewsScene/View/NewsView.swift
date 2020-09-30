@@ -10,6 +10,7 @@ import UIKit
 
 protocol ViewModel {
   var imageUrl: URL? { get }
+  var newsUrl: URL? { get }
   var title: String { get }
   var author: String { get }
   var descriptionNews: String { get }
@@ -21,6 +22,7 @@ protocol NewsViewOutput {
   func loadDataCurrentPage()
   func loadDataNextPage()
   func filterNews(keyWord: String)
+  func showDetailes(at index: IndexPath)
 }
 
 protocol NewsViewInput {
@@ -98,7 +100,9 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
     cell.selectionStyle = .none
     let news = input.provideObject(at: indexPath)
     cell.updateUI(title: news.title, newsDescription: news.descriptionNews, author: news.author, imageUrl: news.imageUrl, publishedAt: news.publishedAt)
-
+    cell.showDetailesView = { bool in
+      self.output.showDetailes(at: indexPath)
+    }
     return cell
   }
 

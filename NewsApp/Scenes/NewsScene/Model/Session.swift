@@ -14,6 +14,11 @@ enum DayDateFormattersConverter { //https://realm.github.io/SwiftLint/convenienc
     dateFormatter.dateFormat = "yyyy-MM-dd"
     return dateFormatter
   }()
+  static let dayTimeDateFormatter: DateFormatter = {
+    var dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMM d, yyyy (HH:mm)"
+    return dateFormatter
+  }()
 }
 
 class SessionData {
