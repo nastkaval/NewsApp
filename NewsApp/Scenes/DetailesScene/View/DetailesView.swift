@@ -14,7 +14,7 @@ protocol DetailesViewOutput {
   func closeView()
 }
 
-protocol DetailesViewInput {
+protocol DetailesViewInput: class {
   var object: ViewModel { get }
 }
 
@@ -22,7 +22,7 @@ final class DetailesView: UIViewController {
   // MARK: - Properties
   // swiftlint:disable implicitly_unwrapped_optional
   var output: DetailesViewOutput!
-  var input: DetailesViewInput!
+  weak var input: DetailesViewInput?
 
   // MARK: - Outlets
   @IBOutlet private weak var imageNews: UIImageView!
@@ -34,26 +34,40 @@ final class DetailesView: UIViewController {
   // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    output.userInterfaceDidLoad()
+    output?.userInterfaceDidLoad()
+  }
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    print("viewWillAppear")
+  }
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    print("viewWillDisappear")
   }
   // MARK: - Functions
   @IBAction func readMoreClicked(_ sender: UIButton) {
-    output.openNewsInResource()
+    output?.openNewsInResource()
   }
   @IBAction func closeViewClicked(_ sender: UIButton) {
-    output.closeView()
+    output?.closeView()
   }
 }
 
 extension DetailesView: DetailesControllerOutput {
+  func dismiss() {
+    self.dismiss(animated: true, completion: nil)
+  }
+
   func updateUI() {
-    let news = input.object
-    if let url = news.imageUrl {
+    let news = input?.object
+    if let url = news?.imageUrl {
       imageNews.af.setImage(withURL: url)
     }
-    titleLabel.text = news.title
-    authorLabel.text = news.author
-    dateLabel.text = DayDateFormattersConverter.dayTimeDateFormatter.string(from: news.publishedAt)
-    descriptionLabel.text = news.descriptionNews
+    titleLabel.text = news?.title
+    authorLabel.text = news?.author
+    if let date = news?.publishedAt {
+    dateLabel.text = DayDateFormattersConverter.dayTimeDateFormatter.string(from: date)
+    }
+    descriptionLabel.text = news?.descriptionNews
   }
 }

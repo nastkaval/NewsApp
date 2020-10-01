@@ -11,33 +11,29 @@ import Foundation
 protocol NewsControllerOutput: class {
   func displayAlert(title: String, message: String)
   func displayUpdate()
+  func presentView(view: DetailesView)
 }
 
 final class NewsController {
-  private weak var output: NewsControllerOutput?
   private var modelNews: NewsModel
-  private var modelDetailedNews: DetailesModel?
-  private var view: NewsView
+  private weak var output: NewsControllerOutput?
 
   private var isFiltering: Bool = false
 
-  init(view: NewsView, model: NewsModel, output: NewsControllerOutput) {
-    self.view = view
+  init(model: NewsModel, output: NewsControllerOutput) {
     self.modelNews = model
     self.output = output
   }
 }
 
 extension NewsController: NewsViewInput {
-  func provideObject(at index: IndexPath) -> ViewModel {
-    guard let object = modelNews.object(index.row) as? ViewModel else {
-      fatalError("No cell source for indexPath")
-    }
-    return object
+  var count: Int {
+    return modelNews.count()
   }
 
-  func count() -> Int {
-    return modelNews.count()
+  func provideObject(at index: IndexPath) -> ViewModel {
+    let object = modelNews.object(index.row)
+    return object
   }
 }
 
@@ -45,7 +41,7 @@ extension NewsController: NewsViewOutput {
   func showDetailes(at index: IndexPath) {
     let news = provideObject(at: index) //bad??
     let detailesView = DetailesViewCoordinator().instantiate(news: news)
-    view.present(detailesView, animated: true, completion: nil)
+    output?.presentView(view: detailesView)
   }
 
   func loadDataCurrentPage() {

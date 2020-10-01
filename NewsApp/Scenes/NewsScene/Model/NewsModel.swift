@@ -88,7 +88,6 @@ final class NewsModel {
 
 extension NewsModel {
   func object(_ index: Int) -> NewsEntity {
-    //    if index <= listNews.endIndex { } Q
     return listNews[index]
   }
 

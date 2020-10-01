@@ -10,9 +10,10 @@ import UIKit
 
 class NewsViewCoordinator {
   func instantiate() -> NewsView {
+    // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.newsView.identifier) as! NewsView
     let model = NewsModel(dependency: ModelDependency())
-    let controller = NewsController(view: view, model: model, output: view)
+    let controller = NewsController(model: model, output: view)
     view.output = controller
     view.input = controller
     model.output = controller

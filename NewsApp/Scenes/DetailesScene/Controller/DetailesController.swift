@@ -10,15 +10,14 @@ import UIKit
 
 protocol DetailesControllerOutput: class {
   func updateUI()
+  func dismiss()
 }
 
 final class DetailesController {
   private let model: DetailesModel
-  private let view: DetailesView
   private weak var output: DetailesControllerOutput?
-
-  init(view: DetailesView, model: DetailesModel, output: DetailesControllerOutput) {
-    self.view = view
+  
+  init(model: DetailesModel, output: DetailesControllerOutput) {
     self.model = model
     self.output = output
   }
@@ -37,7 +36,7 @@ extension DetailesController: DetailesViewOutput {
   }
 
   func closeView() {
-    view.dismiss(animated: true, completion: nil)
+    output?.dismiss()
   }
 }
 

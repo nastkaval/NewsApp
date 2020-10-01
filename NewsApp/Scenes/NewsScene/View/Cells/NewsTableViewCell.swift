@@ -44,7 +44,6 @@ class NewsTableViewCell: UITableViewCell {
     titleNews.text = title
     descriptionNews.text = newsDescription
     authorPostNews.text = author
-//    showMoreButton.isHidden = !descriptionNews.isTruncated
     if let url = imageUrl {
     imageNews.af.setImage(withURL: url)
     }

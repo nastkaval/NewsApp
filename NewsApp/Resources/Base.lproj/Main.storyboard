@@ -248,13 +248,14 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstItem="LLS-oX-vJN" firstAttribute="leading" secondItem="JHj-pK-BMd" secondAttribute="leading" constant="16" id="FFg-JG-043"/>
-                                                            <constraint firstAttribute="trailing" secondItem="9uv-KD-L52" secondAttribute="trailing" constant="210.5" id="Gkh-ww-Bpj"/>
+                                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="9uv-KD-L52" secondAttribute="trailing" constant="16" id="H04-J8-ZCG"/>
                                                             <constraint firstItem="DEm-hr-nIM" firstAttribute="centerY" secondItem="9s7-Fb-BFt" secondAttribute="centerY" id="I1i-Um-ckb"/>
                                                             <constraint firstAttribute="height" constant="43" id="IJ0-Cz-RN9"/>
                                                             <constraint firstItem="9s7-Fb-BFt" firstAttribute="top" secondItem="LLS-oX-vJN" secondAttribute="bottom" constant="2" id="Wb4-PW-b2T"/>
                                                             <constraint firstItem="9uv-KD-L52" firstAttribute="leading" secondItem="LLS-oX-vJN" secondAttribute="trailing" constant="8" id="dBv-fn-nVO"/>
                                                             <constraint firstItem="DEm-hr-nIM" firstAttribute="leading" secondItem="9s7-Fb-BFt" secondAttribute="trailing" constant="8" id="eIZ-rk-1hG"/>
                                                             <constraint firstItem="9uv-KD-L52" firstAttribute="centerY" secondItem="LLS-oX-vJN" secondAttribute="centerY" id="hfe-Q3-0js"/>
+                                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="DEm-hr-nIM" secondAttribute="trailing" constant="16" id="igy-lV-vLw"/>
                                                             <constraint firstItem="9s7-Fb-BFt" firstAttribute="leading" secondItem="JHj-pK-BMd" secondAttribute="leading" constant="16" id="lQd-tn-Yft"/>
                                                             <constraint firstItem="LLS-oX-vJN" firstAttribute="top" secondItem="JHj-pK-BMd" secondAttribute="top" constant="4" id="oBW-ug-fCM"/>
                                                         </constraints>
@@ -263,7 +264,7 @@
                                                         <rect key="frame" x="0.0" y="363" width="320" height="449.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d9i-gK-red">
-                                                                <rect key="frame" x="16" y="0.0" width="76" height="17"/>
+                                                                <rect key="frame" x="16" y="0.0" width="288" height="17"/>
                                                                 <fontDescription key="fontDescription" type="system" weight="thin" pointSize="14"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -284,6 +285,7 @@
                                                             <constraint firstItem="d9i-gK-red" firstAttribute="top" secondItem="Ctt-tj-aln" secondAttribute="top" id="UuM-WK-Zc4"/>
                                                             <constraint firstItem="d9i-gK-red" firstAttribute="leading" secondItem="Ctt-tj-aln" secondAttribute="leading" constant="16" id="aTu-bf-6xI"/>
                                                             <constraint firstItem="PDY-1i-eOI" firstAttribute="top" secondItem="d9i-gK-red" secondAttribute="bottom" constant="4" id="jyk-Z0-TmH"/>
+                                                            <constraint firstAttribute="trailing" secondItem="d9i-gK-red" secondAttribute="trailing" constant="16" id="tOQ-cS-5Yl"/>
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aIU-dc-UY8" userLabel="ReadMoreContainer">
@@ -353,12 +355,18 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKE-AM-6Y6">
                                 <rect key="frame" x="274" y="16" width="30" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="0wg-NY-dnl"/>
                                     <constraint firstAttribute="height" constant="30" id="RH7-tH-L5P"/>
                                 </constraints>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="multiply" catalog="system"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="closeViewClicked:" destination="wT2-nz-4UH" eventType="touchUpInside" id="Wfa-gI-MY0"/>
                                 </connections>
