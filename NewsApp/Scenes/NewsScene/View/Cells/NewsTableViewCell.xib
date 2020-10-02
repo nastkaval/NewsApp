@@ -59,6 +59,9 @@
                             <constraint firstAttribute="width" constant="100" id="tSB-f0-AzX"/>
                         </constraints>
                         <state key="normal" title="Show more..."/>
+                        <connections>
+                            <action selector="showMoreButtonClicked:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="3O3-0I-cli"/>
+                        </connections>
                     </button>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image.imagePlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="xV8-FF-eCI">
                         <rect key="frame" x="20" y="88" width="116" height="88"/>

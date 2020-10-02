@@ -34,7 +34,6 @@ protocol DatabaseProtocol: class {
 }
 
 final class DatabaseManager: DatabaseProtocol {
-
   static let shared = DatabaseManager()
   func loadData(callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
     do {

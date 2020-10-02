@@ -10,6 +10,7 @@ import UIKit
 
 protocol ViewModel {
   var imageUrl: URL? { get }
+  var newsUrl: URL? { get }
   var title: String { get }
   var author: String { get }
   var descriptionNews: String { get }
@@ -21,11 +22,12 @@ protocol NewsViewOutput {
   func loadDataCurrentPage()
   func loadDataNextPage()
   func filterNews(keyWord: String)
+  func showDetailes(at index: IndexPath)
 }
 
-protocol NewsViewInput {
+protocol NewsViewInput: class {
   func provideObject(at index: IndexPath) -> ViewModel
-  func count() -> Int
+  var count: Int { get }
 }
 
 final class NewsView: UIViewController {
@@ -35,7 +37,7 @@ final class NewsView: UIViewController {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var output: NewsViewOutput!
-  var input: NewsViewInput!
+  weak var input: NewsViewInput!
 
   // MARK: - Outlets
   @IBOutlet private weak var newsListTableView: UITableView!
@@ -50,6 +52,16 @@ final class NewsView: UIViewController {
     tableViewSettings()
     refreshControlSettings()
     output.userInterfaceDidLoad()
+  }
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    print("hellooo")
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    print("hellooo")
   }
 
 
@@ -89,27 +101,33 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return input.count()
+    return input.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cellIdentifier = "NewsTableViewCell"
+    let cellIdentifier = R.nib.newsTableViewCell.identifier
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
     let news = input.provideObject(at: indexPath)
     cell.updateUI(title: news.title, newsDescription: news.descriptionNews, author: news.author, imageUrl: news.imageUrl, publishedAt: news.publishedAt)
-
+    cell.showDetailesView = { bool in
+      self.output.showDetailes(at: indexPath)
+    }
     return cell
   }
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if indexPath.row == input.count() - 1 {
+    if indexPath.row == input.count - 1 {
       output.loadDataNextPage()
     }
   }
 }
 
 extension NewsView: NewsControllerOutput {
+  func presentView(view: DetailesView) {
+    self.present(view, animated: true, completion: nil)
+  }
+
   func displayAlert(title: String, message: String) {
     self.showAlert(title: title, message: message)
   }

@@ -11,52 +11,56 @@ import Foundation
 protocol NewsControllerOutput: class {
   func displayAlert(title: String, message: String)
   func displayUpdate()
+  func presentView(view: DetailesView)
 }
 
 final class NewsController {
-  // swiftlint:disable implicitly_unwrapped_optional
+  private var modelNews: NewsModel
   private weak var output: NewsControllerOutput?
-  private var model: NewsModel
 
   private var isFiltering: Bool = false
 
   init(model: NewsModel, output: NewsControllerOutput) {
-    self.model = model
+    self.modelNews = model
     self.output = output
   }
 }
 
 extension NewsController: NewsViewInput {
-  func provideObject(at index: IndexPath) -> ViewModel {
-    guard let object = model.object(index.row) as? ViewModel else {
-      fatalError("No cell source for indexPath")
-    }
-    return object
+  var count: Int {
+    return modelNews.count()
   }
 
-  func count() -> Int {
-    return model.count()
+  func provideObject(at index: IndexPath) -> ViewModel {
+    let object = modelNews.object(index.row)
+    return object
   }
 }
 
 extension NewsController: NewsViewOutput {
+  func showDetailes(at index: IndexPath) {
+    let news = provideObject(at: index) //bad??
+    let detailesView = DetailesViewCoordinator().instantiate(news: news)
+    output?.presentView(view: detailesView)
+  }
+
   func loadDataCurrentPage() {
-    model.getData(isNextPage: false)
+    modelNews.getData(isNextPage: false)
   }
 
   func filterNews(keyWord: String) {
-    model.getFilterNews(keyWord: keyWord)
+    modelNews.getFilterNews(keyWord: keyWord)
       isFiltering = true
   }
 
   func loadDataNextPage() {
     if !isFiltering {
-      model.getData(isNextPage: true)
+      modelNews.getData(isNextPage: true)
     }
   }
 
   func userInterfaceDidLoad() {
-    model.getData(isNextPage: false)
+    modelNews.getData(isNextPage: false)
   }
 }
 

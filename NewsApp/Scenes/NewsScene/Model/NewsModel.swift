@@ -88,7 +88,6 @@ final class NewsModel {
 
 extension NewsModel {
   func object(_ index: Int) -> NewsEntity {
-    //    if index <= listNews.endIndex { } Q
     return listNews[index]
   }
 
@@ -98,6 +97,14 @@ extension NewsModel {
 }
 
 extension NewsEntity: ViewModel {
+  var newsUrl: URL? {
+    if let url = URL(string: urlNewsStr) {
+      return url
+    } else {
+      return nil
+    }
+  }
+
   var publishedAt: Date {
     return publishedAtDate
   }
@@ -110,4 +117,3 @@ extension NewsEntity: ViewModel {
     }
   }
 }
-

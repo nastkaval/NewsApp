@@ -15,3 +15,6 @@
 "saveErrorMessage" = "Realm error save";
 "cleanDatabaseErrorMessage" = "Realm error clean database";
 "errorTitle" = "Error";
+"constants.host" = "http://newsapi.org/v2/everything?";
+"constants.apiKey" = "8d22efe4f9f04f1ebb9b841c51e54904";
+"ok" = "OK";

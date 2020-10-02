@@ -24,13 +24,7 @@ extension UIViewController {
       title: title,
       message: message,
       preferredStyle: .alert)
-    alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+    alertController.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: nil))
     self.present(alertController, animated: true, completion: nil)
-  }
-
-  static func getFromStoryboard (withID id: String) -> UIViewController? {
-    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    let controller = storyboard.instantiateViewController(withIdentifier: id)
-    return controller
   }
 }
