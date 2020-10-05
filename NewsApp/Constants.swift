@@ -9,6 +9,6 @@
 import Foundation
 
 enum Constants {
-  static let host: String = R.string.localizable.constantsHost()
-  static let apiKey: String = R.string.localizable.constantsApiKey()
+  static let host: String = "http://newsapi.org/v2/everything?"
+  static let apiKey: String = "8d22efe4f9f04f1ebb9b841c51e54904"
 }

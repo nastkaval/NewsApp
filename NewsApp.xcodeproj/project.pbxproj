@@ -147,7 +147,6 @@
 				1CDFEE4C24ED6325003D5B65 /* NewsEntity.swift */,
 				1CDFEE4624ED5967003D5B65 /* ApiManager.swift */,
 				60871F83251DE92E0079EACC /* ParseHelper.swift */,
-				60871EE4251A0A610079EACC /* DatabaseManager.swift */,
 				6030D0812513AB4E002595C6 /* Session.swift */,
 				602C243725221C0700C41E85 /* NewsViewCoordinator.swift */,
 			);
@@ -240,6 +239,7 @@
 			children = (
 				6029F2D92524AF2A00398991 /* DetailesModel.swift */,
 				6029F2E32524BFAB00398991 /* DetailesViewCoordinator.swift */,
+				60871EE4251A0A610079EACC /* DatabaseManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

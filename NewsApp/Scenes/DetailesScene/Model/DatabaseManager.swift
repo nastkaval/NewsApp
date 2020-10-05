@@ -13,24 +13,27 @@ enum DatabaseDataError: LocalizedError {
   case initDatabaseError
   case saveError
   case removeDatabaseError
+  case noObject
 
   var description: String {
     switch self {
     case .initDatabaseError:
-      return R.string.localizable.initDatabaseErrorMessage()
+      return R.string.localizable.errorMessagesInitDatabaseError()
     case .saveError:
-      return R.string.localizable.saveErrorMessage()
+      return R.string.localizable.errorMessagesSaveError()
     case .removeDatabaseError:
-      return R.string.localizable.cleanDatabaseErrorMessage()
+      return R.string.localizable.errorMessagesCleanDatabaseError()
+    case .noObject:
+      return R.string.localizable.errorMessagesNoObject()
     }
   }
 }
 
 protocol DatabaseProtocol: class {
-  func saveData(newsEntities: [NewsEntity], callBack: (Result<Any?, DatabaseDataError>) -> Void)
+  func saveData(newsEntity: NewsEntity) -> Bool
   func loadData(callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
-  func filterData(keyWord: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
-  func removeData(callBack: (Result<Any?, DatabaseDataError>) -> Void)
+  func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
+  func removeData() -> Bool
 }
 
 final class DatabaseManager: DatabaseProtocol {
@@ -45,37 +48,37 @@ final class DatabaseManager: DatabaseProtocol {
     }
   }
 
-  func filterData(keyWord: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
+  func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
     do {
       let realm = try Realm()
-      let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(keyWord)'").toArray()
+      let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(title)'").toArray()
       return callBack(.success(newsArray))
     } catch {
       return callBack(.failure(.initDatabaseError))
     }
   }
 
-  func removeData(callBack: (Result<Any?, DatabaseDataError>) -> Void) {
+  func removeData() -> Bool {
     do {
       let realm = try Realm()
       try realm.write { //https://medium.com/@m4rr/realm-and-the-forced-try-expression-72eeb599b29d
         realm.deleteAll()
       }
-      return callBack(.success(nil))
+      return true
     } catch {
-      return callBack(.failure(.removeDatabaseError))
+      return false
     }
   }
 
-  func saveData(newsEntities: [NewsEntity], callBack: (Result<Any?, DatabaseDataError>) -> Void) {
+  func saveData(newsEntity: NewsEntity) -> Bool {
     do {
       let realm = try Realm()
       try realm.write { //https://medium.com/@m4rr/realm-and-the-forced-try-expression-72eeb599b29d
-        realm.add(newsEntities)
+        realm.add(newsEntity)
       }
-      return callBack(.success(nil))
+      return true
     } catch {
-      return callBack(.failure(.saveError))
+      return false
     }
   }
 }

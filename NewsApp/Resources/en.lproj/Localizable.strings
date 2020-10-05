@@ -8,13 +8,12 @@
   Copyright © 2020 Nastassia Kavalchuk. All rights reserved.
 */
 
-"limitNewsErrorMessage" = "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.";
-"serverErrorMessage" = "The call failed.";
-"parseErrorMessage" = "Parsing failed.";
-"initDatabaseErrorMessage" = "Realm error init";
-"saveErrorMessage" = "Realm error save";
-"cleanDatabaseErrorMessage" = "Realm error clean database";
-"errorTitle" = "Error";
-"constants.host" = "http://newsapi.org/v2/everything?";
-"constants.apiKey" = "8d22efe4f9f04f1ebb9b841c51e54904";
+"errorMessages.limitNews" = "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.";
+"errorMessages.serverError" = "The call failed.";
+"errorMessages.parseError" = "Parsing failed.";
+"errorMessages.initDatabaseError" = "Realm error init";
+"errorMessages.saveError" = "Realm error save";
+"errorMessages.noObject" = "Realm doesn't have any object with this ID";
+"errorMessages.cleanDatabaseError" = "Realm error clean database";
+"errorMessages.errorTitle" = "Error";
 "ok" = "OK";
