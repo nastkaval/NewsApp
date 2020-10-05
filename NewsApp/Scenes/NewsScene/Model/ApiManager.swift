@@ -18,11 +18,11 @@ enum ServerDataError: LocalizedError {
   var description: String {
     switch self {
     case .limitNewsError:
-      return R.string.localizable.limitNewsErrorMessage()
+      return R.string.localizable.errorMessagesLimitNews()
     case .serverError:
-      return R.string.localizable.serverErrorMessage()
+      return R.string.localizable.errorMessagesServerError()
     case .parseError:
-      return R.string.localizable.parseErrorMessage()
+      return R.string.localizable.errorMessagesParseError()
     }
   }
 }
@@ -36,7 +36,7 @@ enum ServerDateFormatterConverter { //https://realm.github.io/SwiftLint/convenie
 }
 
 protocol ApiManagerProtocol {
-  func callApi(session: SessionData, callBack: @escaping (Result<[NewsEntity], ServerDataError>) -> Void)
+  func callApi(session: SessionData, callBack: @escaping (Result<[NewsScene.NewsViewModel], ServerDataError>) -> Void)
 }
 
 final class ApiManager {
@@ -64,7 +64,7 @@ final class ApiManager {
       }
   }
 
-  private func getNews(session: SessionData, completionHandler: @escaping (Result<[NewsEntity], ServerDataError>) -> Void) {
+  private func getNews(session: SessionData, completionHandler: @escaping (Result<[NewsScene.NewsViewModel], ServerDataError>) -> Void) {
     var request = "\(Constants.host)" + "q=apple&sortBy=publishedAt&" + "from=\(session.from)&"
     request.append("page=\(session.page)&")
     request.append("pageSize=\(session.pageSize)&")
@@ -100,7 +100,7 @@ final class ApiManager {
 }
 
 extension ApiManager: ApiManagerProtocol {
-  func callApi(session: SessionData, callBack: @escaping (Result<[NewsEntity], ServerDataError>) -> Void) {
+  func callApi(session: SessionData, callBack: @escaping (Result<[NewsScene.NewsViewModel], ServerDataError>) -> Void) {
     getNews(session: session) { result in
       callBack(result)
     }

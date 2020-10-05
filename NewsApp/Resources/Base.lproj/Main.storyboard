@@ -217,7 +217,7 @@
                                                             <constraint firstAttribute="bottom" secondItem="d3B-0r-U1K" secondAttribute="bottom" id="xQs-kD-d40"/>
                                                         </constraints>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JHj-pK-BMd" userLabel="AuthorDateContainer">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JHj-pK-BMd" userLabel="AuthorDateCheckContainer">
                                                         <rect key="frame" x="0.0" y="320" width="320" height="43"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LLS-oX-vJN">
@@ -244,13 +244,21 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
+                                                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GQa-g4-SsL">
+                                                                <rect key="frame" x="284.5" y="10.5" width="19.5" height="22"/>
+                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <state key="normal" image="squareshape" catalog="system"/>
+                                                                <state key="selected" image="checkmark.square" catalog="system"/>
+                                                            </button>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstItem="LLS-oX-vJN" firstAttribute="leading" secondItem="JHj-pK-BMd" secondAttribute="leading" constant="16" id="FFg-JG-043"/>
-                                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="9uv-KD-L52" secondAttribute="trailing" constant="16" id="H04-J8-ZCG"/>
+                                                            <constraint firstAttribute="trailing" secondItem="GQa-g4-SsL" secondAttribute="trailing" constant="16" id="FeQ-84-kdN"/>
+                                                            <constraint firstItem="GQa-g4-SsL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="9uv-KD-L52" secondAttribute="trailing" constant="16" id="H04-J8-ZCG"/>
                                                             <constraint firstItem="DEm-hr-nIM" firstAttribute="centerY" secondItem="9s7-Fb-BFt" secondAttribute="centerY" id="I1i-Um-ckb"/>
                                                             <constraint firstAttribute="height" constant="43" id="IJ0-Cz-RN9"/>
+                                                            <constraint firstItem="GQa-g4-SsL" firstAttribute="centerY" secondItem="JHj-pK-BMd" secondAttribute="centerY" id="TSI-EL-DQY"/>
                                                             <constraint firstItem="9s7-Fb-BFt" firstAttribute="top" secondItem="LLS-oX-vJN" secondAttribute="bottom" constant="2" id="Wb4-PW-b2T"/>
                                                             <constraint firstItem="9uv-KD-L52" firstAttribute="leading" secondItem="LLS-oX-vJN" secondAttribute="trailing" constant="8" id="dBv-fn-nVO"/>
                                                             <constraint firstItem="DEm-hr-nIM" firstAttribute="leading" secondItem="9s7-Fb-BFt" secondAttribute="trailing" constant="8" id="eIZ-rk-1hG"/>
@@ -388,6 +396,7 @@
                         <outlet property="dateLabel" destination="DEm-hr-nIM" id="H8M-bT-kXK"/>
                         <outlet property="descriptionLabel" destination="PDY-1i-eOI" id="kDA-np-a8M"/>
                         <outlet property="imageNews" destination="zNa-v7-vJ0" id="3g1-pk-BUX"/>
+                        <outlet property="savedNewsCheck" destination="GQa-g4-SsL" id="tmN-qT-h3F"/>
                         <outlet property="titleLabel" destination="BtY-cb-wcM" id="Vem-VE-V6z"/>
                     </connections>
                 </viewController>
@@ -397,9 +406,11 @@
         </scene>
     </scenes>
     <resources>
+        <image name="checkmark.square" catalog="system" width="128" height="114"/>
         <image name="icon.loope" width="20" height="20"/>
         <image name="image.imagePlaceholder" width="426.5" height="320"/>
         <image name="multiply" catalog="system" width="128" height="111"/>
+        <image name="squareshape" catalog="system" width="128" height="114"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

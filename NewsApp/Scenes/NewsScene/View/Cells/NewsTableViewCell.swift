@@ -40,13 +40,15 @@ class NewsTableViewCell: UITableViewCell {
     showDetailesView?(true)
   }
 
-  func updateUI(title: String, newsDescription: String, author: String, imageUrl: URL?, publishedAt: Date) {
+  func updateUI(title: String, newsDescription: String, author: String, imageUrl: URL?, publishedAt: Date?) {
     titleNews.text = title
     descriptionNews.text = newsDescription
     authorPostNews.text = author
     if let url = imageUrl {
     imageNews.af.setImage(withURL: url)
     }
-    postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: publishedAt)
+    if let date = publishedAt {
+    postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: date)
+    }
   }
 }

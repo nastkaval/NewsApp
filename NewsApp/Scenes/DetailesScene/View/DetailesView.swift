@@ -30,20 +30,15 @@ final class DetailesView: UIViewController {
   @IBOutlet private weak var authorLabel: UILabel!
   @IBOutlet private weak var dateLabel: UILabel!
   @IBOutlet private weak var descriptionLabel: UILabel!
+  @IBOutlet weak var savedNewsCheck: UIButton!
+
 
   // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
     output?.userInterfaceDidLoad()
   }
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    print("viewWillAppear")
-  }
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    print("viewWillDisappear")
-  }
+
   // MARK: - Functions
   @IBAction func readMoreClicked(_ sender: UIButton) {
     output?.openNewsInResource()
@@ -54,8 +49,12 @@ final class DetailesView: UIViewController {
 }
 
 extension DetailesView: DetailesControllerOutput {
+  func displayAlert(title: String, message: String) {
+    showAlert(title: title, message: message)
+  }
+
   func dismiss() {
-    self.dismiss(animated: true, completion: nil)
+    dismiss(animated: true)
   }
 
   func updateUI() {
@@ -69,5 +68,9 @@ extension DetailesView: DetailesControllerOutput {
     dateLabel.text = DayDateFormattersConverter.dayTimeDateFormatter.string(from: date)
     }
     descriptionLabel.text = news?.descriptionNews
+    if let saved = news?.isNewsSaved {
+    savedNewsCheck.isSelected = saved
+    }
+    print("isSaved after checking \(news?.isNewsSaved)")
   }
 }

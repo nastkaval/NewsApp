@@ -11,10 +11,11 @@ import UIKit
 protocol ViewModel {
   var imageUrl: URL? { get }
   var newsUrl: URL? { get }
+  var publishedAt: Date? { get }
   var title: String { get }
   var author: String { get }
   var descriptionNews: String { get }
-  var publishedAt: Date { get }
+  var isNewsSaved: Bool { get }
 }
 
 protocol NewsViewOutput {
@@ -53,17 +54,6 @@ final class NewsView: UIViewController {
     refreshControlSettings()
     output.userInterfaceDidLoad()
   }
-
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    print("hellooo")
-  }
-
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    print("hellooo")
-  }
-
 
   // MARK: - Actions
   @IBAction func editingChangedSearchTextFiled(_ sender: UITextField) {
@@ -125,15 +115,16 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
 
 extension NewsView: NewsControllerOutput {
   func presentView(view: DetailesView) {
-    self.present(view, animated: true, completion: nil)
+    present(view, animated: true)
   }
 
   func displayAlert(title: String, message: String) {
-    self.showAlert(title: title, message: message)
+    showAlert(title: title, message: message)
   }
 
   func displayUpdate() {
-    self.stopAnimation()
-    self.newsListTableView.reloadData()
+    searchTextField.endEditing(true)
+    stopAnimation()
+    newsListTableView.reloadData()
   }
 }
