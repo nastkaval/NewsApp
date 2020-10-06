@@ -11,6 +11,7 @@ import Foundation
 protocol NewsControllerOutput: class {
   func displayAlert(title: String, message: String)
   func displayUpdate()
+  func displayActionSheet()
   func presentView(view: DetailesView)
 }
 
@@ -37,6 +38,10 @@ extension NewsController: NewsViewInput {
 }
 
 extension NewsController: NewsViewOutput {
+  func menuClicked() {
+    output?.displayActionSheet()
+  }
+
   func showDetailes(at index: IndexPath) {
     let newsModel = modelNews.object(index.row)
     let detailesView = DetailesViewCoordinator().instantiate(news: newsModel)

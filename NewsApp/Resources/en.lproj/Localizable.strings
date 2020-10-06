@@ -17,3 +17,5 @@
 "errorMessages.cleanDatabaseError" = "Realm error clean database";
 "errorMessages.errorTitle" = "Error";
 "ok" = "OK";
+"actionSheet.showOffline" = "Show offline news";
+

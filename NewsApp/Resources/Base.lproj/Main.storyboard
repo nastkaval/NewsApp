@@ -29,10 +29,19 @@
                                                 <color key="textColor" systemColor="systemBlueColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g5Z-yu-Jik">
+                                                <rect key="frame" x="274" y="23" width="30" height="30"/>
+                                                <state key="normal" title="..."/>
+                                                <connections>
+                                                    <action selector="menuClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4jr-72-87K"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
+                                            <constraint firstItem="g5Z-yu-Jik" firstAttribute="centerY" secondItem="WhJ-Br-gRu" secondAttribute="centerY" id="Gc7-xN-alH"/>
                                             <constraint firstItem="WhJ-Br-gRu" firstAttribute="centerX" secondItem="5IE-NY-nWv" secondAttribute="centerX" id="QiA-Tv-dHK"/>
+                                            <constraint firstAttribute="trailing" secondItem="g5Z-yu-Jik" secondAttribute="trailing" constant="16" id="cW3-1k-Ikx"/>
                                             <constraint firstAttribute="height" constant="60" id="u0G-DR-RjO"/>
                                             <constraint firstAttribute="bottom" secondItem="WhJ-Br-gRu" secondAttribute="bottom" constant="10" id="xKR-Nf-voV"/>
                                         </constraints>

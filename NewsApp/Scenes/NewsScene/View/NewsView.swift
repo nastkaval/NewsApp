@@ -24,6 +24,7 @@ protocol NewsViewOutput {
   func loadDataNextPage()
   func filterNews(keyWord: String)
   func showDetailes(at index: IndexPath)
+  func menuClicked()
 }
 
 protocol NewsViewInput: class {
@@ -60,6 +61,11 @@ final class NewsView: UIViewController {
     output.filterNews(keyWord: sender.text ?? "")
   }
 
+  @IBAction func menuClicked(_ sender: UIButton) {
+    output.menuClicked()
+  }
+
+
   // MARK: - Functions
   private func refreshControlSettings() {
     refreshControl.addTarget(self, action: #selector(self.handleRefresh(_:)), for: UIControl.Event.valueChanged)
@@ -81,6 +87,15 @@ final class NewsView: UIViewController {
   private func stopAnimation() {
     activityIndicator.stopAnimating()
     refreshControl.endRefreshing()
+  }
+
+  private func showActionSheet() {
+    let optionMenu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .actionSheet)
+    let showOffline = UIAlertAction(title: R.string.localizable.actionSheetShowOffline(), style: .default)
+    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+    optionMenu.addAction(showOffline)
+    optionMenu.addAction(cancelAction)
+    self.present(optionMenu, animated: true, completion: nil)
   }
 }
 
@@ -120,6 +135,10 @@ extension NewsView: NewsControllerOutput {
 
   func displayAlert(title: String, message: String) {
     showAlert(title: title, message: message)
+  }
+
+  func displayActionSheet() {
+    showActionSheet()
   }
 
   func displayUpdate() {
