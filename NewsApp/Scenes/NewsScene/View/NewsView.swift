@@ -25,6 +25,7 @@ protocol NewsViewOutput {
   func filterNews(keyWord: String)
   func showDetailes(at index: IndexPath)
   func menuClicked()
+  func showOfflineNews()
 }
 
 protocol NewsViewInput: class {
@@ -39,7 +40,7 @@ final class NewsView: UIViewController {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var output: NewsViewOutput!
-  weak var input: NewsViewInput!
+  weak var input: NewsViewInput?
 
   // MARK: - Outlets
   @IBOutlet private weak var newsListTableView: UITableView!
@@ -74,9 +75,10 @@ final class NewsView: UIViewController {
 
   private func tableViewSettings() {
     newsListTableView.register(R.nib.newsTableViewCell)
+    newsListTableView.separatorStyle = .none
   }
 
-  @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+  @objc private func handleRefresh(_ refreshControl: UIRefreshControl) {
     output.loadDataNextPage()
   }
 
@@ -84,18 +86,26 @@ final class NewsView: UIViewController {
     notFoundNewsView.isHidden = !newsListTableView.visibleCells.isEmpty
   }
 
+  private func startAnimation() {
+    activityIndicator.isHidden = false
+    activityIndicator.startAnimating()
+  }
+
   private func stopAnimation() {
+    activityIndicator.isHidden = true
     activityIndicator.stopAnimating()
     refreshControl.endRefreshing()
   }
 
   private func showActionSheet() {
     let optionMenu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .actionSheet)
-    let showOffline = UIAlertAction(title: R.string.localizable.actionSheetShowOffline(), style: .default)
-    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-    optionMenu.addAction(showOffline)
-    optionMenu.addAction(cancelAction)
-    self.present(optionMenu, animated: true, completion: nil)
+    optionMenu.addAction(UIAlertAction(title: R.string.localizable.actionSheetShowOffline(), style: .default, handler: clickedShowOfflineNews))
+    optionMenu.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+    self.present(optionMenu, animated: true)
+  }
+
+  private func clickedShowOfflineNews(action: UIAlertAction) {
+    output.showOfflineNews()
   }
 }
 
@@ -106,15 +116,15 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return input.count
+    return input?.count ?? 0
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cellIdentifier = R.nib.newsTableViewCell.identifier
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
-    let news = input.provideObject(at: indexPath)
-    cell.updateUI(title: news.title, newsDescription: news.descriptionNews, author: news.author, imageUrl: news.imageUrl, publishedAt: news.publishedAt)
+    let news = input?.provideObject(at: indexPath)
+    cell.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
     cell.showDetailesView = { bool in
       self.output.showDetailes(at: indexPath)
     }
@@ -122,13 +132,23 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if indexPath.row == input.count - 1 {
-      output.loadDataNextPage()
+    if let input = input {
+      if indexPath.row == input.count - 1 {
+        output.loadDataNextPage()
+      }
     }
   }
 }
 
 extension NewsView: NewsControllerOutput {
+  func displayLoadAnimation() {
+    startAnimation()
+  }
+
+  func pushView(view: OfflineNewsView) {
+    navigationController?.pushViewController(view, animated: true)
+  }
+
   func presentView(view: DetailesView) {
     present(view, animated: true)
   }

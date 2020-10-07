@@ -31,20 +31,21 @@ enum DatabaseDataError: LocalizedError {
 
 protocol DatabaseProtocol: class {
   func saveData(newsEntity: NewsEntity) -> Bool
-  func loadData(callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
+  func loadData() -> [NewsEntity]
   func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
   func removeData() -> Bool
 }
 
 final class DatabaseManager: DatabaseProtocol {
   static let shared = DatabaseManager()
-  func loadData(callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
+
+  func loadData() -> [NewsEntity] {
     do {
       let realm = try Realm()
-      let newsArray = realm.objects(NewsEntity.self).toArray()
-      return callBack(.success(newsArray))
+      let newsArray = realm.objects(NewsEntity.self).sorted(byKeyPath: "publishedAtStr", ascending: false).toArray()
+      return newsArray
     } catch {
-      return callBack(.failure(.initDatabaseError))
+      fatalError(R.string.localizable.errorMessagesInitDatabaseError())
     }
   }
 

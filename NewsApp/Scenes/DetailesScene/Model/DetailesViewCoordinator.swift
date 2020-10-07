@@ -9,7 +9,7 @@
 import Foundation
 
 class DetailesViewCoordinator {
-  func instantiate(news: NewsScene.NewsViewModel) -> DetailesView {
+  func instantiate(news: NewsViewModel) -> DetailesView {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.detailesView.identifier) as! DetailesView
     let model = DetailesModel(dependency: ModelDependency(), news: news)

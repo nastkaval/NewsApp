@@ -14,18 +14,18 @@ protocol DetailesModelOutput: class {
 }
 
 final class DetailesModel {
-  private var news: NewsScene.NewsViewModel
+  private var news: NewsViewModel
   private let databaseManager: DatabaseProtocol
   weak var output: DetailesModelOutput?
 
-  init(dependency: ModelDependencyProtocol, news: NewsScene.NewsViewModel) {
+  init(dependency: ModelDependencyProtocol, news: NewsViewModel) {
     self.news = news
     self.databaseManager = dependency.databaseManager
   }
 }
 
 extension DetailesModel {
-  func object() -> NewsScene.NewsViewModel {
+  func object() -> NewsViewModel {
     return news
   }
 

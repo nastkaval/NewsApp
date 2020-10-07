@@ -10,6 +10,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
+  var navigationController: UINavigationController?
 
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -18,7 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     let window = UIWindow(frame: windowScene.coordinateSpace.bounds)
     window.windowScene = windowScene
-    window.rootViewController = newsView
+    navigationController = UINavigationController(rootViewController: newsView)
+    navigationController?.navigationBar.isHidden = true
+    window.rootViewController = navigationController
     window.makeKeyAndVisible()
 
     self.window = window
