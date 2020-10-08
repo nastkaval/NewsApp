@@ -36,7 +36,7 @@ enum ServerDateFormatterConverter { //https://realm.github.io/SwiftLint/convenie
 }
 
 protocol ApiManagerProtocol {
-  func callApi(session: SessionData, callBack: @escaping (Result<[NewsScene.NewsViewModel], ServerDataError>) -> Void)
+  func callApi(session: SessionData, callBack: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void)
 }
 
 final class ApiManager {
@@ -64,7 +64,7 @@ final class ApiManager {
       }
   }
 
-  private func getNews(session: SessionData, completionHandler: @escaping (Result<[NewsScene.NewsViewModel], ServerDataError>) -> Void) {
+  private func getNews(session: SessionData, completionHandler: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
     var request = "\(Constants.host)" + "q=apple&sortBy=publishedAt&" + "from=\(session.from)&"
     request.append("page=\(session.page)&")
     request.append("pageSize=\(session.pageSize)&")
@@ -100,7 +100,7 @@ final class ApiManager {
 }
 
 extension ApiManager: ApiManagerProtocol {
-  func callApi(session: SessionData, callBack: @escaping (Result<[NewsScene.NewsViewModel], ServerDataError>) -> Void) {
+  func callApi(session: SessionData, callBack: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
     getNews(session: session) { result in
       callBack(result)
     }

@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -70,16 +71,26 @@
                             <constraint firstAttribute="width" constant="116" id="Elj-8F-3ca"/>
                         </constraints>
                     </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hQj-XJ-9tE">
+                        <rect key="frame" x="0.0" y="256.5" width="633" height="0.5"/>
+                        <color key="backgroundColor" systemColor="systemGray5Color"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.5" id="Zxn-lL-H1U"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstItem="eT2-XU-OzC" firstAttribute="top" secondItem="6AN-AF-Wzo" secondAttribute="bottom" constant="4" id="0i6-G4-RaK"/>
                     <constraint firstItem="gVY-aB-kwH" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="35" id="4ZS-7S-Crf"/>
                     <constraint firstItem="KNy-bW-KQ2" firstAttribute="leading" secondItem="xV8-FF-eCI" secondAttribute="trailing" constant="30" id="67x-Qf-Pm3"/>
+                    <constraint firstAttribute="bottom" secondItem="hQj-XJ-9tE" secondAttribute="bottom" id="6qK-OX-0cX"/>
                     <constraint firstItem="eT2-XU-OzC" firstAttribute="leading" secondItem="xV8-FF-eCI" secondAttribute="leading" id="CDl-EB-05d"/>
                     <constraint firstItem="aet-ws-oaY" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="DtB-du-ovd"/>
                     <constraint firstItem="6AN-AF-Wzo" firstAttribute="top" secondItem="xV8-FF-eCI" secondAttribute="bottom" constant="18" id="EIV-GM-N1D"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="eT2-XU-OzC" secondAttribute="bottom" constant="4" id="GX6-vG-7BZ"/>
                     <constraint firstAttribute="trailing" secondItem="aet-ws-oaY" secondAttribute="trailing" constant="20" id="Lsi-7L-RZG"/>
                     <constraint firstAttribute="trailing" secondItem="KNy-bW-KQ2" secondAttribute="trailing" constant="20" id="MkS-ie-cRk"/>
+                    <constraint firstAttribute="trailing" secondItem="hQj-XJ-9tE" secondAttribute="trailing" id="Rvu-dH-E7k"/>
                     <constraint firstItem="6AN-AF-Wzo" firstAttribute="leading" secondItem="xV8-FF-eCI" secondAttribute="leading" id="TF2-S6-XhT"/>
                     <constraint firstAttribute="trailing" secondItem="WyR-wX-iJY" secondAttribute="trailing" constant="20" id="TZ1-4H-6Hu"/>
                     <constraint firstAttribute="trailing" secondItem="gVY-aB-kwH" secondAttribute="trailing" constant="20" id="UH0-dp-tlH"/>
@@ -89,6 +100,7 @@
                     <constraint firstItem="xV8-FF-eCI" firstAttribute="top" secondItem="gVY-aB-kwH" secondAttribute="bottom" constant="10" id="iB4-ER-V5h"/>
                     <constraint firstItem="xV8-FF-eCI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="m9l-X1-Znt"/>
                     <constraint firstItem="WyR-wX-iJY" firstAttribute="leading" secondItem="eT2-XU-OzC" secondAttribute="trailing" constant="10" id="mUe-o3-M24"/>
+                    <constraint firstItem="hQj-XJ-9tE" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="z5Q-CH-N46"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -105,5 +117,8 @@
     </objects>
     <resources>
         <image name="image.imagePlaceholder" width="426.5" height="320"/>
+        <systemColor name="systemGray5Color">
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

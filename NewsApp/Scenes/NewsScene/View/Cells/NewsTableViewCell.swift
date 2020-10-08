@@ -40,7 +40,7 @@ class NewsTableViewCell: UITableViewCell {
     showDetailesView?(true)
   }
 
-  func updateUI(title: String, newsDescription: String, author: String, imageUrl: URL?, publishedAt: Date?) {
+  func updateUI(title: String?, newsDescription: String?, author: String?, imageUrl: URL?, publishedAt: Date?) {
     titleNews.text = title
     descriptionNews.text = newsDescription
     authorPostNews.text = author

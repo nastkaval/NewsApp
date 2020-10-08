@@ -11,7 +11,10 @@ import Foundation
 protocol NewsControllerOutput: class {
   func displayAlert(title: String, message: String)
   func displayUpdate()
+  func displayActionSheet()
+  func displayLoadAnimation()
   func presentView(view: DetailesView)
+  func pushView(view: OfflineNewsView)
 }
 
 final class NewsController {
@@ -37,6 +40,15 @@ extension NewsController: NewsViewInput {
 }
 
 extension NewsController: NewsViewOutput {
+  func showOfflineNews() {
+    let view = OfflineNewsViewCoordinator().instantiate()
+    output?.pushView(view: view)
+  }
+
+  func menuClicked() {
+    output?.displayActionSheet()
+  }
+
   func showDetailes(at index: IndexPath) {
     let newsModel = modelNews.object(index.row)
     let detailesView = DetailesViewCoordinator().instantiate(news: newsModel)
@@ -59,6 +71,7 @@ extension NewsController: NewsViewOutput {
   }
 
   func userInterfaceDidLoad() {
+    output?.displayLoadAnimation()
     modelNews.getData(isNextPage: false)
   }
 }

@@ -71,6 +71,5 @@ extension DetailesView: DetailesControllerOutput {
     if let saved = news?.isNewsSaved {
     savedNewsCheck.isSelected = saved
     }
-    print("isSaved after checking \(news?.isNewsSaved)")
   }
 }

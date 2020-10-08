@@ -15,8 +15,8 @@ protocol NewsModelOutput: class {
 
 final class NewsModel {
   private var session = SessionData()
-  private var listNews: [NewsScene.NewsViewModel] = []
-  private var savedListNews: [NewsScene.NewsViewModel] = []
+  private var listNews: [NewsViewModel] = []
+  private var savedListNews: [NewsViewModel] = []
   weak var output: NewsModelOutput?
 
   private let apiManager: ApiManagerProtocol
@@ -60,7 +60,7 @@ final class NewsModel {
 }
 
 extension NewsModel {
-  func object(_ index: Int) -> NewsScene.NewsViewModel {
+  func object(_ index: Int) -> NewsViewModel {
     return listNews[index]
   }
 
@@ -69,7 +69,7 @@ extension NewsModel {
   }
 }
 
-extension NewsScene.NewsViewModel: ViewModel {
+extension NewsViewModel: ViewModel {
   var imageUrl: URL? {
     return urlToImage
   }

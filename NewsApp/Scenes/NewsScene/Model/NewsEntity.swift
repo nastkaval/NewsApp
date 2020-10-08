@@ -30,8 +30,8 @@ class NewsEntity: Object {
   }
 }
 
-struct NewsScene {
-  struct NewsViewModel: Decodable {
+//class NewsScene {
+  class NewsViewModel: Decodable {
     var author: String
     var title: String
     var descriptionNews: String
@@ -54,7 +54,7 @@ struct NewsScene {
       case content
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
       author = try container.decode(String.self, forKey: .author)
       title = try container.decode(String.self, forKey: .title)
@@ -67,5 +67,18 @@ struct NewsScene {
       publishedAtStr = try container.decode(String.self, forKey: .publishedAt)
       publishedAtDate = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
     }
+
+    init(author: String, title: String, descriptionNews: String, content: String, urlNewsStr: String, urlToImageStr: String, publishedAtStr: String) {
+      self.author = author
+      self.title = title
+      self.descriptionNews = descriptionNews
+      self.content = content
+      self.urlNewsStr = urlNewsStr
+      self.urlToImageStr = urlToImageStr
+      self.publishedAtStr = publishedAtStr
+      self.urlNews = URL(string: urlNewsStr)
+      self.urlToImage = URL(string: urlToImageStr)
+      self.publishedAtDate = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
+    }
   }
-}
+//}
