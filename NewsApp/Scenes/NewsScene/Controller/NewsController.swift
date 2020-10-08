@@ -32,15 +32,14 @@ extension NewsController: NewsViewInput {
   }
 
   func provideObject(at index: IndexPath) -> ViewModel {
-    let object = modelNews.object(index.row)
-    return object
+    return modelNews.object(index.row)
   }
 }
 
 extension NewsController: NewsViewOutput {
   func showDetailes(at index: IndexPath) {
-    let news = provideObject(at: index) //bad??
-    let detailesView = DetailesViewCoordinator().instantiate(news: news)
+    let newsModel = modelNews.object(index.row)
+    let detailesView = DetailesViewCoordinator().instantiate(news: newsModel)
     output?.presentView(view: detailesView)
   }
 
@@ -50,7 +49,7 @@ extension NewsController: NewsViewOutput {
 
   func filterNews(keyWord: String) {
     modelNews.getFilterNews(keyWord: keyWord)
-      isFiltering = true
+    isFiltering = true
   }
 
   func loadDataNextPage() {
@@ -71,6 +70,6 @@ extension NewsController: NewsModelOutput {
   }
 
   func dataLoadWithError(_ errorMessage: String) {
-    output?.displayAlert(title: R.string.localizable.errorTitle(), message: errorMessage)
+    output?.displayAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
   }
 }

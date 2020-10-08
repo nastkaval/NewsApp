@@ -9,8 +9,8 @@
 import Foundation
 
 class ParseHelper {
-  func parseJson(json: [[String: Any]], callBack: @escaping (Result<[NewsEntity], ServerDataError>) -> Void) {
-    var newsEntities: [NewsEntity] = []
+  func parseJson(json: [[String: Any]], callBack: @escaping (Result<[NewsScene.NewsViewModel], ServerDataError>) -> Void) {
+    var newsEntities: [NewsScene.NewsViewModel] = []
     for dict in json {
       var dictString: String?
 
@@ -28,7 +28,7 @@ class ParseHelper {
       }
 
       do {
-        let news = try JSONDecoder().decode(NewsEntity.self, from: jsonData)
+        let news = try JSONDecoder().decode(NewsScene.NewsViewModel.self, from: jsonData)
         newsEntities.append(news)
       } catch {
         print("error")

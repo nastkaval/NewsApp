@@ -10,13 +10,14 @@ import UIKit
 
 protocol DetailesControllerOutput: class {
   func updateUI()
+  func displayAlert(title: String, message: String)
   func dismiss()
 }
 
 final class DetailesController {
   private let model: DetailesModel
   private weak var output: DetailesControllerOutput?
-  
+
   init(model: DetailesModel, output: DetailesControllerOutput) {
     self.model = model
     self.output = output
@@ -25,7 +26,7 @@ final class DetailesController {
 
 extension DetailesController: DetailesViewOutput {
   func userInterfaceDidLoad() {
-    output?.updateUI()
+    model.checkIsExistObjectInDatabase()
   }
 
   func openNewsInResource() {
@@ -43,5 +44,15 @@ extension DetailesController: DetailesViewOutput {
 extension DetailesController: DetailesViewInput {
   var object: ViewModel {
     return model.object()
+  }
+}
+
+extension DetailesController: DetailesModelOutput {
+  func dataLoadSuccess() {
+    output?.updateUI()
+  }
+
+  func dataLoadWithError(_ errorMessage: String) {
+    output?.displayAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
   }
 }

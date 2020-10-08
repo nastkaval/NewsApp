@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-class NewsEntity: Object, Decodable {
+class NewsEntity: Object {
   @objc dynamic var author: String = ""
   @objc dynamic var title: String = ""
   @objc dynamic var descriptionNews: String = ""
@@ -17,28 +17,55 @@ class NewsEntity: Object, Decodable {
   @objc dynamic var urlToImageStr: String = ""
   @objc dynamic var publishedAtStr: String = ""
   @objc dynamic var content: String = ""
-  @objc dynamic var publishedAtDate = Date()
 
-  enum CodingKeys: String, CodingKey {
-    case author
-    case title
-    case description
-    case url
-    case urlToImage
-    case publishedAt
-    case content
-  }
-
-  convenience required init(from decoder: Decoder) throws {
+  convenience init(author: String, title: String, descriptionNews: String, urlNewsStr: String, urlToImageStr: String, publishedAtStr: String, content: String) {
     self.init()
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-    self.author = try container.decode(String.self, forKey: .author)
-    self.title = try container.decode(String.self, forKey: .title)
-    self.descriptionNews = try container.decode(String.self, forKey: .description)
-    self.urlNewsStr = try container.decode(String.self, forKey: .url)
-    self.urlToImageStr = try container.decode(String.self, forKey: .urlToImage)
-    self.publishedAtStr = try container.decode(String.self, forKey: .publishedAt)
-    self.content = try container.decode(String.self, forKey: .content)
-    self.publishedAtDate = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr) ?? publishedAtDate // .date(from:..) -> Date?, required unwrap by ! or ??
+    self.author = author
+    self.title = title
+    self.descriptionNews = descriptionNews
+    self.urlNewsStr = urlNewsStr
+    self.urlToImageStr = urlToImageStr
+    self.publishedAtStr = publishedAtStr
+    self.content = content
+  }
+}
+
+struct NewsScene {
+  struct NewsViewModel: Decodable {
+    var author: String
+    var title: String
+    var descriptionNews: String
+    var content: String
+    var urlNewsStr: String
+    var urlToImageStr: String
+    var publishedAtStr: String
+    var publishedAtDate: Date?
+    var urlNews: URL?
+    var urlToImage: URL?
+    var isNewsSaved: Bool = false
+
+    enum CodingKeys: String, CodingKey {
+      case author
+      case title
+      case description
+      case url
+      case urlToImage
+      case publishedAt
+      case content
+    }
+
+    init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      author = try container.decode(String.self, forKey: .author)
+      title = try container.decode(String.self, forKey: .title)
+      descriptionNews = try container.decode(String.self, forKey: .description)
+      content = try container.decode(String.self, forKey: .content)
+      urlNewsStr = try container.decode(String.self, forKey: .url)
+      urlNews = URL(string: urlNewsStr)
+      urlToImageStr = try container.decode(String.self, forKey: .urlToImage)
+      urlToImage = URL(string: urlToImageStr)
+      publishedAtStr = try container.decode(String.self, forKey: .publishedAt)
+      publishedAtDate = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
+    }
   }
 }
