@@ -36,6 +36,22 @@ final class OfflineNewsModel {
       output?.dataLoadSuccess(state: false)
     }
   }
+
+  func deleteDataFromDatabase(from: Int) -> Bool {
+    if databaseManager.removeDataBy(id: object(from).urlNewsStr) {
+      let dataArray = databaseManager.loadData()
+      if !dataArray.isEmpty {
+        self.listNews = dataArray.map { item -> NewsViewModel in
+          NewsViewModel(author: item.author, title: item.title, descriptionNews: item.descriptionNews, content: item.content, urlNewsStr: item.urlNewsStr, urlToImageStr: item.urlToImageStr, publishedAtStr: item.publishedAtStr)
+        }
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
 }
 
 extension OfflineNewsModel {

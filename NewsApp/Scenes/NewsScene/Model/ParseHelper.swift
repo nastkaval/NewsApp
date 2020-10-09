@@ -33,7 +33,7 @@ class ParseHelper {
       } catch {
         print("error")
       }
-  }
+    }
     return callBack(.success(newsEntities))
   }
 }

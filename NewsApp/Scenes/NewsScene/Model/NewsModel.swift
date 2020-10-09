@@ -28,7 +28,9 @@ final class NewsModel {
   convenience init(dependency: ModelDependencyProtocol) {
     self.init(apiManager: dependency.apiManager)
   }
+}
 
+extension NewsModel {
   func getData(isNextPage: Bool) {
     if isNextPage {
       session.page += 1
@@ -57,9 +59,7 @@ final class NewsModel {
       self.output?.dataLoadSuccess()
     }
   }
-}
 
-extension NewsModel {
   func object(_ index: Int) -> NewsViewModel {
     return listNews[index]
   }

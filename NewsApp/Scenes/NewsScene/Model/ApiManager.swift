@@ -27,7 +27,7 @@ enum ServerDataError: LocalizedError {
   }
 }
 
-enum ServerDateFormatterConverter { //https://realm.github.io/SwiftLint/convenience_type.html
+enum ServerDateFormatterConverter {
   static let serverDateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -41,10 +41,7 @@ protocol ApiManagerProtocol {
 
 final class ApiManager {
   private let parser = ParseHelper()
-
   static let shared = ApiManager()
-
-  private init() { }
 
   private func get(url: URL, parameters: [String: Any]?, headers: HTTPHeaders?, successHandler: @escaping(AFDataResponse<Any>) -> Void, fail: @escaping(Error) -> Void) {
     let getApiQueue = DispatchQueue(label: "apiGetRequest", qos: .userInitiated, attributes: .concurrent)

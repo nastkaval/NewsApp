@@ -30,22 +30,25 @@ extension DetailesModel {
   }
 
   func checkIsExistObjectInDatabase() {
-    print("isSaved after opening == \(news.isNewsSaved)")
-    if !news.isNewsSaved {
-      let newsEntity = NewsEntity(
-        author: news.author,
-        title: news.title,
-        descriptionNews: news.descriptionNews,
-        urlNewsStr: news.urlNewsStr,
-        urlToImageStr: news.urlToImageStr,
-        publishedAtStr: news.publishedAtStr,
-        content: news.content)
-      if databaseManager.saveData(newsEntity: newsEntity) {
-        news.isNewsSaved = true
-        output?.dataLoadSuccess()
-      }
+    if !databaseManager.checkObjectIsExistBy(id: news.urlNewsStr) {
+      saveNewsToDatabase()
     } else {
+      news.isNewsSaved = true
       output?.dataLoadSuccess()
+    }
+  }
+
+  private func saveNewsToDatabase() {
+    let newsEntity = NewsEntity(
+      author: news.author,
+      title: news.title,
+      descriptionNews: news.descriptionNews,
+      urlNewsStr: news.urlNewsStr,
+      urlToImageStr: news.urlToImageStr,
+      publishedAtStr: news.publishedAtStr,
+      content: news.content)
+    if databaseManager.saveData(newsEntity: newsEntity) {
+      checkIsExistObjectInDatabase()
     }
   }
 }
