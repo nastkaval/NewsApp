@@ -15,7 +15,7 @@ enum ServerDataError: LocalizedError {
   case serverError
   case parseError
 
-  var description: String {
+  var localizableDescription: String {
     switch self {
     case .limitNewsError:
       return R.string.localizable.errorMessagesLimitNews()
@@ -66,9 +66,7 @@ final class ApiManager {
     request.append("page=\(session.page)&")
     request.append("pageSize=\(session.pageSize)&")
     request.append("apiKey=\(Constants.apiKey)")
-    // swiftlint:disable force_unwrapping
-    let url = URL(string: request)!
-    print("url == \(url)")
+    guard let url = URL(string: request) else { return }
     self.get(
       url: url,
       parameters: nil,

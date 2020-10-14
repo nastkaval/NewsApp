@@ -28,7 +28,7 @@ protocol NewsViewOutput {
   func showOfflineNews()
 }
 
-protocol NewsViewInput: class {
+protocol NewsViewInput: AnyObject {
   func provideObject(at index: IndexPath) -> ViewModel
   var count: Int { get }
 }
@@ -37,9 +37,7 @@ final class NewsView: UIViewController {
   // MARK: - Properties
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
-
-  // swiftlint:disable implicitly_unwrapped_optional
-  var output: NewsViewOutput!
+  var output: NewsViewOutput?
   weak var input: NewsViewInput?
 
   // MARK: - Outlets
@@ -54,18 +52,17 @@ final class NewsView: UIViewController {
     hideKeyboardWhenTappedAround()
     tableViewSettings()
     refreshControlSettings()
-    output.userInterfaceDidLoad()
+    output?.userInterfaceDidLoad()
   }
 
   // MARK: - Actions
-  @IBAction func editingChangedSearchTextFiled(_ sender: UITextField) {
-    output.filterNews(keyWord: sender.text ?? "")
+  @IBAction private func editingChangedSearchTextFiled(_ sender: UITextField) {
+    output?.filterNews(keyWord: sender.text ?? "")
   }
 
-  @IBAction func menuClicked(_ sender: UIButton) {
-    output.menuClicked()
+  @IBAction private func menuClicked(_ sender: UIButton) {
+    output?.menuClicked()
   }
-
 
   // MARK: - Functions
   private func refreshControlSettings() {
@@ -79,7 +76,7 @@ final class NewsView: UIViewController {
   }
 
   @objc private func handleRefresh(_ refreshControl: UIRefreshControl) {
-    output.loadDataNextPage()
+    output?.loadDataNextPage()
   }
 
   private func checkOperatorTableViewForEmpty() {
@@ -105,7 +102,7 @@ final class NewsView: UIViewController {
   }
 
   private func clickedShowOfflineNews(action: UIAlertAction) {
-    output.showOfflineNews()
+    output?.showOfflineNews()
   }
 }
 
@@ -126,7 +123,7 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
     let news = input?.provideObject(at: indexPath)
     cell.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
     cell.showDetailesView = { bool in
-      self.output.showDetailes(at: indexPath)
+      self.output?.showDetailes(at: indexPath)
     }
     return cell
   }
@@ -134,7 +131,7 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     if let input = input {
       if indexPath.row == input.count - 1 {
-        output.loadDataNextPage()
+        output?.loadDataNextPage()
       }
     }
   }
@@ -154,14 +151,14 @@ extension NewsView: NewsControllerOutput {
   }
 
   func displayAlert(title: String, message: String) {
-    showAlert(title: title, message: message)
+    showAlert(message: message)
   }
 
   func displayActionSheet() {
     showActionSheet()
   }
 
-  func displayUpdate() {
+  func updateUI() {
     searchTextField.endEditing(true)
     stopAnimation()
     newsListTableView.reloadData()

@@ -8,9 +8,9 @@
 
 import Foundation
 
-protocol NewsControllerOutput: class {
+protocol NewsControllerOutput: AnyObject {
+  func updateUI()
   func displayAlert(title: String, message: String)
-  func displayUpdate()
   func displayActionSheet()
   func displayLoadAnimation()
   func presentView(view: DetailesView)
@@ -20,8 +20,7 @@ protocol NewsControllerOutput: class {
 final class NewsController {
   private var modelNews: NewsModel
   private weak var output: NewsControllerOutput?
-
-  private var isFiltering: Bool = false
+  private var isFiltering = false
 
   init(model: NewsModel, output: NewsControllerOutput) {
     self.modelNews = model
@@ -79,7 +78,7 @@ extension NewsController: NewsViewOutput {
 extension NewsController: NewsModelOutput {
   func dataLoadSuccess() {
     isFiltering = false
-    output?.displayUpdate()
+    output?.updateUI()
   }
 
   func dataLoadWithError(_ errorMessage: String) {

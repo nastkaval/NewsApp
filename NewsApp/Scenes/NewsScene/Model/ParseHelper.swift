@@ -13,25 +13,16 @@ class ParseHelper {
     var newsEntities: [NewsViewModel] = []
     for dict in json {
       var dictString: String?
-
       do {
-        let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
-        dictString = String(bytes: jsonData, encoding: String.Encoding.utf8)
-      } catch {
-        print("error")
-      }
-
-      guard let json: String = dictString,
-      let jsonData: Data = json.data(using: .utf8)
-      else {
-        return callBack(.failure(.parseError))
-      }
-
-      do {
+        let jsonDataSerialize = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+        dictString = String(bytes: jsonDataSerialize, encoding: String.Encoding.utf8)
+        guard let json: String = dictString, let jsonData: Data = json.data(using: .utf8) else {
+          return callBack(.failure(.parseError))
+        }
         let news = try JSONDecoder().decode(NewsViewModel.self, from: jsonData)
         newsEntities.append(news)
       } catch {
-        print("error")
+        print("decode error: invalid data from server")
       }
     }
     return callBack(.success(newsEntities))

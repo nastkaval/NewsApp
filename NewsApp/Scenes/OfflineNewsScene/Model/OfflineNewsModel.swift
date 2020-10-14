@@ -8,8 +8,11 @@
 
 import Foundation
 
-protocol OfflineNewsModelOutput: class {
-  func dataLoadSuccess(state: Bool)
+protocol OfflineNewsModelOutput: AnyObject {
+  func dataLoadSuccess()
+  func dataLoadFailed()
+  func dataRemovedSuccess()
+  func dataRemovedFailed()
 }
 
 final class OfflineNewsModel {
@@ -27,30 +30,24 @@ final class OfflineNewsModel {
 
   func loadDataFromDatabase() {
     let dataArray = databaseManager.loadData()
-    if !dataArray.isEmpty {
-      self.listNews = dataArray.map { item -> NewsViewModel in
-        NewsViewModel(author: item.author, title: item.title, descriptionNews: item.descriptionNews, content: item.content, urlNewsStr: item.urlNewsStr, urlToImageStr: item.urlToImageStr, publishedAtStr: item.publishedAtStr)
-      }
-      output?.dataLoadSuccess(state: true)
-    } else {
-      output?.dataLoadSuccess(state: false)
+    guard !dataArray.isEmpty else {
+      output?.dataLoadFailed()
+      return
     }
+    listNews = dataArray.map { item -> NewsViewModel in
+      NewsViewModel(author: item.author, title: item.title, descriptionNews: item.descriptionNews, content: item.content, urlNewsStr: item.urlNewsStr, urlToImageStr: item.urlToImageStr, publishedAtStr: item.publishedAtStr)
+    }
+    output?.dataLoadSuccess()
   }
 
-  func deleteDataFromDatabase(from: Int) -> Bool {
-    if databaseManager.removeDataBy(id: object(from).urlNewsStr) {
-      let dataArray = databaseManager.loadData()
-      if !dataArray.isEmpty {
-        self.listNews = dataArray.map { item -> NewsViewModel in
-          NewsViewModel(author: item.author, title: item.title, descriptionNews: item.descriptionNews, content: item.content, urlNewsStr: item.urlNewsStr, urlToImageStr: item.urlToImageStr, publishedAtStr: item.publishedAtStr)
-        }
-        return true
-      } else {
-        return false
-      }
-    } else {
-      return false
+  func removeDataFromDatabase(from: Int) {
+    let removeObjectId = object(from).urlNewsStr
+    guard databaseManager.removeDataBy(id: removeObjectId) else {
+      output?.dataRemovedFailed()
+      return
     }
+    listNews = listNews.filter { $0.urlNewsStr != removeObjectId }
+    output?.dataRemovedSuccess()
   }
 }
 
@@ -60,6 +57,10 @@ extension OfflineNewsModel {
   }
 
   func count() -> Int {
-    return listNews.endIndex
+    return listNews.count
+  }
+
+  var isModelEmpty: Bool {
+    return listNews.isEmpty
   }
 }

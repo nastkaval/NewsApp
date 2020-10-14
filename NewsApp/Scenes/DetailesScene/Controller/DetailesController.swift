@@ -8,10 +8,10 @@
 
 import UIKit
 
-protocol DetailesControllerOutput: class {
+protocol DetailesControllerOutput: AnyObject {
   func updateUI()
   func displayAlert(title: String, message: String)
-  func dismiss()
+  func dismissView()
 }
 
 final class DetailesController {
@@ -29,7 +29,7 @@ extension DetailesController: DetailesViewOutput {
     model.checkIsExistObjectInDatabase()
   }
 
-  func openNewsInResource() {
+  func openNewsInExternalResource() {
     let newsUrl = object.newsUrl
     if let url = newsUrl {
       UIApplication.shared.open(url)
@@ -37,7 +37,7 @@ extension DetailesController: DetailesViewOutput {
   }
 
   func closeView() {
-    output?.dismiss()
+    output?.dismissView()
   }
 }
 

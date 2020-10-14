@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol NewsModelOutput: class {
+protocol NewsModelOutput: AnyObject {
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
 }
@@ -44,7 +44,7 @@ extension NewsModel {
         self?.savedListNews.append(contentsOf: newsArray)
         self?.output?.dataLoadSuccess()
       case .failure(let error):
-        self?.output?.dataLoadWithError(error.description)
+        self?.output?.dataLoadWithError(error.localizableDescription)
       }
     }
   }

@@ -440,11 +440,12 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wex-xt-FYH">
-                                                <rect key="frame" x="16" y="28" width="15" height="22"/>
+                                                <rect key="frame" x="16" y="25" width="20" height="25"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="15" id="LaY-Yq-Z8V"/>
+                                                    <constraint firstAttribute="width" constant="20" id="LaY-Yq-Z8V"/>
+                                                    <constraint firstAttribute="height" constant="25" id="aMQ-q1-N8k"/>
                                                 </constraints>
-                                                <state key="normal" image="chevron.backward" catalog="system">
+                                                <state key="normal" image="icon.backArrow">
                                                     <color key="titleColor" systemColor="linkColor"/>
                                                 </state>
                                                 <connections>
@@ -533,7 +534,7 @@
     </scenes>
     <resources>
         <image name="checkmark.square" catalog="system" width="128" height="114"/>
-        <image name="chevron.backward" catalog="system" width="96" height="128"/>
+        <image name="icon.backArrow" width="150.5" height="150.5"/>
         <image name="icon.loope" width="20" height="20"/>
         <image name="image.imagePlaceholder" width="426.5" height="320"/>
         <image name="multiply" catalog="system" width="128" height="111"/>

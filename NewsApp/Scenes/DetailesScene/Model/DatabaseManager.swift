@@ -15,7 +15,7 @@ enum DatabaseDataError: LocalizedError {
   case removeDatabaseError
   case noObject
 
-  var description: String {
+  var localizableDescription: String {
     switch self {
     case .initDatabaseError:
       return R.string.localizable.errorMessagesInitDatabaseError()
@@ -29,13 +29,12 @@ enum DatabaseDataError: LocalizedError {
   }
 }
 
-protocol DatabaseProtocol: class {
+protocol DatabaseProtocol: AnyObject {
   func saveData(newsEntity: NewsEntity) -> Bool
   func loadData() -> [NewsEntity]
-  func checkObjectIsExistBy(id: String) -> Bool
   func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
-  func removeAllData() -> Bool
   func removeDataBy(id: String) -> Bool
+  func checkObjectIsExistBy(id: String) -> NewsEntity?
 }
 
 final class DatabaseManager: DatabaseProtocol {
@@ -61,29 +60,13 @@ final class DatabaseManager: DatabaseProtocol {
     }
   }
 
-  func checkObjectIsExistBy(id: String) -> Bool {
+  func checkObjectIsExistBy(id: String) -> NewsEntity? {
     do {
       let realm = try Realm()
       let object = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id).first
-      if object != nil {
-        return true
-      } else {
-        return false
-      }
+      return object
     } catch {
-      return false
-    }
-  }
-
-  func removeAllData() -> Bool {
-    do {
-      let realm = try Realm()
-      try realm.write {
-        realm.deleteAll()
-      }
-      return true
-    } catch {
-      return false
+      fatalError(R.string.localizable.errorMessagesInitDatabaseError())
     }
   }
 

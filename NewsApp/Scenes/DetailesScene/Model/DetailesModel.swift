@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol DetailesModelOutput: class {
+protocol DetailesModelOutput: AnyObject {
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
 }
@@ -30,12 +30,13 @@ extension DetailesModel {
   }
 
   func checkIsExistObjectInDatabase() {
-    if !databaseManager.checkObjectIsExistBy(id: news.urlNewsStr) {
+    let lookingObject = databaseManager.checkObjectIsExistBy(id: news.urlNewsStr)
+    guard lookingObject != nil else {
       saveNewsToDatabase()
-    } else {
-      news.isNewsSaved = true
-      output?.dataLoadSuccess()
+      return
     }
+    news.isNewsSaved = true
+    output?.dataLoadSuccess()
   }
 
   private func saveNewsToDatabase() {

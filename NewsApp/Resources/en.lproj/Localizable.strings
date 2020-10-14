@@ -13,9 +13,10 @@
 "errorMessages.parseError" = "Parsing failed.";
 "errorMessages.initDatabaseError" = "Realm error init";
 "errorMessages.saveError" = "Realm error save";
-"errorMessages.noObject" = "Realm doesn't have any object with this ID";
+"errorMessages.noObject" = "Realm doesn't have any object";
 "errorMessages.cleanDatabaseError" = "Realm error clean database";
 "errorMessages.errorTitle" = "Error";
+"errorMessages.errorRemoving" = "Sorry, the news can't be removed";
 "ok" = "OK";
 "actionSheet.showOffline" = "Show offline news";
 

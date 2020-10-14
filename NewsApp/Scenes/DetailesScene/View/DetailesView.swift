@@ -10,18 +10,17 @@ import UIKit
 
 protocol DetailesViewOutput {
   func userInterfaceDidLoad()
-  func openNewsInResource()
+  func openNewsInExternalResource()
   func closeView()
 }
 
-protocol DetailesViewInput: class {
+protocol DetailesViewInput: AnyObject {
   var object: ViewModel { get }
 }
 
 final class DetailesView: UIViewController {
   // MARK: - Properties
-  // swiftlint:disable implicitly_unwrapped_optional
-  var output: DetailesViewOutput!
+  var output: DetailesViewOutput?
   weak var input: DetailesViewInput?
 
   // MARK: - Outlets
@@ -30,8 +29,7 @@ final class DetailesView: UIViewController {
   @IBOutlet private weak var authorLabel: UILabel!
   @IBOutlet private weak var dateLabel: UILabel!
   @IBOutlet private weak var descriptionLabel: UILabel!
-  @IBOutlet weak var savedNewsCheck: UIButton!
-
+  @IBOutlet private weak var savedNewsCheck: UIButton!
 
   // MARK: - LifeCycle
   override func viewDidLoad() {
@@ -40,20 +38,20 @@ final class DetailesView: UIViewController {
   }
 
   // MARK: - Functions
-  @IBAction func readMoreClicked(_ sender: UIButton) {
-    output?.openNewsInResource()
+  @IBAction private func readMoreClicked(_ sender: UIButton) {
+    output?.openNewsInExternalResource()
   }
-  @IBAction func closeViewClicked(_ sender: UIButton) {
+  @IBAction private func closeViewClicked(_ sender: UIButton) {
     output?.closeView()
   }
 }
 
 extension DetailesView: DetailesControllerOutput {
   func displayAlert(title: String, message: String) {
-    showAlert(title: title, message: message)
+    showAlert(message: message)
   }
 
-  func dismiss() {
+  func dismissView() {
     dismiss(animated: true)
   }
 

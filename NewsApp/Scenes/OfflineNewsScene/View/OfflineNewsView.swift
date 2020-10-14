@@ -10,10 +10,10 @@ import UIKit
 
 protocol OfflineNewsViewOutput {
   func userInterfaceDidLoad()
-  func deleteRowAt(index: IndexPath, callback: ((Bool) -> Void))
+  func deleteRowAt(index: IndexPath)
 }
 
-protocol OfflineNewsViewInput: class {
+protocol OfflineNewsViewInput: AnyObject {
   func provideObject(at index: IndexPath) -> ViewModel
   var count: Int { get }
 }
@@ -28,7 +28,6 @@ final class OfflineNewsView: UIViewController {
   @IBOutlet private weak var listNewsTableView: UITableView!
   @IBOutlet private weak var newsNotFoundView: UIView!
 
-
   // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -37,7 +36,7 @@ final class OfflineNewsView: UIViewController {
   }
 
   // MARK: - Actions
-  @IBAction func backClicked(_ sender: UIButton) {
+  @IBAction private func backClicked(_ sender: UIButton) {
     navigationController?.popViewController(animated: true)
   }
 
@@ -45,6 +44,10 @@ final class OfflineNewsView: UIViewController {
   private func tableViewSettings() {
     listNewsTableView.register(R.nib.newsTableViewCell)
     listNewsTableView.separatorStyle = .none
+  }
+
+  private func showNewsNotFoundView(state: Bool) {
+    newsNotFoundView.isHidden = !state
   }
 }
 
@@ -68,22 +71,24 @@ extension OfflineNewsView: UITableViewDelegate, UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     if editingStyle == .delete {
-      output?.deleteRowAt(index: indexPath) { complete in
-        if complete {
-          tableView.deleteRows(at: [indexPath], with: .fade)
-        } else {
-          hideNewsNotFoundView(state: false)
-        }
-      }
+      output?.deleteRowAt(index: indexPath)
     }
   }
 }
 
 extension OfflineNewsView: OfflineNewsControllerOutput {
-  func updateUI() {
+  func updateUI(withNotFoundNewsView: Bool) {
     listNewsTableView.reloadData()
+    showNewsNotFoundView(state: withNotFoundNewsView)
   }
-  func hideNewsNotFoundView(state: Bool) {
-    newsNotFoundView.isHidden = state
+
+  func updateUIWithRemoveCellAt(index: IndexPath, withNotFoundNewsView: Bool) {
+    listNewsTableView.deleteRows(at: [index], with: .none)
+    showNewsNotFoundView(state: withNotFoundNewsView)
+  }
+
+  func displayAlert(message: String) {
+    showAlert(message: message)
+    showNewsNotFoundView(state: true)
   }
 }
