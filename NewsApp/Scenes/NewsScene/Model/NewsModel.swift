@@ -52,11 +52,11 @@ extension NewsModel {
   func getFilterNews(keyWord: String) {
     if !keyWord.isEmpty, keyWord.count > 2 {
       listNews = listNews.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
-      self.output?.dataLoadSuccess()
+      output?.dataLoadSuccess()
     }
     if keyWord.isEmpty {
       listNews = savedListNews
-      self.output?.dataLoadSuccess()
+      output?.dataLoadSuccess()
     }
   }
 
@@ -69,6 +69,7 @@ extension NewsModel {
   }
 }
 
+// MARK: - ViewModel
 extension NewsViewModel: ViewModel {
   var imageUrl: URL? {
     return urlToImage

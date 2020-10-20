@@ -94,6 +94,7 @@ final class ApiManager {
   }
 }
 
+// MARK: - ApiManagerProtocol
 extension ApiManager: ApiManagerProtocol {
   func callApi(session: SessionData, callBack: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
     getNews(session: session) { result in

@@ -18,11 +18,11 @@ class ModelDependency {
   private let databaseManagerDependency: DatabaseProtocol = DatabaseManager.shared
 }
 
+// MARK: - ModelDependencyProtocol
 extension ModelDependency: ModelDependencyProtocol {
   var apiManager: ApiManagerProtocol {
     return apiManagerDependency
   }
-
   var databaseManager: DatabaseProtocol {
     return databaseManagerDependency
   }

@@ -16,9 +16,9 @@ protocol OfflineNewsModelOutput: AnyObject {
 }
 
 final class OfflineNewsModel {
-  weak var output: OfflineNewsModelOutput?
   private var listNews: [NewsViewModel] = []
   private let databaseManager: DatabaseProtocol
+  weak var output: OfflineNewsModelOutput?
 
   private init(databaseManager: DatabaseProtocol) {
     self.databaseManager = databaseManager

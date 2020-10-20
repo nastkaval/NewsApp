@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum DayDateFormattersConverter { //https://realm.github.io/SwiftLint/convenience_type.html
+enum DayDateFormattersConverter {
   static let dayDateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -24,8 +24,8 @@ enum DayDateFormattersConverter { //https://realm.github.io/SwiftLint/convenienc
 
 class SessionData {
   private var date = Date()
-  var page: Int = 1
-  let pageSize: Int = 15
+  var page = 1
+  let pageSize = 15
   var from: String {
     return DayDateFormattersConverter.dayDateFormatter.string(from: date)
   }

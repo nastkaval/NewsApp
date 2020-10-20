@@ -25,27 +25,30 @@ final class OfflineNewsController {
   }
 }
 
-extension OfflineNewsController: OfflineNewsViewInput {
-  func provideObject(at index: IndexPath) -> ViewModel {
-    return model.object(index.row)
-  }
-
-  var count: Int {
-    return model.count()
-  }
-}
-
+// MARK: - OfflineNewsViewOutput
 extension OfflineNewsController: OfflineNewsViewOutput {
+  func userInterfaceDidLoad() {
+    model.loadDataFromDatabase()
+  }
+
   func deleteRowAt(index: IndexPath) {
     indexPath = index
     model.removeDataFromDatabase(from: index.row)
   }
+}
 
-  func userInterfaceDidLoad() {
-    model.loadDataFromDatabase()
+// MARK: - OfflineNewsViewInput
+extension OfflineNewsController: OfflineNewsViewInput {
+  var count: Int {
+    return model.count()
+  }
+
+  func provideObject(at index: IndexPath) -> ViewModel {
+    return model.object(index.row)
   }
 }
 
+// MARK: - OfflineNewsModelOutput
 extension OfflineNewsController: OfflineNewsModelOutput {
   func dataLoadSuccess() {
     output?.updateUI(withNotFoundNewsView: model.isModelEmpty)

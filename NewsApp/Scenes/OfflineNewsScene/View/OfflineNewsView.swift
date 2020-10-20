@@ -21,8 +21,8 @@ protocol OfflineNewsViewInput: AnyObject {
 final class OfflineNewsView: UIViewController {
   // MARK: - Property
   private let heightForCell: CGFloat = 280
-  var output: OfflineNewsViewOutput?
   weak var input: OfflineNewsViewInput?
+  var output: OfflineNewsViewOutput?
 
   // MARK: - Outlets
   @IBOutlet private weak var listNewsTableView: UITableView!
@@ -45,17 +45,13 @@ final class OfflineNewsView: UIViewController {
     listNewsTableView.register(R.nib.newsTableViewCell)
     listNewsTableView.separatorStyle = .none
   }
-
   private func showNewsNotFoundView(state: Bool) {
     newsNotFoundView.isHidden = !state
   }
 }
 
-extension OfflineNewsView: UITableViewDelegate, UITableViewDataSource {
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return heightForCell
-  }
-
+// MARK: - UITableViewDataSource
+extension OfflineNewsView: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return input?.count ?? 0
   }
@@ -75,7 +71,14 @@ extension OfflineNewsView: UITableViewDelegate, UITableViewDataSource {
     }
   }
 }
+// MARK: - UITableViewDelegate
+extension OfflineNewsView: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return heightForCell
+  }
+}
 
+// MARK: - OfflineNewsControllerOutput
 extension OfflineNewsView: OfflineNewsControllerOutput {
   func updateUI(withNotFoundNewsView: Bool) {
     listNewsTableView.reloadData()

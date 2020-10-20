@@ -26,6 +26,7 @@ protocol NewsViewOutput {
   func showDetailes(at index: IndexPath)
   func menuClicked()
   func showOfflineNews()
+  func showOfflineCollectionNews()
 }
 
 protocol NewsViewInput: AnyObject {
@@ -37,8 +38,8 @@ final class NewsView: UIViewController {
   // MARK: - Properties
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
-  var output: NewsViewOutput?
   weak var input: NewsViewInput?
+  var output: NewsViewOutput?
 
   // MARK: - Outlets
   @IBOutlet private weak var newsListTableView: UITableView!
@@ -66,7 +67,7 @@ final class NewsView: UIViewController {
 
   // MARK: - Functions
   private func refreshControlSettings() {
-    refreshControl.addTarget(self, action: #selector(self.handleRefresh(_:)), for: UIControl.Event.valueChanged)
+    refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: UIControl.Event.valueChanged)
     newsListTableView.addSubview(refreshControl)
   }
 
@@ -95,19 +96,24 @@ final class NewsView: UIViewController {
   }
 
   private func showActionSheet() {
-    let optionMenu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .actionSheet)
+    let optionMenu = UIAlertController(title: nil, message: R.string.localizable.chooseOption(), preferredStyle: .actionSheet)
     optionMenu.addAction(UIAlertAction(title: R.string.localizable.actionSheetShowOffline(), style: .default, handler: clickedShowOfflineNews))
-    optionMenu.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-    self.present(optionMenu, animated: true)
+    optionMenu.addAction(UIAlertAction(title: R.string.localizable.actionSheetShowOfflineCollection(), style: .default, handler: clickedShowOfflineCollectionNews))
+    optionMenu.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+    present(optionMenu, animated: true)
   }
 
   private func clickedShowOfflineNews(action: UIAlertAction) {
     output?.showOfflineNews()
   }
+
+  private func clickedShowOfflineCollectionNews(action: UIAlertAction) {
+    output?.showOfflineCollectionNews()
+  }
 }
 
-// MARK: - Extension TableView
-extension NewsView: UITableViewDataSource, UITableViewDelegate {
+// MARK: - UITableViewDataSource
+extension NewsView: UITableViewDataSource {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return heightForCell
   }
@@ -121,13 +127,14 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
     let news = input?.provideObject(at: indexPath)
+    cell.delegate = self
     cell.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
-    cell.showDetailesView = { bool in
-      self.output?.showDetailes(at: indexPath)
-    }
     return cell
   }
+}
 
+// MARK: - UITableViewDelegate
+extension NewsView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     if let input = input {
       if indexPath.row == input.count - 1 {
@@ -137,12 +144,25 @@ extension NewsView: UITableViewDataSource, UITableViewDelegate {
   }
 }
 
+// MARK: - NewsTableViewCellDelegate
+extension NewsView: NewsTableViewCellDelegate {
+  func showDetailesView(from cell: UITableViewCell) {
+    guard let index = newsListTableView.indexPath(for: cell) else { return }
+    output?.showDetailes(at: index)
+  }
+}
+
+// MARK: - NewsControllerOutput
 extension NewsView: NewsControllerOutput {
   func displayLoadAnimation() {
     startAnimation()
   }
 
   func pushView(view: OfflineNewsView) {
+    navigationController?.pushViewController(view, animated: true)
+  }
+
+  func pushCollectionView(view: OfflineCollectionNewsView) {
     navigationController?.pushViewController(view, animated: true)
   }
 

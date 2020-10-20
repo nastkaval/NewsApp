@@ -15,6 +15,7 @@ protocol NewsControllerOutput: AnyObject {
   func displayLoadAnimation()
   func presentView(view: DetailesView)
   func pushView(view: OfflineNewsView)
+  func pushCollectionView(view: OfflineCollectionNewsView)
 }
 
 final class NewsController {
@@ -28,17 +29,13 @@ final class NewsController {
   }
 }
 
-extension NewsController: NewsViewInput {
-  var count: Int {
-    return modelNews.count()
-  }
-
-  func provideObject(at index: IndexPath) -> ViewModel {
-    return modelNews.object(index.row)
-  }
-}
-
+// MARK: - NewsViewOutput
 extension NewsController: NewsViewOutput {
+  func showOfflineCollectionNews() {
+    let view = OfflineCollectionNewsCoordinator().instantiate()
+    output?.pushCollectionView(view: view)
+  }
+
   func showOfflineNews() {
     let view = OfflineNewsViewCoordinator().instantiate()
     output?.pushView(view: view)
@@ -75,6 +72,7 @@ extension NewsController: NewsViewOutput {
   }
 }
 
+// MARK: - NewsModelOutput
 extension NewsController: NewsModelOutput {
   func dataLoadSuccess() {
     isFiltering = false
@@ -83,5 +81,16 @@ extension NewsController: NewsModelOutput {
 
   func dataLoadWithError(_ errorMessage: String) {
     output?.displayAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
+  }
+}
+
+// MARK: - NewsViewInput
+extension NewsController: NewsViewInput {
+  var count: Int {
+    return modelNews.count()
+  }
+
+  func provideObject(at index: IndexPath) -> ViewModel {
+    return modelNews.object(index.row)
   }
 }

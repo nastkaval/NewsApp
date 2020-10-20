@@ -9,18 +9,18 @@
 import UIKit
 import AlamofireImage
 
+protocol NewsTableViewCellDelegate: AnyObject {
+  func showDetailesView(from cell: UITableViewCell)
+}
 class NewsTableViewCell: UITableViewCell {
   // MARK: - Struct TimeDateFormatters
-  private enum TimeDateFormatters { //https://realm.github.io/SwiftLint/convenience_type.html
+  private enum TimeDateFormatters {
     static let hoursMinutesDateFormatter: DateFormatter = {
       var dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "HH:mm"
       return dateFormatter
     }()
   }
-  // MARK: - Properties
-  typealias IsClicked = (Bool) -> Void
-  var showDetailesView: IsClicked?
 
   // MARK: - Outlets
   @IBOutlet private weak var imageNews: UIImageView!
@@ -30,16 +30,20 @@ class NewsTableViewCell: UITableViewCell {
   @IBOutlet private weak var authorPostNews: UILabel!
   @IBOutlet private weak var showMoreButton: UIButton!
 
+  // MARK: - Properties
+  weak var delegate: NewsTableViewCellDelegate?
+
   // MARK: - LifeCycle
   override func prepareForReuse() {
     super.prepareForReuse()
-    self.imageNews.image = R.image.imageImagePlaceholder()
+    imageNews.image = R.image.imageImagePlaceholder()
   }
 
   @IBAction private func showMoreButtonClicked(_ sender: UIButton) {
-    showDetailesView?(true)
+    delegate?.showDetailesView(from: self)
   }
 
+  // MARK: - Functions
   func updateUI(title: String?, newsDescription: String?, author: String?, imageUrl: URL?, publishedAt: Date?) {
     titleNews.text = title
     descriptionNews.text = newsDescription

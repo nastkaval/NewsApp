@@ -25,6 +25,6 @@ extension UIViewController {
       message: message,
       preferredStyle: .alert)
     alertController.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: nil))
-    self.present(alertController, animated: true, completion: nil)
+    present(alertController, animated: true, completion: nil)
   }
 }

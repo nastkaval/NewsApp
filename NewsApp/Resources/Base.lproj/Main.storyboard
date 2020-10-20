@@ -433,8 +433,8 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ll9-7Y-60g">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Saved News" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0nd-Nc-LMa">
-                                                <rect key="frame" x="106" y="26" width="108.5" height="24"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Saved News Table" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0nd-Nc-LMa">
+                                                <rect key="frame" x="80" y="26" width="160" height="24"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                 <color key="textColor" systemColor="systemBlueColor"/>
                                                 <nil key="highlightedColor"/>
@@ -530,6 +530,153 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q6Z-oE-gLh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="833" y="851"/>
+        </scene>
+        <!--Offline Collection News View-->
+        <scene sceneID="JjB-v0-vaS">
+            <objects>
+                <viewController storyboardIdentifier="OfflineCollectionNewsView" id="HrV-5R-P32" customClass="OfflineCollectionNewsView" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kBu-MU-wsY">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Lku-ad-3Wm">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="br7-cO-ZlS">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Saved News Collection" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ldl-aB-fDy">
+                                                <rect key="frame" x="59.5" y="26" width="201" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <color key="textColor" systemColor="systemBlueColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="om6-dR-V9v">
+                                                <rect key="frame" x="16" y="25" width="20" height="25"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="20" id="0Tu-Sy-DGT"/>
+                                                    <constraint firstAttribute="height" constant="25" id="Mms-p6-g5J"/>
+                                                </constraints>
+                                                <state key="normal" image="icon.backArrow">
+                                                    <color key="titleColor" systemColor="linkColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="backClicked:" destination="HrV-5R-P32" eventType="touchUpInside" id="BAr-1F-RxM"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="om6-dR-V9v" firstAttribute="leading" secondItem="br7-cO-ZlS" secondAttribute="leading" constant="16" id="0uP-cI-66H"/>
+                                            <constraint firstAttribute="bottom" secondItem="Ldl-aB-fDy" secondAttribute="bottom" constant="10" id="6NI-E2-SoI"/>
+                                            <constraint firstAttribute="height" constant="60" id="7AB-xc-9vJ"/>
+                                            <constraint firstAttribute="bottom" secondItem="om6-dR-V9v" secondAttribute="bottom" constant="10" id="BKk-Fk-2VS"/>
+                                            <constraint firstItem="Ldl-aB-fDy" firstAttribute="centerX" secondItem="br7-cO-ZlS" secondAttribute="centerX" id="uxy-YV-0if"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L3S-zz-a6A">
+                                        <rect key="frame" x="0.0" y="60" width="320" height="508"/>
+                                        <subviews>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7yy-Z2-FeD">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="508"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="News not found" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pdj-2B-gsQ">
+                                                        <rect key="frame" x="100" y="220.5" width="120" height="20.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry, there are no saved news" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0TV-yP-D9v">
+                                                        <rect key="frame" x="73" y="247" width="174" height="14.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <color key="textColor" systemColor="systemGray2Color"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="pdj-2B-gsQ" firstAttribute="centerX" secondItem="0TV-yP-D9v" secondAttribute="centerX" id="CEa-g7-G1u"/>
+                                                    <constraint firstItem="0TV-yP-D9v" firstAttribute="centerX" secondItem="7yy-Z2-FeD" secondAttribute="centerX" id="EEa-3u-vAo"/>
+                                                    <constraint firstItem="0TV-yP-D9v" firstAttribute="top" secondItem="pdj-2B-gsQ" secondAttribute="bottom" constant="6" id="Odh-pr-X9X"/>
+                                                    <constraint firstItem="0TV-yP-D9v" firstAttribute="centerY" secondItem="7yy-Z2-FeD" secondAttribute="centerY" id="qSn-g4-pT9"/>
+                                                </constraints>
+                                            </view>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mhj-wr-3Ff">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="508"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="eAk-9D-3qZ">
+                                                    <size key="itemSize" width="128" height="128"/>
+                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                </collectionViewFlowLayout>
+                                                <cells/>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="HrV-5R-P32" id="Sk8-Ci-prK"/>
+                                                    <outlet property="delegate" destination="HrV-5R-P32" id="B4d-7q-Bv9"/>
+                                                </connections>
+                                            </collectionView>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mqb-Vq-G8Q">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="508"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="News not found" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WRj-IA-IAH">
+                                                        <rect key="frame" x="100" y="220.5" width="120" height="20.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry, there are no saved news" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ckl-v1-QJ6">
+                                                        <rect key="frame" x="73" y="247" width="174" height="14.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <color key="textColor" systemColor="systemGray2Color"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="ckl-v1-QJ6" firstAttribute="centerY" secondItem="mqb-Vq-G8Q" secondAttribute="centerY" id="A95-xg-g8H"/>
+                                                    <constraint firstItem="ckl-v1-QJ6" firstAttribute="top" secondItem="WRj-IA-IAH" secondAttribute="bottom" constant="6" id="GUK-iq-1oJ"/>
+                                                    <constraint firstItem="ckl-v1-QJ6" firstAttribute="centerX" secondItem="mqb-Vq-G8Q" secondAttribute="centerX" id="ejn-eW-KKP"/>
+                                                    <constraint firstItem="WRj-IA-IAH" firstAttribute="centerX" secondItem="ckl-v1-QJ6" secondAttribute="centerX" id="kju-VW-ZAV"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="7yy-Z2-FeD" firstAttribute="leading" secondItem="L3S-zz-a6A" secondAttribute="leading" id="1aB-x0-zlk"/>
+                                            <constraint firstItem="mqb-Vq-G8Q" firstAttribute="leading" secondItem="L3S-zz-a6A" secondAttribute="leading" id="578-XF-UDx"/>
+                                            <constraint firstAttribute="trailing" secondItem="mhj-wr-3Ff" secondAttribute="trailing" id="5hF-lm-pJB"/>
+                                            <constraint firstAttribute="trailing" secondItem="7yy-Z2-FeD" secondAttribute="trailing" id="9B3-pA-G8t"/>
+                                            <constraint firstAttribute="bottom" secondItem="7yy-Z2-FeD" secondAttribute="bottom" id="Az2-x5-ub4"/>
+                                            <constraint firstAttribute="bottom" secondItem="mhj-wr-3Ff" secondAttribute="bottom" id="Cfz-Dj-cw1"/>
+                                            <constraint firstAttribute="trailing" secondItem="mqb-Vq-G8Q" secondAttribute="trailing" id="MAS-r9-BHT"/>
+                                            <constraint firstItem="mhj-wr-3Ff" firstAttribute="top" secondItem="L3S-zz-a6A" secondAttribute="top" id="PaI-id-ww7"/>
+                                            <constraint firstAttribute="bottom" secondItem="mqb-Vq-G8Q" secondAttribute="bottom" id="eOU-q1-tEq"/>
+                                            <constraint firstItem="7yy-Z2-FeD" firstAttribute="top" secondItem="L3S-zz-a6A" secondAttribute="top" id="m1S-Ix-BSJ"/>
+                                            <constraint firstItem="mhj-wr-3Ff" firstAttribute="leading" secondItem="L3S-zz-a6A" secondAttribute="leading" id="pRt-kH-slp"/>
+                                            <constraint firstItem="mqb-Vq-G8Q" firstAttribute="top" secondItem="L3S-zz-a6A" secondAttribute="top" id="uZH-22-IlT"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="aKc-dk-6ii"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="aKc-dk-6ii" firstAttribute="bottom" secondItem="Lku-ad-3Wm" secondAttribute="bottom" id="8TA-PM-wWJ"/>
+                            <constraint firstItem="aKc-dk-6ii" firstAttribute="trailing" secondItem="Lku-ad-3Wm" secondAttribute="trailing" id="dSI-S7-DAH"/>
+                            <constraint firstItem="Lku-ad-3Wm" firstAttribute="top" secondItem="kBu-MU-wsY" secondAttribute="top" id="naS-ba-tAy"/>
+                            <constraint firstItem="Lku-ad-3Wm" firstAttribute="leading" secondItem="kBu-MU-wsY" secondAttribute="leading" id="tAj-gn-wRh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="listNewsCollectionView" destination="mhj-wr-3Ff" id="rSU-Lr-jjX"/>
+                        <outlet property="newsNotFoundView" destination="mqb-Vq-G8Q" id="rOi-zp-Wr0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="o4z-B6-6AM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="167" y="850"/>
         </scene>
     </scenes>
     <resources>

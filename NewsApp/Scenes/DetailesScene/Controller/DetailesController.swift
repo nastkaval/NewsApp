@@ -24,6 +24,7 @@ final class DetailesController {
   }
 }
 
+// MARK: - DetailesViewOutput
 extension DetailesController: DetailesViewOutput {
   func userInterfaceDidLoad() {
     model.checkIsExistObjectInDatabase()
@@ -47,6 +48,7 @@ extension DetailesController: DetailesViewInput {
   }
 }
 
+// MARK: - DetailesModelOutput
 extension DetailesController: DetailesModelOutput {
   func dataLoadSuccess() {
     output?.updateUI()

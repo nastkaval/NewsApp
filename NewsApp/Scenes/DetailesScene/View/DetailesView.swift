@@ -41,11 +41,13 @@ final class DetailesView: UIViewController {
   @IBAction private func readMoreClicked(_ sender: UIButton) {
     output?.openNewsInExternalResource()
   }
+
   @IBAction private func closeViewClicked(_ sender: UIButton) {
     output?.closeView()
   }
 }
 
+// MARK: - DetailesControllerOutput
 extension DetailesView: DetailesControllerOutput {
   func displayAlert(title: String, message: String) {
     showAlert(message: message)
