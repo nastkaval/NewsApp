@@ -11,18 +11,20 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
-  var navigationController: UINavigationController?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    let newsView = NewsViewCoordinator().instantiate()
+    let di = DependeciesContainer()
+    di.register(type: ApiManagerProtocol.self, name: "ApiManager", service: ApiManager.shared)
+    di.register(type: DatabaseProtocol.self, name: "DatabaseManager", service: DatabaseManager.shared)
 
     let window = UIWindow(frame: UIScreen.main.bounds)
-    navigationController = UINavigationController(rootViewController: newsView)
-    navigationController?.navigationBar.isHidden = true
+    var navigationController = UINavigationController()
+    navigationController = UINavigationController(rootViewController: NewsViewCoordinator().instantiate(di: di))
+    navigationController.navigationBar.isHidden = true
     window.rootViewController = navigationController
     window.makeKeyAndVisible()
-
     self.window = window
+
     return true
   }
 }

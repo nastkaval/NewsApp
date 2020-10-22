@@ -9,14 +9,16 @@
 import UIKit
 
 class NewsViewCoordinator {
-  func instantiate() -> NewsView {
+  func instantiate(di: DependeciesContainer) -> NewsView {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.newsView.identifier) as! NewsView
-    let model = NewsModel(dependency: ModelDependency())
+    let dependency = di.resolve(type: ApiManagerProtocol.self, name: "ApiManager")
+    let model = NewsModel(loadService: dependency as! ApiManagerProtocol)
     let controller = NewsController(model: model, output: view)
     view.output = controller
     view.input = controller
     model.output = controller
+
     return view
   }
 }

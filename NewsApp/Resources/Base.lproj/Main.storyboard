@@ -145,7 +145,7 @@
                         <constraints>
                             <constraint firstItem="DzM-2S-28Z" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="9QS-AO-TA5"/>
                             <constraint firstItem="DzM-2S-28Z" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="bfG-Et-2bh"/>
-                            <constraint firstItem="DzM-2S-28Z" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="gJn-iv-mTt"/>
+                            <constraint firstItem="DzM-2S-28Z" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="gJn-iv-mTt"/>
                             <constraint firstItem="DzM-2S-28Z" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ycn-pq-GRj"/>
                         </constraints>
                     </view>
@@ -371,7 +371,6 @@
                                     <constraint firstItem="K3i-e8-YYY" firstAttribute="width" secondItem="hzH-gr-QTU" secondAttribute="width" id="OHs-Hr-7th"/>
                                     <constraint firstAttribute="trailing" secondItem="K3i-e8-YYY" secondAttribute="trailing" id="X53-Wz-QVe"/>
                                     <constraint firstAttribute="bottom" secondItem="K3i-e8-YYY" secondAttribute="bottom" id="feB-fF-OZe"/>
-                                    <constraint firstItem="K3i-e8-YYY" firstAttribute="height" secondItem="hzH-gr-QTU" secondAttribute="height" priority="250" id="rQI-Tk-QSt"/>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="FR6-6a-07G"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="Nvd-7c-nTW"/>
@@ -516,9 +515,9 @@
                         <viewLayoutGuide key="safeArea" id="Jsq-RM-qGd"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Jsq-RM-qGd" firstAttribute="bottom" secondItem="WxK-Wh-AGF" secondAttribute="bottom" id="1AD-43-sUp"/>
+                            <constraint firstAttribute="bottom" secondItem="WxK-Wh-AGF" secondAttribute="bottom" id="1AD-43-sUp"/>
                             <constraint firstItem="Jsq-RM-qGd" firstAttribute="trailing" secondItem="WxK-Wh-AGF" secondAttribute="trailing" id="8mK-pj-nNh"/>
-                            <constraint firstItem="WxK-Wh-AGF" firstAttribute="top" secondItem="xLT-DU-j6X" secondAttribute="top" id="Kfv-Ps-i7M"/>
+                            <constraint firstItem="WxK-Wh-AGF" firstAttribute="top" secondItem="Jsq-RM-qGd" secondAttribute="top" id="Kfv-Ps-i7M"/>
                             <constraint firstItem="WxK-Wh-AGF" firstAttribute="leading" secondItem="xLT-DU-j6X" secondAttribute="leading" id="gJ5-od-dyg"/>
                         </constraints>
                     </view>
@@ -663,9 +662,9 @@
                         <viewLayoutGuide key="safeArea" id="aKc-dk-6ii"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="aKc-dk-6ii" firstAttribute="bottom" secondItem="Lku-ad-3Wm" secondAttribute="bottom" id="8TA-PM-wWJ"/>
+                            <constraint firstAttribute="bottom" secondItem="Lku-ad-3Wm" secondAttribute="bottom" id="8TA-PM-wWJ"/>
                             <constraint firstItem="aKc-dk-6ii" firstAttribute="trailing" secondItem="Lku-ad-3Wm" secondAttribute="trailing" id="dSI-S7-DAH"/>
-                            <constraint firstItem="Lku-ad-3Wm" firstAttribute="top" secondItem="kBu-MU-wsY" secondAttribute="top" id="naS-ba-tAy"/>
+                            <constraint firstItem="Lku-ad-3Wm" firstAttribute="top" secondItem="aKc-dk-6ii" secondAttribute="top" id="naS-ba-tAy"/>
                             <constraint firstItem="Lku-ad-3Wm" firstAttribute="leading" secondItem="kBu-MU-wsY" secondAttribute="leading" id="tAj-gn-wRh"/>
                         </constraints>
                     </view>

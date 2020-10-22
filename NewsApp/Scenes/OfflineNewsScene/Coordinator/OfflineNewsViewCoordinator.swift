@@ -9,7 +9,7 @@
 import Foundation
 
 final class OfflineNewsViewCoordinator {
-  func instantiate() -> OfflineNewsView {
+  func instantiate() {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.offlineNewsView.identifier) as! OfflineNewsView
     let model = OfflineNewsModel(dependency: ModelDependency())
@@ -17,6 +17,5 @@ final class OfflineNewsViewCoordinator {
     model.output = controller
     view.output = controller
     view.input = controller
-    return view
   }
 }

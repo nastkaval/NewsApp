@@ -23,10 +23,8 @@ enum DayDateFormattersConverter {
 }
 
 class SessionData {
-  private var date = Date()
   var page = 1
-  let pageSize = 15
   var from: String {
-    return DayDateFormattersConverter.dayDateFormatter.string(from: date)
+    return DayDateFormattersConverter.dayDateFormatter.string(from: Date())
   }
 }

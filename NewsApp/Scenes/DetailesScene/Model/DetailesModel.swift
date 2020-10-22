@@ -18,9 +18,9 @@ final class DetailesModel {
   private let databaseManager: DatabaseProtocol
   weak var output: DetailesModelOutput?
 
-  init(dependency: ModelDependencyProtocol, news: NewsViewModel) {
+  init(loadService: DatabaseProtocol, news: NewsViewModel) {
     self.news = news
-    self.databaseManager = dependency.databaseManager
+    self.databaseManager = loadService
   }
 }
 

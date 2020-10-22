@@ -21,12 +21,8 @@ final class NewsModel {
 
   private let apiManager: ApiManagerProtocol
 
-  init(apiManager: ApiManagerProtocol) {
-    self.apiManager = apiManager
-  }
-
-  convenience init(dependency: ModelDependencyProtocol) {
-    self.init(apiManager: dependency.apiManager)
+  init(loadService: ApiManagerProtocol) {
+    self.apiManager = loadService
   }
 }
 

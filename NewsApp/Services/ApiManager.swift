@@ -14,6 +14,8 @@ enum ServerDataError: LocalizedError {
   case limitNewsError
   case serverError
   case parseError
+  case clientError
+  case unknownError
 
   var localizableDescription: String {
     switch self {
@@ -23,6 +25,10 @@ enum ServerDataError: LocalizedError {
       return R.string.localizable.errorMessagesServerError()
     case .parseError:
       return R.string.localizable.errorMessagesParseError()
+    case .clientError:
+      return R.string.localizable.errorMessagesServerError()
+    case .unknownError:
+      return R.string.localizable.errorMessagesServerError()
     }
   }
 }
@@ -43,54 +49,77 @@ final class ApiManager {
   private let parser = ParseHelper()
   static let shared = ApiManager()
 
-  private func get(url: URL, parameters: [String: Any]?, headers: HTTPHeaders?, successHandler: @escaping(AFDataResponse<Any>) -> Void, fail: @escaping(Error) -> Void) {
-    let getApiQueue = DispatchQueue(label: "apiGetRequest", qos: .userInitiated, attributes: .concurrent)
-    AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers)
-      .responseJSON(queue: getApiQueue, options: .allowFragments) { response in
+  private func get(url: URL, completionHandler: @escaping (Result<AFDataResponse<Data>, AFError>) -> Void) {
+    let getApiQueue = DispatchQueue(label: "apiGetRequest", qos: .userInteractive)
+    AF.request(url, method: .get)
+      .responseData(queue: getApiQueue) { response in
         switch response.result {
         case .success:
           DispatchQueue.main.async {
-            successHandler(response)
+            completionHandler(.success(response))
           }
         case .failure:
           print(response.error.debugDescription)
           if let error = response.error {
-            fail(error)
+            completionHandler(.failure(error))
           }
         }
       }
   }
 
   private func getNews(session: SessionData, completionHandler: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
-    var request = "\(Constants.host)" + "q=apple&sortBy=publishedAt&" + "from=\(session.from)&"
-    request.append("page=\(session.page)&")
-    request.append("pageSize=\(session.pageSize)&")
-    request.append("apiKey=\(Constants.apiKey)")
-    guard let url = URL(string: request) else { return }
-    self.get(
-      url: url,
-      parameters: nil,
-      headers: nil,
-      successHandler: { [weak self] response in
+    let urlRequest = getUrl(session: session)
+    guard let url = urlRequest else { return }
+    get(url: url) { [weak self] result in
+      switch result {
+      case .success(let response):
         if response.response?.statusCode == 426 {
           completionHandler(.failure(.limitNewsError))
           return
         }
-        if let JSON = response.value as? [String: Any] {
-          if let json = JSON["articles"] as? [[String: Any]] {
-            self?.parser.parseJson(json: json) { result in
-              switch result {
-              case .success(let newsEntities):
-                completionHandler(.success(newsEntities))
-              case .failure(let error):
-                completionHandler(.failure(error))
-              }
-            }
-            }
+        guard let data = response.value else { return }
+        self?.parser.parseJson(json: data) { result in
+          switch result {
+          case .success(let newsEntities):
+            completionHandler(.success(newsEntities))
+          case .failure(let error):
+            completionHandler(.failure(error))
           }
-      }, fail: { _ in
-        completionHandler(.failure(.serverError))
-      })
+        }
+      case .failure(let afError):
+        guard let error = self?.handleError(error: afError) else { return }
+        completionHandler(.failure(error))
+      }
+    }
+  }
+
+  private func getUrl(session: SessionData) -> URL? {
+    var urlComponents = URLComponents()
+    urlComponents.scheme = Constants.scheme
+    urlComponents.host = Constants.host
+    urlComponents.path = Constants.path
+    urlComponents.queryItems = [
+      URLQueryItem(name: "q", value: "apple"),
+      URLQueryItem(name: "sortBy", value: "publishedAt"),
+      URLQueryItem(name: "from", value: session.from),
+      URLQueryItem(name: "page", value: "\(session.page)"),
+      URLQueryItem(name: "pageSize", value: "15"),
+      URLQueryItem(name: "apiKey", value: Constants.apiKey)
+    ]
+
+    return urlComponents.url
+  }
+
+  private func handleError(error: AFError) -> ServerDataError {
+    guard let errorCode = error.responseCode else { return .unknownError }
+    switch errorCode {
+    case 500...526:
+      return .serverError
+    case 400...499:
+      return .clientError
+    default:
+      return .unknownError
+    }
   }
 }
 

@@ -14,7 +14,6 @@ protocol NewsControllerOutput: AnyObject {
   func displayActionSheet()
   func displayLoadAnimation()
   func presentView(view: DetailesView)
-  func pushView(view: OfflineNewsView)
   func pushCollectionView(view: OfflineCollectionNewsView)
 }
 
@@ -37,8 +36,7 @@ extension NewsController: NewsViewOutput {
   }
 
   func showOfflineNews() {
-    let view = OfflineNewsViewCoordinator().instantiate()
-    output?.pushView(view: view)
+    OfflineNewsViewCoordinator().instantiate()
   }
 
   func menuClicked() {
@@ -47,8 +45,7 @@ extension NewsController: NewsViewOutput {
 
   func showDetailes(at index: IndexPath) {
     let newsModel = modelNews.object(index.row)
-    let detailesView = DetailesViewCoordinator().instantiate(news: newsModel)
-    output?.presentView(view: detailesView)
+    DetailesViewCoordinator().instantiate(news: newsModel)
   }
 
   func loadDataCurrentPage() {

@@ -9,21 +9,16 @@
 import Foundation
 
 class ParseHelper {
-  func parseJson(json: [[String: Any]], callBack: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
+  func parseJson(json: Data, callBack: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
     var newsEntities: [NewsViewModel] = []
-    for dict in json {
-      var dictString: String?
-      do {
-        let jsonDataSerialize = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
-        dictString = String(bytes: jsonDataSerialize, encoding: String.Encoding.utf8)
-        guard let json: String = dictString, let jsonData: Data = json.data(using: .utf8) else {
-          return callBack(.failure(.parseError))
-        }
-        let news = try JSONDecoder().decode(NewsViewModel.self, from: jsonData)
-        newsEntities.append(news)
-      } catch {
-        print("decode error: invalid data from server")
+    do {
+      let news = try JSONDecoder().decode(NewsServerModel.self, from: json)
+      newsEntities = news.articles.map { item -> NewsViewModel in
+        NewsViewModel(author: item.author ?? "", title: item.title ?? "", descriptionNews: item.articlesDescription ?? "", content: item.content ?? "", urlNewsStr: item.url, urlToImageStr: item.urlToImage ?? "", publishedAtStr: item.publishedAt)
       }
+    } catch {
+      print("decode error: invalid data from server")
+      return callBack(.failure(.parseError))
     }
     return callBack(.success(newsEntities))
   }

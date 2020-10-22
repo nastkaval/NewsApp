@@ -158,10 +158,6 @@ extension NewsView: NewsControllerOutput {
     startAnimation()
   }
 
-  func pushView(view: OfflineNewsView) {
-    navigationController?.pushViewController(view, animated: true)
-  }
-
   func pushCollectionView(view: OfflineCollectionNewsView) {
     navigationController?.pushViewController(view, animated: true)
   }
