@@ -34,10 +34,6 @@ extension NewsController: NewsViewOutput {
     coordinator.openOfflineCollectionNews()
   }
 
-  func showOfflineNews() {
-    coordinator.openOfflineNews()
-  }
-
   func menuClicked() {
     output?.displayActionSheet()
   }

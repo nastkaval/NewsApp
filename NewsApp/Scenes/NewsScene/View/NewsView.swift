@@ -25,7 +25,6 @@ protocol NewsViewOutput {
   func filterNews(keyWord: String)
   func showDetailes(at index: IndexPath)
   func menuClicked()
-  func showOfflineNews()
   func showOfflineCollectionNews()
 }
 
@@ -97,14 +96,9 @@ final class NewsView: UIViewController {
 
   private func showActionSheet() {
     let optionMenu = UIAlertController(title: nil, message: R.string.localizable.chooseOption(), preferredStyle: .actionSheet)
-    optionMenu.addAction(UIAlertAction(title: R.string.localizable.actionSheetShowOffline(), style: .default, handler: clickedShowOfflineNews))
     optionMenu.addAction(UIAlertAction(title: R.string.localizable.actionSheetShowOfflineCollection(), style: .default, handler: clickedShowOfflineCollectionNews))
     optionMenu.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
     present(optionMenu, animated: true)
-  }
-
-  private func clickedShowOfflineNews(action: UIAlertAction) {
-    output?.showOfflineNews()
   }
 
   private func clickedShowOfflineCollectionNews(action: UIAlertAction) {
