@@ -47,7 +47,6 @@ protocol ApiManagerProtocol {
 
 final class ApiManager {
   private let parser = ParseHelper()
-  static let shared = ApiManager()
 
   private func get(url: URL, completionHandler: @escaping (Result<AFDataResponse<Data>, AFError>) -> Void) {
     let getApiQueue = DispatchQueue(label: "apiGetRequest", qos: .userInteractive)

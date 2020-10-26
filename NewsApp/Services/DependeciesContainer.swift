@@ -16,8 +16,8 @@ class DependeciesContainer {
     dependecies[dependencyKey] = service
   }
 
-  func resolve<T>(type: T.Type, name: String) -> T? {
+  func resolve<T>(type: T.Type, name: String) -> T {
     let dependencyKey = DependencyKey(type: type, name: name)
-    return dependecies[dependencyKey] as? T
+    return dependecies[dependencyKey] as! T //?
   }
 }

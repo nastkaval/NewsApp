@@ -20,12 +20,8 @@ final class OfflineNewsModel {
   private let databaseManager: DatabaseProtocol
   weak var output: OfflineNewsModelOutput?
 
-  private init(databaseManager: DatabaseProtocol) {
+  init(databaseManager: DatabaseProtocol) {
     self.databaseManager = databaseManager
-  }
-
-  convenience init(dependency: ModelDependencyProtocol) {
-    self.init(databaseManager: dependency.databaseManager)
   }
 
   func loadDataFromDatabase() {

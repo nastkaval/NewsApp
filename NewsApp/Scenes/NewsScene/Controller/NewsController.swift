@@ -13,30 +13,29 @@ protocol NewsControllerOutput: AnyObject {
   func displayAlert(title: String, message: String)
   func displayActionSheet()
   func displayLoadAnimation()
-  func presentView(view: DetailesView)
-  func pushCollectionView(view: OfflineCollectionNewsView)
 }
 
 final class NewsController {
   private var modelNews: NewsModel
   private weak var output: NewsControllerOutput?
+  private let coordinator: NewsViewCoordinator
   private var isFiltering = false
 
-  init(model: NewsModel, output: NewsControllerOutput) {
+  init(model: NewsModel, output: NewsControllerOutput, coordinator: NewsViewCoordinator) {
     self.modelNews = model
     self.output = output
+    self.coordinator = coordinator
   }
 }
 
 // MARK: - NewsViewOutput
 extension NewsController: NewsViewOutput {
   func showOfflineCollectionNews() {
-    let view = OfflineCollectionNewsCoordinator().instantiate()
-    output?.pushCollectionView(view: view)
+    coordinator.openOfflineCollectionNews()
   }
 
   func showOfflineNews() {
-    OfflineNewsViewCoordinator().instantiate()
+    coordinator.openOfflineNews()
   }
 
   func menuClicked() {
@@ -45,7 +44,7 @@ extension NewsController: NewsViewOutput {
 
   func showDetailes(at index: IndexPath) {
     let newsModel = modelNews.object(index.row)
-    DetailesViewCoordinator().instantiate(news: newsModel)
+    coordinator.openDetailesNews(newsModel: newsModel)
   }
 
   func loadDataCurrentPage() {

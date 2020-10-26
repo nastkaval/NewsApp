@@ -11,6 +11,7 @@ import UIKit
 protocol OfflineNewsViewOutput {
   func userInterfaceDidLoad()
   func deleteRowAt(index: IndexPath)
+  func closeView()
 }
 
 protocol OfflineNewsViewInput: AnyObject {
@@ -37,7 +38,7 @@ final class OfflineNewsView: UIViewController {
 
   // MARK: - Actions
   @IBAction private func backClicked(_ sender: UIButton) {
-    navigationController?.popViewController(animated: true)
+    output?.closeView()
   }
 
   // MARK: - Functions

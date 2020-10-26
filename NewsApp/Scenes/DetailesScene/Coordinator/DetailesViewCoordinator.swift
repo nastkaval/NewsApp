@@ -9,20 +9,27 @@
 import UIKit
 import RealmSwift
 
-class DetailesViewCoordinator {
-  func instantiate(news: NewsViewModel) {
+final class DetailesViewCoordinator {
+  private let dependencyContainer: DependeciesContainer
+  private weak var delegate: NewsViewCoordinator?
+
+  init(dependencyContainer: DependeciesContainer, delegate: NewsViewCoordinator) {
+    self.dependencyContainer = dependencyContainer
+    self.delegate = delegate
+  }
+
+  func show(news: NewsViewModel, callback: ((UIViewController) -> Void)) {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.detailesView.identifier) as! DetailesView
-    let di = DependeciesContainer()
-    di.register(type: DatabaseProtocol.self, name: "DatabaseManager", service: DatabaseManager.shared)
-    guard let dependency = di.resolve(type: DatabaseProtocol.self, name: "DatabaseManager") else { return }
-    let model = DetailesModel(loadService: dependency, news: news)
-    let controller = DetailesController(model: model, output: view)
+    let model = DetailesModel(loadService: dependencyContainer.resolve(type: DatabaseProtocol.self, name: "DatabaseManager"), news: news)
+    let controller = DetailesController(model: model, output: view, coordinator: self)
     model.output = controller
     view.output = controller
     view.input = controller
+    callback(view)
+  }
 
-    let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-    window?.rootViewController?.present(view, animated: true)
+  func hide() {
+    delegate?.closeDetailesNews()
   }
 }

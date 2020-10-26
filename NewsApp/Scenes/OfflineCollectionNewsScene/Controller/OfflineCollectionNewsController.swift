@@ -18,10 +18,12 @@ final class OfflineCollectionNewsController {
   private var indexPath: IndexPath?
   private var model: OfflineCollectionNewsModel
   private weak var output: OfflineCollectionNewsControllerOutput?
+  private let coordinator: OfflineCollectionNewsCoordinator
 
-  init(model: OfflineCollectionNewsModel, output: OfflineCollectionNewsControllerOutput?) {
+  init(model: OfflineCollectionNewsModel, output: OfflineCollectionNewsControllerOutput?, coordinator: OfflineCollectionNewsCoordinator) {
     self.model = model
     self.output = output
+    self.coordinator = coordinator
   }
 }
 
@@ -37,6 +39,10 @@ extension OfflineCollectionNewsController: OfflineCollectionNewsViewInput {
 
 // MARK: - OfflineCollectionNewsViewOutput
 extension OfflineCollectionNewsController: OfflineCollectionNewsViewOutput {
+  func closeView() {
+    coordinator.hide()
+  }
+
   func deleteRowAt(index: IndexPath) {
     indexPath = index
     model.removeDataFromDatabase(from: index.row)

@@ -13,16 +13,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    let di = DependeciesContainer()
-    di.register(type: ApiManagerProtocol.self, name: "ApiManager", service: ApiManager.shared)
-    di.register(type: DatabaseProtocol.self, name: "DatabaseManager", service: DatabaseManager.shared)
+    let dependencyManager = DependencyManager()
+    let dependencyContainer = dependencyManager.buildDependencyContainer()
 
     let window = UIWindow(frame: UIScreen.main.bounds)
-    var navigationController = UINavigationController()
-    navigationController = UINavigationController(rootViewController: NewsViewCoordinator().instantiate(di: di))
-    navigationController.navigationBar.isHidden = true
-    window.rootViewController = navigationController
     window.makeKeyAndVisible()
+    let navigationController = UINavigationController()
+    navigationController.navigationBar.isHidden = true
+
+    NewsViewCoordinator(dependencyContainer: dependencyContainer).setRootViewController { view in
+      navigationController.viewControllers = [view]
+    }
+
+    window.rootViewController = navigationController
     self.window = window
 
     return true

@@ -17,10 +17,12 @@ protocol DetailesControllerOutput: AnyObject {
 final class DetailesController {
   private let model: DetailesModel
   private weak var output: DetailesControllerOutput?
+  private let coordinator: DetailesViewCoordinator
 
-  init(model: DetailesModel, output: DetailesControllerOutput) {
+  init(model: DetailesModel, output: DetailesControllerOutput, coordinator: DetailesViewCoordinator) {
     self.model = model
     self.output = output
+    self.coordinator = coordinator
   }
 }
 
@@ -38,7 +40,7 @@ extension DetailesController: DetailesViewOutput {
   }
 
   func closeView() {
-    output?.dismissView()
+    coordinator.hide()
   }
 }
 

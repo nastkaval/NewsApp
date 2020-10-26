@@ -18,15 +18,21 @@ final class OfflineNewsController {
   private var indexPath: IndexPath?
   private var model: OfflineNewsModel
   private weak var output: OfflineNewsControllerOutput?
+  private let coordinator: OfflineNewsViewCoordinator
 
-  init(model: OfflineNewsModel, output: OfflineNewsControllerOutput?) {
+  init(model: OfflineNewsModel, output: OfflineNewsControllerOutput?, coordinator: OfflineNewsViewCoordinator) {
     self.model = model
     self.output = output
+    self.coordinator = coordinator
   }
 }
 
 // MARK: - OfflineNewsViewOutput
 extension OfflineNewsController: OfflineNewsViewOutput {
+  func closeView() {
+    coordinator.hide()
+  }
+
   func userInterfaceDidLoad() {
     model.loadDataFromDatabase()
   }

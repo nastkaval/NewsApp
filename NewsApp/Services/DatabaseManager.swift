@@ -38,8 +38,6 @@ protocol DatabaseProtocol: AnyObject {
 }
 
 final class DatabaseManager: DatabaseProtocol {
-  static let shared = DatabaseManager()
-
   func loadData() -> [NewsEntity] {
     do {
       let realm = try Realm()
