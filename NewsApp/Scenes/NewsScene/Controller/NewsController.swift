@@ -13,6 +13,8 @@ protocol NewsControllerOutput: AnyObject {
   func displayAlert(title: String, message: String)
   func displayActionSheet()
   func displayLoadAnimation()
+  func displayNoResultView()
+  func updateUIFilteringEnd()
 }
 
 final class NewsController {
@@ -49,6 +51,7 @@ extension NewsController: NewsViewOutput {
 
   func filterNews(keyWord: String) {
     modelNews.getFilterNews(keyWord: keyWord)
+    print(keyWord)
     isFiltering = true
   }
 
@@ -66,8 +69,16 @@ extension NewsController: NewsViewOutput {
 
 // MARK: - NewsModelOutput
 extension NewsController: NewsModelOutput {
-  func dataLoadSuccess() {
+  func dataFilterEnd() {
     isFiltering = false
+    output?.updateUIFilteringEnd()
+  }
+
+  func dataFilterNoResult() {
+    output?.displayNoResultView()
+  }
+
+  func dataLoadSuccess() {
     output?.updateUI()
   }
 

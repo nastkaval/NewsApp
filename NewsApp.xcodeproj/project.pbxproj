@@ -371,7 +371,6 @@
 			buildPhases = (
 				F56A562CD14A17E9DF2CACED /* [CP] Check Pods Manifest.lock */,
 				6043ADC82514DB6D00B117E5 /* ShellScript */,
-				B0F66450356CD5011B613C66 /* [CP] Prepare Artifacts */,
 				1CDFEE2B24ED550C003D5B65 /* Sources */,
 				1CDFEE2C24ED550C003D5B65 /* Frameworks */,
 				1CDFEE2D24ED550C003D5B65 /* Resources */,
@@ -491,23 +490,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NewsApp/Pods-NewsApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B0F66450356CD5011B613C66 /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NewsApp/Pods-NewsApp-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NewsApp/Pods-NewsApp-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NewsApp/Pods-NewsApp-artifacts.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F56A562CD14A17E9DF2CACED /* [CP] Check Pods Manifest.lock */ = {

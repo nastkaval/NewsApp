@@ -57,6 +57,9 @@ final class NewsView: UIViewController {
 
   // MARK: - Actions
   @IBAction private func editingChangedSearchTextFiled(_ sender: UITextField) {
+    if refreshControl.isDescendant(of: newsListTableView) {
+      refreshControl.removeFromSuperview()
+    }
     output?.filterNews(keyWord: sender.text ?? "")
   }
 
@@ -161,8 +164,18 @@ extension NewsView: NewsControllerOutput {
   }
 
   func updateUI() {
-    searchTextField.endEditing(true)
+    notFoundNewsView.isHidden = true
     stopAnimation()
     newsListTableView.reloadData()
+  }
+
+  func updateUIFilteringEnd() {
+    notFoundNewsView.isHidden = true
+    refreshControlSettings()
+    newsListTableView.reloadData()
+  }
+
+  func displayNoResultView() {
+    notFoundNewsView.isHidden = false
   }
 }

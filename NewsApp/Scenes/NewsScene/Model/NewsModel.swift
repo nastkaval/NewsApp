@@ -11,6 +11,8 @@ import Foundation
 protocol NewsModelOutput: AnyObject {
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
+  func dataFilterNoResult()
+  func dataFilterEnd()
 }
 
 final class NewsModel {
@@ -47,12 +49,17 @@ extension NewsModel {
 
   func getFilterNews(keyWord: String) {
     if !keyWord.isEmpty, keyWord.count > 2 {
+      listNews = savedListNews
       listNews = listNews.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
+      guard !listNews.isEmpty else {
+        output?.dataFilterNoResult()
+        return
+      }
       output?.dataLoadSuccess()
     }
     if keyWord.isEmpty {
       listNews = savedListNews
-      output?.dataLoadSuccess()
+      output?.dataFilterEnd()
     }
   }
 
