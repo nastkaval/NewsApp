@@ -10,6 +10,7 @@ import UIKit
 
 protocol OfflineNewsViewOutput {
   func userInterfaceDidLoad()
+  func deleteRowAt(index: IndexPath, callback: ((Bool) -> Void))
 }
 
 protocol OfflineNewsViewInput: class {
@@ -63,6 +64,18 @@ extension OfflineNewsView: UITableViewDelegate, UITableViewDataSource {
     let news = input?.provideObject(at: indexPath)
     cell.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
     return cell
+  }
+
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+      output?.deleteRowAt(index: indexPath) { complete in
+        if complete {
+          tableView.deleteRows(at: [indexPath], with: .fade)
+        } else {
+          hideNewsNotFoundView(state: false)
+        }
+      }
+    }
   }
 }
 

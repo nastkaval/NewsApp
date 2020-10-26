@@ -34,6 +34,14 @@ extension OfflineNewsController: OfflineNewsViewInput {
 }
 
 extension OfflineNewsController: OfflineNewsViewOutput {
+  func deleteRowAt(index: IndexPath, callback: ((Bool) -> Void)) {
+    if model.deleteDataFromDatabase(from: index.row) {
+      callback(true)
+    } else {
+      callback(false)
+    }
+  }
+
   func userInterfaceDidLoad() {
     model.loadDataFromDatabase()
   }

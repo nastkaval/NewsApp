@@ -30,7 +30,6 @@ class NewsEntity: Object {
   }
 }
 
-//class NewsScene {
   class NewsViewModel: Decodable {
     var author: String
     var title: String
@@ -81,4 +80,3 @@ class NewsEntity: Object {
       self.publishedAtDate = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
     }
   }
-//}
