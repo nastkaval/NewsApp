@@ -37,6 +37,9 @@ final class NewsViewCoordinator {
   }
 
   func openOfflineCollectionNews() {
+    let offlineCollectionNewsCoordinator = OfflineCollectionNewsCoordinator(dependencyContainer: dependencyContainer)
+    offlineCollectionNewsCoordinator.output = self
+    offlineCollectionNewsCoordinator.show { view in
       self.viewController?.navigationController?.pushViewController(view, animated: true)
     }
   }
@@ -48,7 +51,8 @@ extension NewsViewCoordinator: DetailesViewCoordinatorOutput {
   }
 }
 
+extension NewsViewCoordinator: OfflineCollectionNewsCoordinatorOutput {
   func closeOfflineCollectionNews() {
-    self.viewController?.navigationController?.popViewController(animated: true)
+    viewController?.navigationController?.popViewController(animated: true)
   }
 }

@@ -8,13 +8,15 @@
 
 import UIKit
 
+protocol OfflineCollectionNewsCoordinatorOutput: AnyObject {
+  func closeOfflineCollectionNews()
+}
 final class OfflineCollectionNewsCoordinator {
   private let dependencyContainer: DependeciesContainer
-  private weak var delegate: NewsViewCoordinator?
+  weak var output: OfflineCollectionNewsCoordinatorOutput?
 
-  init(dependencyContainer: DependeciesContainer, delegate: NewsViewCoordinator) {
+  init(dependencyContainer: DependeciesContainer) {
     self.dependencyContainer = dependencyContainer
-    self.delegate = delegate
   }
 
   func show(_ callback: ((UIViewController) -> Void)) {
@@ -29,6 +31,6 @@ final class OfflineCollectionNewsCoordinator {
   }
 
   func hide() {
-    delegate?.closeOfflineCollectionNews()
+    output?.closeOfflineCollectionNews()
   }
 }
