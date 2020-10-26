@@ -38,39 +38,33 @@ protocol DatabaseProtocol: AnyObject {
 }
 
 final class DatabaseManager: DatabaseProtocol {
-  func loadData() -> [NewsEntity] {
+  private let realm: Realm
+
+  init?() {
     do {
-      let realm = try Realm()
-      let newsArray = realm.objects(NewsEntity.self).sorted(byKeyPath: "publishedAtStr", ascending: false).toArray()
-      return newsArray
+      self.realm = try Realm()
     } catch {
-      fatalError(R.string.localizable.errorMessagesInitDatabaseError())
+      return nil
     }
+  }
+
+  func loadData() -> [NewsEntity] {
+    let newsArray = realm.objects(NewsEntity.self).sorted(byKeyPath: "publishedAtStr", ascending: false).toArray()
+    return newsArray
   }
 
   func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
-    do {
-      let realm = try Realm()
-      let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(title)'").toArray()
-      return callBack(.success(newsArray))
-    } catch {
-      return callBack(.failure(.initDatabaseError))
-    }
+    let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(title)'").toArray()
+    return callBack(.success(newsArray))
   }
 
   func checkObjectIsExistBy(id: String) -> NewsEntity? {
-    do {
-      let realm = try Realm()
-      let object = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id).first
-      return object
-    } catch {
-      fatalError(R.string.localizable.errorMessagesInitDatabaseError())
-    }
+    let object = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id).first
+    return object
   }
 
   func removeDataBy(id: String) -> Bool {
     do {
-      let realm = try Realm()
       let objectShouldDelete = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id)
       try realm.write {
         realm.delete(objectShouldDelete)
@@ -83,7 +77,6 @@ final class DatabaseManager: DatabaseProtocol {
 
   func saveData(newsEntity: NewsEntity) -> Bool {
     do {
-      let realm = try Realm()
       try realm.write {
         realm.add(newsEntity)
       }
