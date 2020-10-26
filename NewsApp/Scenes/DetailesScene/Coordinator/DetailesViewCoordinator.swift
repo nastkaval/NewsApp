@@ -9,13 +9,16 @@
 import UIKit
 import RealmSwift
 
+protocol DetailesViewCoordinatorOutput: AnyObject {
+  func closeDetailesView()
+}
+
 final class DetailesViewCoordinator {
   private let dependencyContainer: DependeciesContainer
-  private weak var delegate: NewsViewCoordinator?
+  weak var output: DetailesViewCoordinatorOutput?
 
-  init(dependencyContainer: DependeciesContainer, delegate: NewsViewCoordinator) {
+  init(dependencyContainer: DependeciesContainer) {
     self.dependencyContainer = dependencyContainer
-    self.delegate = delegate
   }
 
   func show(news: NewsViewModel, callback: ((UIViewController) -> Void)) {
@@ -30,6 +33,6 @@ final class DetailesViewCoordinator {
   }
 
   func hide() {
-    delegate?.closeDetailesNews()
+    output?.closeDetailesView()
   }
 }

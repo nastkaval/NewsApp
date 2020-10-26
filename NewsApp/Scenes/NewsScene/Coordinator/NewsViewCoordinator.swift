@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewsViewCoordinator {
+final class NewsViewCoordinator {
   private let dependencyContainer: DependeciesContainer
   private weak var viewController: UIViewController?
 
@@ -29,20 +29,24 @@ class NewsViewCoordinator {
   }
 
   func openDetailesNews(newsModel: NewsViewModel) {
-    DetailesViewCoordinator(dependencyContainer: dependencyContainer, delegate: self).show(news: newsModel) { view in
+    let detailesCoordinator = DetailesViewCoordinator(dependencyContainer: dependencyContainer)
+    detailesCoordinator.output = self
+    detailesCoordinator.show(news: newsModel) { view in
       self.viewController?.present(view, animated: true)
     }
   }
 
-  func closeDetailesNews() {
-    self.viewController?.dismiss(animated: true)
-  }
-
   func openOfflineCollectionNews() {
-    OfflineCollectionNewsCoordinator(dependencyContainer: dependencyContainer, delegate: self).show { view in
       self.viewController?.navigationController?.pushViewController(view, animated: true)
     }
   }
+}
+
+extension NewsViewCoordinator: DetailesViewCoordinatorOutput {
+  func closeDetailesView() {
+    viewController?.dismiss(animated: true)
+  }
+}
 
   func closeOfflineCollectionNews() {
     self.viewController?.navigationController?.popViewController(animated: true)
