@@ -38,16 +38,6 @@ class NewsViewCoordinator {
     self.viewController?.dismiss(animated: true)
   }
 
-  func openOfflineNews() {
-    OfflineNewsViewCoordinator(dependencyContainer: dependencyContainer, delegate: self).show { view in
-      self.viewController?.navigationController?.pushViewController(view, animated: true)
-    }
-  }
-
-  func closeOfflineNews() {
-    self.viewController?.navigationController?.popViewController(animated: true)
-  }
-
   func openOfflineCollectionNews() {
     OfflineCollectionNewsCoordinator(dependencyContainer: dependencyContainer, delegate: self).show { view in
       self.viewController?.navigationController?.pushViewController(view, animated: true)
