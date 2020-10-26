@@ -13,11 +13,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    return true
-  }
+    let dependencyManager = DependencyManager()
+    let dependencyContainer = dependencyManager.buildDependencyContainer()
 
-  // MARK: UISceneSession Lifecycle
-  func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-    return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    let window = UIWindow(frame: UIScreen.main.bounds)
+    window.makeKeyAndVisible()
+    let navigationController = UINavigationController()
+    navigationController.navigationBar.isHidden = true
+
+    NewsViewCoordinator(dependencyContainer: dependencyContainer).setRootViewController { view in
+      navigationController.viewControllers = [view]
+    }
+
+    window.rootViewController = navigationController
+    self.window = window
+
+    return true
   }
 }

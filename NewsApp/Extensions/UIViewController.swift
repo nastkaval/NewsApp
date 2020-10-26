@@ -19,12 +19,12 @@ extension UIViewController {
     view.endEditing(true)
   }
 
-  func showAlert(title: String, message: String) {
+  func showAlert(message: String) {
     let alertController = UIAlertController(
-      title: title,
+      title: R.string.localizable.errorMessagesErrorTitle(),
       message: message,
       preferredStyle: .alert)
     alertController.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: nil))
-    self.present(alertController, animated: true, completion: nil)
+    present(alertController, animated: true, completion: nil)
   }
 }

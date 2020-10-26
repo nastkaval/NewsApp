@@ -8,28 +8,31 @@
 
 import UIKit
 
-protocol DetailesControllerOutput: class {
+protocol DetailesControllerOutput: AnyObject {
   func updateUI()
   func displayAlert(title: String, message: String)
-  func dismiss()
+  func dismissView()
 }
 
 final class DetailesController {
   private let model: DetailesModel
   private weak var output: DetailesControllerOutput?
+  private let coordinator: DetailesViewCoordinator
 
-  init(model: DetailesModel, output: DetailesControllerOutput) {
+  init(model: DetailesModel, output: DetailesControllerOutput, coordinator: DetailesViewCoordinator) {
     self.model = model
     self.output = output
+    self.coordinator = coordinator
   }
 }
 
+// MARK: - DetailesViewOutput
 extension DetailesController: DetailesViewOutput {
   func userInterfaceDidLoad() {
     model.checkIsExistObjectInDatabase()
   }
 
-  func openNewsInResource() {
+  func openNewsInExternalResource() {
     let newsUrl = object.newsUrl
     if let url = newsUrl {
       UIApplication.shared.open(url)
@@ -37,7 +40,7 @@ extension DetailesController: DetailesViewOutput {
   }
 
   func closeView() {
-    output?.dismiss()
+    coordinator.hide()
   }
 }
 
@@ -47,6 +50,7 @@ extension DetailesController: DetailesViewInput {
   }
 }
 
+// MARK: - DetailesModelOutput
 extension DetailesController: DetailesModelOutput {
   func dataLoadSuccess() {
     output?.updateUI()

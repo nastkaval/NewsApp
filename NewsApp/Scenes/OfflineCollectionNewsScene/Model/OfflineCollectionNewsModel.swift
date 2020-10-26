@@ -8,22 +8,23 @@
 
 import Foundation
 
-protocol OfflineNewsModelOutput: AnyObject {
+protocol OfflineCollectionNewsModelOutput: AnyObject {
   func dataLoadSuccess()
   func dataLoadFailed()
   func dataRemovedSuccess()
   func dataRemovedFailed()
 }
 
-final class OfflineNewsModel {
+final class OfflineCollectionNewsModel {
   private var listNews: [NewsViewModel] = []
   private let databaseManager: DatabaseProtocol
-  weak var output: OfflineNewsModelOutput?
+  weak var output: OfflineCollectionNewsModelOutput?
 
   init(databaseManager: DatabaseProtocol) {
     self.databaseManager = databaseManager
   }
 
+  // MARK: - Functions
   func loadDataFromDatabase() {
     let dataArray = databaseManager.loadData()
     guard !dataArray.isEmpty else {
@@ -47,7 +48,7 @@ final class OfflineNewsModel {
   }
 }
 
-extension OfflineNewsModel {
+extension OfflineCollectionNewsModel {
   func object(_ index: Int) -> NewsViewModel {
     return listNews[index]
   }

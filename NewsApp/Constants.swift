@@ -9,6 +9,8 @@
 import Foundation
 
 enum Constants {
-  static let host: String = "http://newsapi.org/v2/everything?"
-  static let apiKey: String = "8d22efe4f9f04f1ebb9b841c51e54904"
+  static let scheme = "https"
+  static let host = "newsapi.org"
+  static let path = "/v2/everything"
+  static let apiKey = "8d22efe4f9f04f1ebb9b841c51e54904"
 }

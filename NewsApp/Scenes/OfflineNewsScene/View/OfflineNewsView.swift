@@ -10,10 +10,11 @@ import UIKit
 
 protocol OfflineNewsViewOutput {
   func userInterfaceDidLoad()
-  func deleteRowAt(index: IndexPath, callback: ((Bool) -> Void))
+  func deleteRowAt(index: IndexPath)
+  func closeView()
 }
 
-protocol OfflineNewsViewInput: class {
+protocol OfflineNewsViewInput: AnyObject {
   func provideObject(at index: IndexPath) -> ViewModel
   var count: Int { get }
 }
@@ -21,13 +22,12 @@ protocol OfflineNewsViewInput: class {
 final class OfflineNewsView: UIViewController {
   // MARK: - Property
   private let heightForCell: CGFloat = 280
-  var output: OfflineNewsViewOutput?
   weak var input: OfflineNewsViewInput?
+  var output: OfflineNewsViewOutput?
 
   // MARK: - Outlets
   @IBOutlet private weak var listNewsTableView: UITableView!
   @IBOutlet private weak var newsNotFoundView: UIView!
-
 
   // MARK: - LifeCycle
   override func viewDidLoad() {
@@ -37,8 +37,8 @@ final class OfflineNewsView: UIViewController {
   }
 
   // MARK: - Actions
-  @IBAction func backClicked(_ sender: UIButton) {
-    navigationController?.popViewController(animated: true)
+  @IBAction private func backClicked(_ sender: UIButton) {
+    output?.closeView()
   }
 
   // MARK: - Functions
@@ -46,13 +46,13 @@ final class OfflineNewsView: UIViewController {
     listNewsTableView.register(R.nib.newsTableViewCell)
     listNewsTableView.separatorStyle = .none
   }
+  private func showNewsNotFoundView(state: Bool) {
+    newsNotFoundView.isHidden = !state
+  }
 }
 
-extension OfflineNewsView: UITableViewDelegate, UITableViewDataSource {
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return heightForCell
-  }
-
+// MARK: - UITableViewDataSource
+extension OfflineNewsView: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return input?.count ?? 0
   }
@@ -68,22 +68,31 @@ extension OfflineNewsView: UITableViewDelegate, UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     if editingStyle == .delete {
-      output?.deleteRowAt(index: indexPath) { complete in
-        if complete {
-          tableView.deleteRows(at: [indexPath], with: .fade)
-        } else {
-          hideNewsNotFoundView(state: false)
-        }
-      }
+      output?.deleteRowAt(index: indexPath)
     }
   }
 }
-
-extension OfflineNewsView: OfflineNewsControllerOutput {
-  func updateUI() {
-    listNewsTableView.reloadData()
+// MARK: - UITableViewDelegate
+extension OfflineNewsView: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return heightForCell
   }
-  func hideNewsNotFoundView(state: Bool) {
-    newsNotFoundView.isHidden = state
+}
+
+// MARK: - OfflineNewsControllerOutput
+extension OfflineNewsView: OfflineNewsControllerOutput {
+  func updateUI(withNotFoundNewsView: Bool) {
+    listNewsTableView.reloadData()
+    showNewsNotFoundView(state: withNotFoundNewsView)
+  }
+
+  func updateUIWithRemoveCellAt(index: IndexPath, withNotFoundNewsView: Bool) {
+    listNewsTableView.deleteRows(at: [index], with: .none)
+    showNewsNotFoundView(state: withNotFoundNewsView)
+  }
+
+  func displayAlert(message: String) {
+    showAlert(message: message)
+    showNewsNotFoundView(state: true)
   }
 }

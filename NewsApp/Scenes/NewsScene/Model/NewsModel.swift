@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol NewsModelOutput: class {
+protocol NewsModelOutput: AnyObject {
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
 }
@@ -21,12 +21,8 @@ final class NewsModel {
 
   private let apiManager: ApiManagerProtocol
 
-  init(apiManager: ApiManagerProtocol) {
-    self.apiManager = apiManager
-  }
-
-  convenience init(dependency: ModelDependencyProtocol) {
-    self.init(apiManager: dependency.apiManager)
+  init(loadService: ApiManagerProtocol) {
+    self.apiManager = loadService
   }
 }
 
@@ -44,7 +40,7 @@ extension NewsModel {
         self?.savedListNews.append(contentsOf: newsArray)
         self?.output?.dataLoadSuccess()
       case .failure(let error):
-        self?.output?.dataLoadWithError(error.description)
+        self?.output?.dataLoadWithError(error.localizableDescription)
       }
     }
   }
@@ -52,11 +48,11 @@ extension NewsModel {
   func getFilterNews(keyWord: String) {
     if !keyWord.isEmpty, keyWord.count > 2 {
       listNews = listNews.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
-      self.output?.dataLoadSuccess()
+      output?.dataLoadSuccess()
     }
     if keyWord.isEmpty {
       listNews = savedListNews
-      self.output?.dataLoadSuccess()
+      output?.dataLoadSuccess()
     }
   }
 
@@ -69,6 +65,7 @@ extension NewsModel {
   }
 }
 
+// MARK: - ViewModel
 extension NewsViewModel: ViewModel {
   var imageUrl: URL? {
     return urlToImage

@@ -8,14 +8,19 @@
   Copyright © 2020 Nastassia Kavalchuk. All rights reserved.
 */
 
-"errorMessages.limitNews" = "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.";
-"errorMessages.serverError" = "The call failed.";
-"errorMessages.parseError" = "Parsing failed.";
-"errorMessages.initDatabaseError" = "Realm error init";
-"errorMessages.saveError" = "Realm error save";
-"errorMessages.noObject" = "Realm doesn't have any object with this ID";
-"errorMessages.cleanDatabaseError" = "Realm error clean database";
-"errorMessages.errorTitle" = "Error";
+"errorMessages.limit.news" = "You have requested too many results. Developer accounts are limited to a max of 100 results. You are trying to request results 100 to 125. Please upgrade to a paid plan if you need more results.";
+"errorMessages.server.error" = "The call failed.";
+"errorMessages.parse.error" = "Parsing failed.";
+"errorMessages.init.database.error" = "Realm error init";
+"errorMessages.save.error" = "Realm error save";
+"errorMessages.no.object" = "Realm doesn't have any object";
+"errorMessages.clean.database.error" = "Realm error clean database";
+"errorMessages.error.title" = "Error";
+"errorMessages.error.removing" = "Sorry, the news can't be removed";
 "ok" = "OK";
-"actionSheet.showOffline" = "Show offline news";
+"cancel" = "Cancel";
+"choose.option" = "Choose Option";
+"actionSheet.show.offline" = "Show offline news";
+"actionSheet.show.offline.collection" = "Show collection offline news";
+"click.to.delete" = "Click to delete";
 

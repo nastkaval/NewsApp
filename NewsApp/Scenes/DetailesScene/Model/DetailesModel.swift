@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol DetailesModelOutput: class {
+protocol DetailesModelOutput: AnyObject {
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
 }
@@ -18,9 +18,9 @@ final class DetailesModel {
   private let databaseManager: DatabaseProtocol
   weak var output: DetailesModelOutput?
 
-  init(dependency: ModelDependencyProtocol, news: NewsViewModel) {
+  init(loadService: DatabaseProtocol, news: NewsViewModel) {
     self.news = news
-    self.databaseManager = dependency.databaseManager
+    self.databaseManager = loadService
   }
 }
 
@@ -30,12 +30,13 @@ extension DetailesModel {
   }
 
   func checkIsExistObjectInDatabase() {
-    if !databaseManager.checkObjectIsExistBy(id: news.urlNewsStr) {
+    let lookingObject = databaseManager.checkObjectIsExistBy(id: news.urlNewsStr)
+    guard lookingObject != nil else {
       saveNewsToDatabase()
-    } else {
-      news.isNewsSaved = true
-      output?.dataLoadSuccess()
+      return
     }
+    news.isNewsSaved = true
+    output?.dataLoadSuccess()
   }
 
   private func saveNewsToDatabase() {
