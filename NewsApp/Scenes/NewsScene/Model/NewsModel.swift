@@ -8,18 +8,16 @@
 
 import Foundation
 
-protocol NewsModelOutput: AnyObject {
+protocol NewsModelDelegate: AnyObject {
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
-  func dataFilteringEmpty()
-  func dataFilteringEnded()
 }
 
 final class NewsModel {
   private var session = SessionData()
-  private var listNews: [NewsViewModel] = []
-  private var savedListNews: [NewsViewModel] = []
-  weak var output: NewsModelOutput?
+  private var listNews: [News] = []
+  private var savedListNews: [News] = []
+  weak var delegate: NewsModelDelegate?
 
   private let apiManager: ApiManagerProtocol
 
@@ -40,30 +38,25 @@ extension NewsModel {
       case .success(let newsArray):
         self?.listNews.append(contentsOf: newsArray)
         self?.savedListNews.append(contentsOf: newsArray)
-        self?.output?.dataLoadSuccess()
+        self?.delegate?.dataLoadSuccess()
       case .failure(let error):
-        self?.output?.dataLoadWithError(error.localizableDescription)
+        self?.delegate?.dataLoadWithError(error.localizableDescription)
       }
     }
   }
 
   func getFilterNews(keyWord: String) {
     if !keyWord.isEmpty, keyWord.count > 2 {
-      listNews = savedListNews
       listNews = listNews.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
-      guard !listNews.isEmpty else {
-        output?.dataFilteringEmpty()
-        return
-      }
-      output?.dataLoadSuccess()
+      delegate?.dataLoadSuccess()
     }
     if keyWord.isEmpty {
       listNews = savedListNews
-      output?.dataFilteringEnded()
+      delegate?.dataLoadSuccess()
     }
   }
 
-  func object(_ index: Int) -> NewsViewModel {
+  func object(_ index: Int) -> News {
     return listNews[index]
   }
 
@@ -72,8 +65,8 @@ extension NewsModel {
   }
 }
 
-// MARK: - ViewModel
-extension NewsViewModel: ViewModel {
+// MARK: - NewsViewModel
+extension News: NewsViewModel {
   var imageUrl: URL? {
     return urlToImage
   }

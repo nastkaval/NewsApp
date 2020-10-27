@@ -8,22 +8,22 @@
 
 import UIKit
 
-protocol OfflineCollectionNewsViewOutput {
+protocol OfflineCollectionNewsControllerDelegate: AnyObject {
   func userInterfaceDidLoad()
   func deleteRowAt(index: IndexPath)
   func closeView()
 }
 
-protocol OfflineCollectionNewsViewInput: AnyObject {
-  func provideObject(at index: IndexPath) -> ViewModel
+protocol OfflineCollectionNewsViewDataSource: AnyObject {
+  func provideObject(at index: IndexPath) -> NewsViewModel
   var count: Int { get }
 }
 
 final class OfflineCollectionNewsView: UIViewController {
   // MARK: - Property
   private let heightForCell: CGFloat = 280
-  weak var input: OfflineCollectionNewsViewInput?
-  var output: OfflineCollectionNewsViewOutput?
+  // swiftlint:disable weak_delegate
+  var delegate: (OfflineCollectionNewsViewDataSource & OfflineCollectionNewsControllerDelegate)?
 
   // MARK: - Outlets
   @IBOutlet private weak var listNewsCollectionView: UICollectionView!
@@ -33,12 +33,12 @@ final class OfflineCollectionNewsView: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     collectionViewSettings()
-    output?.userInterfaceDidLoad()
+    delegate?.userInterfaceDidLoad()
   }
 
   // MARK: - Actions
   @IBAction private func backClicked(_ sender: UIButton) {
-    output?.closeView()
+    delegate?.closeView()
   }
 
   // MARK: - Functions
@@ -54,7 +54,7 @@ final class OfflineCollectionNewsView: UIViewController {
 // MARK: - UICollectionViewDataSource
 extension OfflineCollectionNewsView: UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return input?.count ?? 0
+    return delegate?.count ?? 0
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -62,7 +62,7 @@ extension OfflineCollectionNewsView: UICollectionViewDataSource {
     guard let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? OfflineCollectionViewCell else {
     return UICollectionViewCell()
     }
-    let news = input?.provideObject(at: indexPath)
+    let news = delegate?.provideObject(at: indexPath)
     item.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
     item.delegate = self
     return item
@@ -80,12 +80,12 @@ extension OfflineCollectionNewsView: UICollectionViewDelegateFlowLayout {
 extension OfflineCollectionNewsView: SwipeableCollectionViewCellDelegate {
   func hiddenContainerViewTapped(inCell cell: UICollectionViewCell) {
     guard let index = listNewsCollectionView.indexPath(for: cell) else { return }
-    output?.deleteRowAt(index: index)
+    delegate?.deleteRowAt(index: index)
   }
 }
 
 // MARK: - OfflineCollectionNewsControllerOutput
-extension OfflineCollectionNewsView: OfflineCollectionNewsControllerOutput {
+extension OfflineCollectionNewsView: OfflineCollectionNewsViewDelegate {
   func updateUI(withNotFoundNewsView: Bool) {
     listNewsCollectionView.reloadData()
     showNewsNotFoundView(state: withNotFoundNewsView)

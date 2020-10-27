@@ -1,5 +1,5 @@
 //
-//  DetailesModel.swift
+//  DetailsModel.swift
 //  NewsApp
 //
 //  Created by Kovalchuk, Anastasiya on 9/30/20.
@@ -8,24 +8,24 @@
 
 import Foundation
 
-protocol DetailesModelOutput: AnyObject {
+protocol DetailsModelOutput: AnyObject {
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
 }
 
-final class DetailesModel {
-  private var news: NewsViewModel
+final class DetailsModel {
+  private var news: News
   private let databaseManager: DatabaseProtocol
-  weak var output: DetailesModelOutput?
+  weak var output: DetailsModelOutput?
 
-  init(loadService: DatabaseProtocol, news: NewsViewModel) {
+  init(loadService: DatabaseProtocol, news: News) {
     self.news = news
     self.databaseManager = loadService
   }
 }
 
-extension DetailesModel {
-  func object() -> NewsViewModel {
+extension DetailsModel {
+  func object() -> News {
     return news
   }
 

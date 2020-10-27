@@ -1,5 +1,5 @@
 //
-//  DetailesView.swift
+//  DetailsView.swift
 //  NewsApp
 //
 //  Created by Kovalchuk, Anastasiya on 9/30/20.
@@ -8,20 +8,20 @@
 
 import UIKit
 
-protocol DetailesViewOutput {
+protocol DetailsControllerDelegate: AnyObject {
   func userInterfaceDidLoad()
   func openNewsInExternalResource()
   func closeView()
 }
 
-protocol DetailesViewInput: AnyObject {
-  var object: ViewModel { get }
+protocol DetailsViewInput: AnyObject {
+  var object: NewsViewModel { get }
 }
 
-final class DetailesView: UIViewController {
+final class DetailsView: UIViewController {
   // MARK: - Properties
-  var output: DetailesViewOutput?
-  weak var input: DetailesViewInput?
+  // swiftlint:disable weak_delegate
+  var delegate: (DetailsControllerDelegate & DetailsViewInput)?
 
   // MARK: - Outlets
   @IBOutlet private weak var imageNews: UIImageView!
@@ -34,21 +34,21 @@ final class DetailesView: UIViewController {
   // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    output?.userInterfaceDidLoad()
+    delegate?.userInterfaceDidLoad()
   }
 
   // MARK: - Functions
   @IBAction private func readMoreClicked(_ sender: UIButton) {
-    output?.openNewsInExternalResource()
+    delegate?.openNewsInExternalResource()
   }
 
   @IBAction private func closeViewClicked(_ sender: UIButton) {
-    output?.closeView()
+    delegate?.closeView()
   }
 }
 
-// MARK: - DetailesControllerOutput
-extension DetailesView: DetailesControllerOutput {
+// MARK: - DetailsControllerOutput
+extension DetailsView: DetailsViewDelegate {
   func displayAlert(title: String, message: String) {
     showAlert(message: message)
   }
@@ -58,7 +58,7 @@ extension DetailesView: DetailesControllerOutput {
   }
 
   func updateUI() {
-    let news = input?.object
+    let news = delegate?.object
     if let url = news?.imageUrl {
       imageNews.af.setImage(withURL: url)
     }

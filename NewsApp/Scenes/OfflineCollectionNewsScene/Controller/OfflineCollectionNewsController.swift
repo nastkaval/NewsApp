@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol OfflineCollectionNewsControllerOutput: AnyObject {
+protocol OfflineCollectionNewsViewDelegate: AnyObject {
   func updateUI(withNotFoundNewsView: Bool)
   func updateUIWithRemoveCellAt(index: IndexPath, withNotFoundNewsView: Bool)
   func displayAlert(message: String)
@@ -17,18 +17,18 @@ protocol OfflineCollectionNewsControllerOutput: AnyObject {
 final class OfflineCollectionNewsController {
   private var indexPath: IndexPath?
   private var model: OfflineCollectionNewsModel
-  private weak var output: OfflineCollectionNewsControllerOutput?
+  private weak var delegate: OfflineCollectionNewsViewDelegate?
   private let coordinator: OfflineCollectionNewsCoordinator
 
-  init(model: OfflineCollectionNewsModel, output: OfflineCollectionNewsControllerOutput?, coordinator: OfflineCollectionNewsCoordinator) {
+  init(model: OfflineCollectionNewsModel, delegate: OfflineCollectionNewsViewDelegate?, coordinator: OfflineCollectionNewsCoordinator) {
     self.model = model
-    self.output = output
+    self.delegate = delegate
     self.coordinator = coordinator
   }
 }
 
-extension OfflineCollectionNewsController: OfflineCollectionNewsViewInput {
-  func provideObject(at index: IndexPath) -> ViewModel {
+extension OfflineCollectionNewsController: OfflineCollectionNewsViewDataSource {
+  func provideObject(at index: IndexPath) -> NewsViewModel {
     return model.object(index.row)
   }
 
@@ -37,8 +37,8 @@ extension OfflineCollectionNewsController: OfflineCollectionNewsViewInput {
   }
 }
 
-// MARK: - OfflineCollectionNewsViewOutput
-extension OfflineCollectionNewsController: OfflineCollectionNewsViewOutput {
+// MARK: - OfflineCollectionNewsControllerDelegate
+extension OfflineCollectionNewsController: OfflineCollectionNewsControllerDelegate {
   func closeView() {
     coordinator.hide()
   }
@@ -53,22 +53,22 @@ extension OfflineCollectionNewsController: OfflineCollectionNewsViewOutput {
   }
 }
 
-// MARK: - OfflineCollectionNewsModelOutput
+// MARK: - OfflineCollectionNewsViewDelegate
 extension OfflineCollectionNewsController: OfflineCollectionNewsModelOutput {
   func dataLoadSuccess() {
-    output?.updateUI(withNotFoundNewsView: model.isModelEmpty)
+    delegate?.updateUI(withNotFoundNewsView: model.isModelEmpty)
   }
 
   func dataRemovedSuccess() {
     guard let index = indexPath else { return }
-    output?.updateUIWithRemoveCellAt(index: index, withNotFoundNewsView: model.isModelEmpty)
+    delegate?.updateUIWithRemoveCellAt(index: index, withNotFoundNewsView: model.isModelEmpty)
   }
 
   func dataLoadFailed() {
-    output?.displayAlert(message: R.string.localizable.errorMessagesNoObject())
+    delegate?.displayAlert(message: R.string.localizable.errorMessagesNoObject())
   }
 
   func dataRemovedFailed() {
-    output?.displayAlert(message: R.string.localizable.errorMessagesErrorRemoving())
+    delegate?.displayAlert(message: R.string.localizable.errorMessagesErrorRemoving())
   }
 }

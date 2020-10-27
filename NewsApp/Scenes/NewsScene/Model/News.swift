@@ -1,5 +1,5 @@
 //
-//  NewsViewModel.swift
+//  News.swift
 //  NewsApp
 //
 //  Created by Kovalchuk, Anastasiya on 10/19/20.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class NewsViewModel: Decodable {
+struct News: Decodable {
   var author: String
   var title: String
   var descriptionNews: String
@@ -31,7 +31,7 @@ class NewsViewModel: Decodable {
     case content
   }
 
-  required init(from decoder: Decoder) throws {
+  init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     author = try container.decode(String.self, forKey: .author)
     title = try container.decode(String.self, forKey: .title)

@@ -11,10 +11,10 @@ import Foundation
 struct NewsServerModel: Decodable {
   let status: String
   let totalResults: Int
-  let articles: [News]
+  let articles: [Article]
 }
 
-struct News: Decodable {
+struct Article: Decodable {
   let author, title, articlesDescription: String?
   let url: String
   let urlToImage: String?

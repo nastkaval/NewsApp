@@ -8,23 +8,24 @@
 
 import UIKit
 
+protocol OfflineCollectionNewsCoordinatorDelegate: AnyObject {
+  func closeOfflineCollectionNews()
+}
 final class OfflineCollectionNewsCoordinator {
   private let dependencyContainer: DependeciesContainer
-  private weak var delegate: NewsViewCoordinator?
+  weak var delegate: OfflineCollectionNewsCoordinatorDelegate?
 
-  init(dependencyContainer: DependeciesContainer, delegate: NewsViewCoordinator) {
+  init(dependencyContainer: DependeciesContainer) {
     self.dependencyContainer = dependencyContainer
-    self.delegate = delegate
   }
 
   func show(_ callback: ((UIViewController) -> Void)) {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.offlineCollectionNewsView.identifier) as! OfflineCollectionNewsView
-    let model = OfflineCollectionNewsModel(databaseManager: dependencyContainer.resolve(type: DatabaseProtocol.self, name: "DatabaseManager"))
-    let controller = OfflineCollectionNewsController(model: model, output: view, coordinator: self)
+    let model = OfflineCollectionNewsModel(databaseManager: dependencyContainer.resolve(type: DatabaseProtocol.self))
+    let controller = OfflineCollectionNewsController(model: model, delegate: view, coordinator: self)
     model.output = controller
-    view.output = controller
-    view.input = controller
+    view.delegate = controller
     callback(view)
   }
 

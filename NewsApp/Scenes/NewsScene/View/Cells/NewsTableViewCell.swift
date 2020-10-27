@@ -10,7 +10,7 @@ import UIKit
 import AlamofireImage
 
 protocol NewsTableViewCellDelegate: AnyObject {
-  func showDetailesView(from cell: UITableViewCell)
+  func showDetailsView(from cell: UITableViewCell)
 }
 class NewsTableViewCell: UITableViewCell {
   // MARK: - Struct TimeDateFormatters
@@ -40,7 +40,7 @@ class NewsTableViewCell: UITableViewCell {
   }
 
   @IBAction private func showMoreButtonClicked(_ sender: UIButton) {
-    delegate?.showDetailesView(from: self)
+    delegate?.showDetailsView(from: self)
   }
 
   // MARK: - Functions

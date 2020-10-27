@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ViewModel {
+protocol NewsViewModel {
   var imageUrl: URL? { get }
   var newsUrl: URL? { get }
   var publishedAt: Date? { get }
@@ -18,18 +18,18 @@ protocol ViewModel {
   var isNewsSaved: Bool { get }
 }
 
-protocol NewsViewOutput {
+protocol NewsControllerDelegate: AnyObject {
   func userInterfaceDidLoad()
   func loadDataCurrentPage()
   func loadDataNextPage()
   func filterNews(keyWord: String)
-  func showDetailes(at index: IndexPath)
+  func showDetails(at index: IndexPath)
   func menuClicked()
   func showOfflineCollectionNews()
 }
 
-protocol NewsViewInput: AnyObject {
-  func provideObject(at index: IndexPath) -> ViewModel
+protocol NewsViewDataSource: AnyObject {
+  func provideObject(at index: IndexPath) -> NewsViewModel
   var count: Int { get }
 }
 
@@ -37,8 +37,8 @@ final class NewsView: UIViewController {
   // MARK: - Properties
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
-  weak var input: NewsViewInput?
-  var output: NewsViewOutput?
+  // swiftlint:disable weak_delegate
+  var delegate: (NewsControllerDelegate & NewsViewDataSource)?
 
   // MARK: - Outlets
   @IBOutlet private weak var newsListTableView: UITableView!
@@ -52,19 +52,16 @@ final class NewsView: UIViewController {
     hideKeyboardWhenTappedAround()
     tableViewSettings()
     refreshControlSettings()
-    output?.userInterfaceDidLoad()
+    delegate?.userInterfaceDidLoad()
   }
 
   // MARK: - Actions
   @IBAction private func editingChangedSearchTextFiled(_ sender: UITextField) {
-    if refreshControl.isDescendant(of: newsListTableView) {
-      refreshControl.removeFromSuperview()
-    }
-    output?.filterNews(keyWord: sender.text ?? "")
+    delegate?.filterNews(keyWord: sender.text ?? "")
   }
 
   @IBAction private func menuClicked(_ sender: UIButton) {
-    output?.menuClicked()
+    delegate?.menuClicked()
   }
 
   // MARK: - Functions
@@ -79,7 +76,7 @@ final class NewsView: UIViewController {
   }
 
   @objc private func handleRefresh(_ refreshControl: UIRefreshControl) {
-    output?.loadDataNextPage()
+    delegate?.loadDataNextPage()
   }
 
   private func checkOperatorTableViewForEmpty() {
@@ -105,7 +102,7 @@ final class NewsView: UIViewController {
   }
 
   private func clickedShowOfflineCollectionNews(action: UIAlertAction) {
-    output?.showOfflineCollectionNews()
+    delegate?.showOfflineCollectionNews()
   }
 }
 
@@ -116,14 +113,14 @@ extension NewsView: UITableViewDataSource {
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return input?.count ?? 0
+    return delegate?.count ?? 0
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cellIdentifier = R.nib.newsTableViewCell.identifier
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
-    let news = input?.provideObject(at: indexPath)
+    let news = delegate?.provideObject(at: indexPath)
     cell.delegate = self
     cell.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
     return cell
@@ -133,9 +130,9 @@ extension NewsView: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension NewsView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if let input = input {
+    if let input = delegate {
       if indexPath.row == input.count - 1 {
-        output?.loadDataNextPage()
+        delegate?.loadDataNextPage()
       }
     }
   }
@@ -143,20 +140,14 @@ extension NewsView: UITableViewDelegate {
 
 // MARK: - NewsTableViewCellDelegate
 extension NewsView: NewsTableViewCellDelegate {
-  func showDetailesView(from cell: UITableViewCell) {
+  func showDetailsView(from cell: UITableViewCell) {
     guard let index = newsListTableView.indexPath(for: cell) else { return }
-    output?.showDetailes(at: index)
+    delegate?.showDetails(at: index)
   }
 }
 
 // MARK: - NewsControllerOutput
-extension NewsView: NewsControllerOutput {
-  func displayFilterEmptyState(_ isDisplayed: Bool) {
-    notFoundNewsView.isHidden = !isDisplayed
-    refreshControlSettings()
-    newsListTableView.reloadData()
-  }
-
+extension NewsView: NewsViewDelegate {
   func displayLoadAnimation() {
     startAnimation()
   }
@@ -170,7 +161,7 @@ extension NewsView: NewsControllerOutput {
   }
 
   func updateUI() {
-    notFoundNewsView.isHidden = true
+    searchTextField.endEditing(true)
     stopAnimation()
     newsListTableView.reloadData()
   }

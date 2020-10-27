@@ -9,12 +9,12 @@
 import Foundation
 
 class ParseHelper {
-  func parseJson(json: Data, callBack: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
-    var newsEntities: [NewsViewModel] = []
+  func parseJson(json: Data, callBack: @escaping (Result<[News], ServerDataError>) -> Void) {
+    var newsEntities: [News] = []
     do {
       let news = try JSONDecoder().decode(NewsServerModel.self, from: json)
-      newsEntities = news.articles.map { item -> NewsViewModel in
-        NewsViewModel(author: item.author ?? "", title: item.title ?? "", descriptionNews: item.articlesDescription ?? "", content: item.content ?? "", urlNewsStr: item.url, urlToImageStr: item.urlToImage ?? "", publishedAtStr: item.publishedAt)
+      newsEntities = news.articles.map { item -> News in
+        News(author: item.author ?? "", title: item.title ?? "", descriptionNews: item.articlesDescription ?? "", content: item.content ?? "", urlNewsStr: item.url, urlToImageStr: item.urlToImage ?? "", publishedAtStr: item.publishedAt)
       }
     } catch {
       print("decode error: invalid data from server")
