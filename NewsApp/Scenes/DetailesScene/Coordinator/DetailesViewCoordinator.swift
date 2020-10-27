@@ -21,7 +21,7 @@ final class DetailesViewCoordinator {
   func show(news: NewsViewModel, callback: ((UIViewController) -> Void)) {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.detailesView.identifier) as! DetailesView
-    let model = DetailesModel(loadService: dependencyContainer.resolve(type: DatabaseProtocol.self, name: "DatabaseManager"), news: news)
+    let model = DetailesModel(loadService: dependencyContainer.resolve(type: DatabaseProtocol.self), news: news)
     let controller = DetailesController(model: model, output: view, coordinator: self)
     model.output = controller
     view.output = controller
