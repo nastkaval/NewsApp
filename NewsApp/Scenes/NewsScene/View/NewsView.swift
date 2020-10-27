@@ -151,8 +151,8 @@ extension NewsView: NewsTableViewCellDelegate {
 
 // MARK: - NewsControllerOutput
 extension NewsView: NewsControllerOutput {
-  func displayEmpty(state: Bool) {
-    notFoundNewsView.isHidden = state
+  func displayFilterEmptyState(_ isDisplayed: Bool) {
+    notFoundNewsView.isHidden = !isDisplayed
     refreshControlSettings()
     newsListTableView.reloadData()
   }
