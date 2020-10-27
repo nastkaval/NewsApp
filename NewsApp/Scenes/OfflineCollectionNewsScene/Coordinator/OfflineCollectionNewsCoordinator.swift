@@ -8,12 +8,12 @@
 
 import UIKit
 
-protocol OfflineCollectionNewsCoordinatorOutput: AnyObject {
+protocol OfflineCollectionNewsCoordinatorDelegate: AnyObject {
   func closeOfflineCollectionNews()
 }
 final class OfflineCollectionNewsCoordinator {
   private let dependencyContainer: DependeciesContainer
-  weak var output: OfflineCollectionNewsCoordinatorOutput?
+  weak var delegate: OfflineCollectionNewsCoordinatorDelegate?
 
   init(dependencyContainer: DependeciesContainer) {
     self.dependencyContainer = dependencyContainer
@@ -23,14 +23,13 @@ final class OfflineCollectionNewsCoordinator {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.offlineCollectionNewsView.identifier) as! OfflineCollectionNewsView
     let model = OfflineCollectionNewsModel(databaseManager: dependencyContainer.resolve(type: DatabaseProtocol.self, name: "DatabaseManager"))
-    let controller = OfflineCollectionNewsController(model: model, output: view, coordinator: self)
+    let controller = OfflineCollectionNewsController(model: model, delegate: view, coordinator: self)
     model.output = controller
-    view.output = controller
-    view.input = controller
+    view.delegate = controller
     callback(view)
   }
 
   func hide() {
-    output?.closeOfflineCollectionNews()
+    delegate?.closeOfflineCollectionNews()
   }
 }

@@ -1,5 +1,5 @@
 //
-//  DetailesModel.swift
+//  OfflineCollectionNewsModel.swift
 //  NewsApp
 //
 //  Created by Kovalchuk, Anastasiya on 10/06/20.
@@ -16,7 +16,7 @@ protocol OfflineCollectionNewsModelOutput: AnyObject {
 }
 
 final class OfflineCollectionNewsModel {
-  private var listNews: [NewsViewModel] = []
+  private var listNews: [News] = []
   private let databaseManager: DatabaseProtocol
   weak var output: OfflineCollectionNewsModelOutput?
 
@@ -31,8 +31,8 @@ final class OfflineCollectionNewsModel {
       output?.dataLoadFailed()
       return
     }
-    listNews = dataArray.map { item -> NewsViewModel in
-      NewsViewModel(author: item.author, title: item.title, descriptionNews: item.descriptionNews, content: item.content, urlNewsStr: item.urlNewsStr, urlToImageStr: item.urlToImageStr, publishedAtStr: item.publishedAtStr)
+    listNews = dataArray.map { item -> News in
+      News(author: item.author, title: item.title, descriptionNews: item.descriptionNews, content: item.content, urlNewsStr: item.urlNewsStr, urlToImageStr: item.urlToImageStr, publishedAtStr: item.publishedAtStr)
     }
     output?.dataLoadSuccess()
   }
@@ -49,7 +49,7 @@ final class OfflineCollectionNewsModel {
 }
 
 extension OfflineCollectionNewsModel {
-  func object(_ index: Int) -> NewsViewModel {
+  func object(_ index: Int) -> News {
     return listNews[index]
   }
 

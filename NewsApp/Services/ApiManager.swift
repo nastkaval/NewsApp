@@ -42,7 +42,7 @@ enum ServerDateFormatterConverter {
 }
 
 protocol ApiManagerProtocol {
-  func callApi(session: SessionData, callBack: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void)
+  func callApi(session: SessionData, callBack: @escaping (Result<[News], ServerDataError>) -> Void)
 }
 
 final class ApiManager {
@@ -66,7 +66,7 @@ final class ApiManager {
       }
   }
 
-  private func getNews(session: SessionData, completionHandler: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
+  private func getNews(session: SessionData, completionHandler: @escaping (Result<[News], ServerDataError>) -> Void) {
     let urlRequest = getUrl(session: session)
     guard let url = urlRequest else { return }
     get(url: url) { [weak self] result in
@@ -124,7 +124,7 @@ final class ApiManager {
 
 // MARK: - ApiManagerProtocol
 extension ApiManager: ApiManagerProtocol {
-  func callApi(session: SessionData, callBack: @escaping (Result<[NewsViewModel], ServerDataError>) -> Void) {
+  func callApi(session: SessionData, callBack: @escaping (Result<[News], ServerDataError>) -> Void) {
     getNews(session: session) { result in
       callBack(result)
     }

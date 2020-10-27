@@ -21,37 +21,36 @@ final class NewsViewCoordinator {
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.newsView.identifier) as! NewsView
     viewController = view
     let model = NewsModel(loadService: dependencyContainer.resolve(type: ApiManagerProtocol.self, name: "ApiManager"))
-    let controller = NewsController(model: model, output: view, coordinator: self)
-    view.output = controller
-    view.input = controller
-    model.output = controller
+    let controller = NewsController(model: model, delegate: view, coordinator: self)
+    view.delegate = controller
+    model.delegate = controller
     callback(view)
   }
 
-  func openDetailesNews(newsModel: NewsViewModel) {
-    let detailesCoordinator = DetailesViewCoordinator(dependencyContainer: dependencyContainer)
-    detailesCoordinator.output = self
-    detailesCoordinator.show(news: newsModel) { view in
+  func openDetailsNews(newsModel: News) {
+    let detailsCoordinator = DetailsViewCoordinator(dependencyContainer: dependencyContainer)
+    detailsCoordinator.delegate = self
+    detailsCoordinator.show(news: newsModel) { view in
       self.viewController?.present(view, animated: true)
     }
   }
 
   func openOfflineCollectionNews() {
     let offlineCollectionNewsCoordinator = OfflineCollectionNewsCoordinator(dependencyContainer: dependencyContainer)
-    offlineCollectionNewsCoordinator.output = self
+    offlineCollectionNewsCoordinator.delegate = self
     offlineCollectionNewsCoordinator.show { view in
       self.viewController?.navigationController?.pushViewController(view, animated: true)
     }
   }
 }
 
-extension NewsViewCoordinator: DetailesViewCoordinatorOutput {
-  func closeDetailesView() {
+extension NewsViewCoordinator: DetailsViewCoordinatorDelegate {
+  func closeDetailsView() {
     viewController?.dismiss(animated: true)
   }
 }
 
-extension NewsViewCoordinator: OfflineCollectionNewsCoordinatorOutput {
+extension NewsViewCoordinator: OfflineCollectionNewsCoordinatorDelegate {
   func closeOfflineCollectionNews() {
     viewController?.navigationController?.popViewController(animated: true)
   }

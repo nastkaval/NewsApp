@@ -155,17 +155,17 @@
                         <outlet property="newsListTableView" destination="EPa-Tz-m6S" id="MFk-GM-Lqc"/>
                         <outlet property="notFoundNewsView" destination="vUe-Md-yhX" id="hHU-I1-Yhh"/>
                         <outlet property="searchTextField" destination="f8x-b2-9xL" id="3cD-ef-eIp"/>
-                        <segue destination="wT2-nz-4UH" kind="presentation" identifier="detailesScene" id="Rei-Qg-93m"/>
+                        <segue destination="wT2-nz-4UH" kind="presentation" identifier="detailsScene" id="Rei-Qg-93m"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="832.5" y="167.95774647887325"/>
         </scene>
-        <!--Detailes View-->
+        <!--Details View-->
         <scene sceneID="lB1-Th-x9g">
             <objects>
-                <viewController storyboardIdentifier="DetailesView" id="wT2-nz-4UH" customClass="DetailesView" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailsView" id="wT2-nz-4UH" customClass="DetailsView" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pnj-bV-fHM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

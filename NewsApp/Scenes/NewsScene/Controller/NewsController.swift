@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol NewsControllerOutput: AnyObject {
+protocol NewsViewDelegate: AnyObject {
   func updateUI()
   func displayAlert(title: String, message: String)
   func displayActionSheet()
@@ -17,30 +17,30 @@ protocol NewsControllerOutput: AnyObject {
 
 final class NewsController {
   private var modelNews: NewsModel
-  private weak var output: NewsControllerOutput?
+  private weak var delegate: NewsViewDelegate?
   private let coordinator: NewsViewCoordinator
   private var isFiltering = false
 
-  init(model: NewsModel, output: NewsControllerOutput, coordinator: NewsViewCoordinator) {
+  init(model: NewsModel, delegate: NewsViewDelegate, coordinator: NewsViewCoordinator) {
     self.modelNews = model
-    self.output = output
+    self.delegate = delegate
     self.coordinator = coordinator
   }
 }
 
 // MARK: - NewsViewOutput
-extension NewsController: NewsViewOutput {
+extension NewsController: NewsControllerDelegate {
   func showOfflineCollectionNews() {
     coordinator.openOfflineCollectionNews()
   }
 
   func menuClicked() {
-    output?.displayActionSheet()
+    delegate?.displayActionSheet()
   }
 
-  func showDetailes(at index: IndexPath) {
+  func showDetails(at index: IndexPath) {
     let newsModel = modelNews.object(index.row)
-    coordinator.openDetailesNews(newsModel: newsModel)
+    coordinator.openDetailsNews(newsModel: newsModel)
   }
 
   func loadDataCurrentPage() {
@@ -59,30 +59,30 @@ extension NewsController: NewsViewOutput {
   }
 
   func userInterfaceDidLoad() {
-    output?.displayLoadAnimation()
+    delegate?.displayLoadAnimation()
     modelNews.getData(isNextPage: false)
   }
 }
 
 // MARK: - NewsModelOutput
-extension NewsController: NewsModelOutput {
+extension NewsController: NewsModelDelegate {
   func dataLoadSuccess() {
     isFiltering = false
-    output?.updateUI()
+    delegate?.updateUI()
   }
 
   func dataLoadWithError(_ errorMessage: String) {
-    output?.displayAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
+    delegate?.displayAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
   }
 }
 
 // MARK: - NewsViewInput
-extension NewsController: NewsViewInput {
+extension NewsController: NewsViewDataSource {
   var count: Int {
     return modelNews.count()
   }
 
-  func provideObject(at index: IndexPath) -> ViewModel {
+  func provideObject(at index: IndexPath) -> NewsViewModel {
     return modelNews.object(index.row)
   }
 }
