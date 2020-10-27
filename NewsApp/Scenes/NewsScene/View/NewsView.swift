@@ -151,6 +151,12 @@ extension NewsView: NewsTableViewCellDelegate {
 
 // MARK: - NewsControllerOutput
 extension NewsView: NewsControllerOutput {
+  func displayEmpty(state: Bool) {
+    notFoundNewsView.isHidden = state
+    refreshControlSettings()
+    newsListTableView.reloadData()
+  }
+
   func displayLoadAnimation() {
     startAnimation()
   }
@@ -167,15 +173,5 @@ extension NewsView: NewsControllerOutput {
     notFoundNewsView.isHidden = true
     stopAnimation()
     newsListTableView.reloadData()
-  }
-
-  func updateUIFilteringEnd() {
-    notFoundNewsView.isHidden = true
-    refreshControlSettings()
-    newsListTableView.reloadData()
-  }
-
-  func displayNoResultView() {
-    notFoundNewsView.isHidden = false
   }
 }
