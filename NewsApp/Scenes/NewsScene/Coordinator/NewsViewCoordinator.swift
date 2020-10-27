@@ -20,7 +20,7 @@ final class NewsViewCoordinator {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.newsView.identifier) as! NewsView
     viewController = view
-    let model = NewsModel(loadService: dependencyContainer.resolve(type: ApiManagerProtocol.self, name: "ApiManager"))
+    let model = NewsModel(loadService: dependencyContainer.resolve(type: ApiManagerProtocol.self))
     let controller = NewsController(model: model, delegate: view, coordinator: self)
     view.delegate = controller
     model.delegate = controller

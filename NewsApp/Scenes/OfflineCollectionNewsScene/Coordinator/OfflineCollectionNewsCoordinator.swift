@@ -22,7 +22,7 @@ final class OfflineCollectionNewsCoordinator {
   func show(_ callback: ((UIViewController) -> Void)) {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.offlineCollectionNewsView.identifier) as! OfflineCollectionNewsView
-    let model = OfflineCollectionNewsModel(databaseManager: dependencyContainer.resolve(type: DatabaseProtocol.self, name: "DatabaseManager"))
+    let model = OfflineCollectionNewsModel(databaseManager: dependencyContainer.resolve(type: DatabaseProtocol.self))
     let controller = OfflineCollectionNewsController(model: model, delegate: view, coordinator: self)
     model.output = controller
     view.delegate = controller

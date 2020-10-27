@@ -11,8 +11,8 @@ import Foundation
 class DependencyManager {
   func buildDependencyContainer() -> DependeciesContainer {
     let dependencyContainer = DependeciesContainer()
-    dependencyContainer.register(type: ApiManagerProtocol.self, name: "ApiManager", service: ApiManager())
-    dependencyContainer.register(type: DatabaseProtocol.self, name: "DatabaseManager", service: DatabaseManager()) //?
+    dependencyContainer.register(type: ApiManagerProtocol.self, service: ApiManager())
+    dependencyContainer.register(type: DatabaseProtocol.self, service: DatabaseManager()) //?
 
     return dependencyContainer
   }
