@@ -21,16 +21,17 @@ final class NewsViewCoordinator {
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.newsView.identifier) as! NewsView
     viewController = view
     let model = NewsModel(loadService: dependencyContainer.resolve(type: ApiManagerProtocol.self))
-    let controller = NewsController(model: model, delegate: view, coordinator: self)
+    let controller = NewsController(model: model, delegate: view, newsModuleOutput: self)
     view.delegate = controller
     model.delegate = controller
     callback(view)
   }
-
-  func openDetailsNews(newsModel: News) {
+}
+extension NewsViewCoordinator: NewsModuleOutput {
+  func openDetailsNews(news: News) {
     let detailsCoordinator = DetailsViewCoordinator(dependencyContainer: dependencyContainer)
     detailsCoordinator.delegate = self
-    detailsCoordinator.show(news: newsModel) { view in
+    detailsCoordinator.show(news: news) { view in
       self.viewController?.present(view, animated: true)
     }
   }
@@ -44,12 +45,14 @@ final class NewsViewCoordinator {
   }
 }
 
+// MARK: - DetailsViewCoordinatorDelegate
 extension NewsViewCoordinator: DetailsViewCoordinatorDelegate {
   func closeDetailsView() {
     viewController?.dismiss(animated: true)
   }
 }
 
+// MARK: - OfflineCollectionNewsCoordinatorDelegate
 extension NewsViewCoordinator: OfflineCollectionNewsCoordinatorDelegate {
   func closeOfflineCollectionNews() {
     viewController?.navigationController?.popViewController(animated: true)

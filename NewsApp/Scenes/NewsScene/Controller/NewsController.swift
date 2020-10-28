@@ -2,87 +2,104 @@
 //  NewsController.swift
 //  NewsApp
 //
-//  Created by Kovalchuk, Anastasiya on 9/21/20.
+//  Created by Kovalchuk, Anastasiya on 10/27/20.
 //  Copyright © 2020 Nastassia Kavalchuk. All rights reserved.
 //
 
 import Foundation
 
-protocol NewsViewDelegate: AnyObject {
-  func updateUI()
-  func displayAlert(title: String, message: String)
-  func displayActionSheet()
-  func displayLoadAnimation()
+protocol NewsViewModel {
+  var imageUrl: URL? { get }
+  var newsUrl: URL? { get }
+  var publishedAt: Date? { get }
+  var title: String { get }
+  var author: String { get }
+  var descriptionNews: String { get }
+  var isNewsSaved: Bool { get }
+}
+
+protocol NewsViewable: AnyObject {
+  func updateUI(with data: [NewsViewModel])
+  func showAlert(title: String, message: String)
+  func showActionSheet()
+  func showAnimation()
+}
+
+protocol NewsModuleOutput: AnyObject {
+  func openDetailsNews(news: News)
+  func openOfflineCollectionNews()
 }
 
 final class NewsController {
-  private var modelNews: NewsModel
-  private weak var delegate: NewsViewDelegate?
-  private let coordinator: NewsViewCoordinator
+  // MARK: - Properties
+  private var model: NewsDataSource
+  private let newsModuleOutput: NewsModuleOutput
+  private weak var delegate: NewsViewable?
+
   private var isFiltering = false
 
-  init(model: NewsModel, delegate: NewsViewDelegate, coordinator: NewsViewCoordinator) {
-    self.modelNews = model
+  init(model: NewsDataSource, delegate: NewsViewable, newsModuleOutput: NewsModuleOutput) {
+    self.model = model
     self.delegate = delegate
-    self.coordinator = coordinator
+    self.newsModuleOutput = newsModuleOutput
   }
 }
 
-// MARK: - NewsViewOutput
-extension NewsController: NewsControllerDelegate {
-  func showOfflineCollectionNews() {
-    coordinator.openOfflineCollectionNews()
+// MARK: - NewsControllable
+extension NewsController: NewsControllable {
+  func didUserInterfaceLoad() {
+    model.loadDataFromApi(withNextPage: false)
   }
 
-  func menuClicked() {
-    delegate?.displayActionSheet()
+  func didMenuClick() {
+    delegate?.showActionSheet()
   }
 
-  func showDetails(at index: IndexPath) {
-    let newsModel = modelNews.object(index.row)
-    coordinator.openDetailsNews(newsModel: newsModel)
+  func didFilteringStart(keyWord: String) {
+    let filteredResult = model.filteringData(by: keyWord)
+    delegate?.updateUI(with: filteredResult)
   }
 
-  func loadDataCurrentPage() {
-    modelNews.getData(isNextPage: false)
+  func didScrollTableView() {
+    model.loadDataFromApi(withNextPage: true)
   }
 
-  func filterNews(keyWord: String) {
-    modelNews.getFilterNews(keyWord: keyWord)
-    isFiltering = true
+  func didSwipeRefresh() {
+    model.loadDataFromApi(withNextPage: false)
   }
 
-  func loadDataNextPage() {
-    if !isFiltering {
-      modelNews.getData(isNextPage: true)
-    }
+  func didOfflineNewsButtonClick() {
+    newsModuleOutput.openOfflineCollectionNews()
   }
 
-  func userInterfaceDidLoad() {
-    delegate?.displayLoadAnimation()
-    modelNews.getData(isNextPage: false)
+  func didDetailesNewsButtonClick(at index: IndexPath) {
+    let news = model.dataSource[index.row]
+    newsModuleOutput.openDetailsNews(news: news)
   }
 }
 
-// MARK: - NewsModelOutput
-extension NewsController: NewsModelDelegate {
+// MARK: - NewsDataSourceDelegate
+extension NewsController: NewsDataSourceDelegate {
   func dataLoadSuccess() {
-    isFiltering = false
-    delegate?.updateUI()
+    delegate?.updateUI(with: model.dataSource)
   }
 
   func dataLoadWithError(_ errorMessage: String) {
-    delegate?.displayAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
+    delegate?.showAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
   }
 }
 
-// MARK: - NewsViewInput
-extension NewsController: NewsViewDataSource {
-  var count: Int {
-    return modelNews.count()
+// MARK: - NewsViewModel
+extension News: NewsViewModel {
+  var imageUrl: URL? {
+    return urlToImage
   }
 
-  func provideObject(at index: IndexPath) -> NewsViewModel {
-    return modelNews.object(index.row)
+  var newsUrl: URL? {
+    return urlNews
+  }
+
+  var publishedAt: Date? {
+    return publishedAtDate
   }
 }
