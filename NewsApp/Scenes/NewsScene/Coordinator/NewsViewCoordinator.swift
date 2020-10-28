@@ -27,7 +27,7 @@ final class NewsViewCoordinator {
     callback(view)
   }
 }
-extension NewsViewCoordinator: NewsModuleOutput {
+extension NewsViewCoordinator: NewsOutput {
   func openDetailsNews(news: News) {
     let detailsCoordinator = DetailsViewCoordinator(dependencyContainer: dependencyContainer)
     detailsCoordinator.delegate = self

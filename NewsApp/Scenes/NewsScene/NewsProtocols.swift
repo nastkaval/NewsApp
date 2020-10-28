@@ -53,7 +53,7 @@ protocol NewsViewable: AnyObject {
   func showAnimation()
 }
 
-protocol NewsModuleOutput: AnyObject {
+protocol NewsOutput: AnyObject {
   func openDetailsNews(news: News)
   func openOfflineCollectionNews()
 }

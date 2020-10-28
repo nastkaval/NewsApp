@@ -11,12 +11,12 @@ import Foundation
 final class NewsController {
   // MARK: - Properties
   private var model: NewsDataSource
-  private let output: NewsModuleOutput
+  private let output: NewsOutput
   private weak var view: NewsViewable?
 
   private var isFiltering = false
 
-  init(model: NewsDataSource, view: NewsViewable, output: NewsModuleOutput) {
+  init(model: NewsDataSource, view: NewsViewable, output: NewsOutput) {
     self.model = model
     self.view = view
     self.output = output
