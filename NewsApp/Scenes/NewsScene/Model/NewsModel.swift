@@ -21,7 +21,7 @@ protocol NewsDataSourceDelegate: AnyObject {
 
 final class NewsModel {
   private var session = SessionData()
-  private var newsArray: [News] = []
+  var items: [News] = []
 
   weak var delegate: NewsDataSourceDelegate?
   private let apiManager: ApiManagerProtocol
@@ -32,10 +32,6 @@ final class NewsModel {
 }
 
 extension NewsModel: NewsDataSource {
-  var items: [News] {
-    return newsArray
-  }
-
   func loadDataFromApi(withNextPage: Bool) {
     if withNextPage {
       session.page += 1
@@ -45,7 +41,7 @@ extension NewsModel: NewsDataSource {
     apiManager.callApi(session: session) { [weak self] result in
       switch result {
       case .success(let newsArray):
-        self?.newsArray.append(contentsOf: newsArray)
+        self?.items.append(contentsOf: newsArray)
         self?.delegate?.dataLoadSuccess()
       case .failure(let error):
         self?.delegate?.dataLoadWithError(error.localizableDescription)
@@ -55,9 +51,9 @@ extension NewsModel: NewsDataSource {
 
   func filterData(by keyWord: String) -> [News] {
     guard keyWord.count > 2 else {
-      return newsArray
+      return items
     }
-    let filteredArray = newsArray.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
+    let filteredArray = items.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
     return filteredArray
   }
 }
