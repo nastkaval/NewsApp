@@ -9,7 +9,7 @@
 import UIKit
 
 protocol NewsControllable: AnyObject {
-  func didUserInterfaceLoad()
+  func viewDidLoad()
   func didMenuClick()
   func didOfflineNewsButtonClick()
   func didDetailesNewsButtonClick(at index: IndexPath)
@@ -38,7 +38,7 @@ final class NewsView: UIViewController {
     hideKeyboardWhenTappedAround()
     tableViewSettings()
     refreshControlSettings()
-    delegate?.didUserInterfaceLoad()
+    delegate?.viewDidLoad()
   }
 
   // MARK: - Actions

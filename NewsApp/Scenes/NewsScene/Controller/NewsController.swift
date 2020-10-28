@@ -47,7 +47,7 @@ final class NewsController {
 
 // MARK: - NewsControllable
 extension NewsController: NewsControllable {
-  func didUserInterfaceLoad() {
+  func viewDidLoad() {
     model.loadDataFromApi(withNextPage: false)
   }
 
