@@ -9,13 +9,13 @@
 import Foundation
 
 protocol NewsViewModel {
-  var imageUrl: URL? { get }
-  var newsUrl: URL? { get }
-  var publishedAt: Date? { get }
+  var urlToImage: URL? { get }
+  var urlNews: URL? { get }
+  var publishedAtDate: Date? { get }
   var title: String { get }
   var author: String { get }
   var descriptionNews: String { get }
-  var isNewsSaved: Bool { get }
+  var isSaved: Bool { get }
 }
 
 protocol NewsViewable: AnyObject {
@@ -66,7 +66,9 @@ extension NewsController: NewsControllable {
   }
 
   func didScrollToEnd() {
+    if !isFiltering {
     model.loadDataFromApi(withNextPage: true)
+    }
   }
 
   func didRefresh() {
@@ -91,15 +93,4 @@ extension NewsController: NewsDataSourceDelegate {
 
 // MARK: - NewsViewModel
 extension News: NewsViewModel {
-  var imageUrl: URL? {
-    return urlToImage
-  }
-
-  var newsUrl: URL? {
-    return urlNews
-  }
-
-  var publishedAt: Date? {
-    return publishedAtDate
-  }
 }

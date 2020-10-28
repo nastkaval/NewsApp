@@ -35,7 +35,7 @@ extension DetailsModel {
       saveNewsToDatabase()
       return
     }
-    news.isNewsSaved = true
+    news.isSaved = true
     output?.dataLoadSuccess()
   }
 

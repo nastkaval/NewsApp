@@ -19,7 +19,7 @@ struct News: Decodable {
   var publishedAtDate: Date?
   var urlNews: URL?
   var urlToImage: URL?
-  var isNewsSaved: Bool = false
+  var isSaved: Bool = false
 
   enum CodingKeys: String, CodingKey {
     case author

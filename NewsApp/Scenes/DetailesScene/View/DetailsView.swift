@@ -59,16 +59,16 @@ extension DetailsView: DetailsViewDelegate {
 
   func updateUI() {
     let news = delegate?.object
-    if let url = news?.imageUrl {
+    if let url = news?.urlToImage {
       imageNews.af.setImage(withURL: url)
     }
     titleLabel.text = news?.title
     authorLabel.text = news?.author
-    if let date = news?.publishedAt {
+    if let date = news?.publishedAtDate {
     dateLabel.text = DayDateFormattersConverter.dayTimeDateFormatter.string(from: date)
     }
     descriptionLabel.text = news?.descriptionNews
-    if let saved = news?.isNewsSaved {
+    if let saved = news?.isSaved {
     savedNewsCheck.isSelected = saved
     }
   }
