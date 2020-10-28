@@ -33,15 +33,15 @@ protocol NewsModuleOutput: AnyObject {
 final class NewsController {
   // MARK: - Properties
   private var model: NewsDataSource
-  private let newsModuleOutput: NewsModuleOutput
+  private let output: NewsModuleOutput
   private weak var view: NewsViewable?
 
   private var isFiltering = false
 
-  init(model: NewsDataSource, delegate: NewsViewable, output: NewsModuleOutput) {
+  init(model: NewsDataSource, view: NewsViewable, output: NewsModuleOutput) {
     self.model = model
-    self.view = delegate
-    self.newsModuleOutput = output
+    self.view = view
+    self.output = output
   }
 }
 
@@ -52,12 +52,12 @@ extension NewsController: NewsControllable {
   }
 
   func didTapOffline() {
-    newsModuleOutput.openOfflineCollectionNews()
+    output.openOfflineCollectionNews()
   }
 
   func didTapDetails(at index: IndexPath) {
     let news = model.items[index.row]
-    newsModuleOutput.openDetailsNews(news: news)
+    output.openDetailsNews(news: news)
   }
 
   func didStartFilter(keyWord: String) {
