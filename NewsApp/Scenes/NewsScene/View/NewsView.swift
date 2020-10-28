@@ -88,16 +88,16 @@ extension NewsView: UITableViewDataSource {
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return items?.count ?? 0
+    return viewModels.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cellIdentifier = R.nib.newsTableViewCell.identifier
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
-    let news = items?[indexPath.row]
+    let news = viewModels[indexPath.row]
     cell.delegate = self
-    cell.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
+    cell.updateUI(title: news.title, newsDescription: news.descriptionNews, author: news.author, imageUrl: news.imageUrl, publishedAt: news.publishedAt)
     return cell
   }
 }
@@ -105,10 +105,8 @@ extension NewsView: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension NewsView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if let newsArray = items {
-      if indexPath.row == newsArray.count - 1 {
-        controller?.didScroll()
-      }
+    if indexPath.row == viewModels.count - 1 {
+      controller?.didScroll()
     }
   }
 }
@@ -123,7 +121,7 @@ extension NewsView: NewsTableViewCellDelegate {
 
 extension NewsView: NewsViewable {
   func updateUI(with data: [NewsViewModel]) {
-    items = data
+    viewModels = data
     notFoundNewsView.isHidden = !data.isEmpty
     stopAnimation()
     newsListTableView.reloadData()
