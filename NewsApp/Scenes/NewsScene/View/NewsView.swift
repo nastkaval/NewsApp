@@ -10,7 +10,7 @@ import UIKit
 
 protocol NewsControllable: AnyObject {
   func viewDidLoad()
-  func didMenuClick()
+  func didTapMenu()
   func didOfflineNewsButtonClick()
   func didDetailesNewsButtonClick(at index: IndexPath)
   func didFilteringStart(keyWord: String)
@@ -47,7 +47,7 @@ final class NewsView: UIViewController {
   }
 
   @IBAction private func menuClicked(_ sender: UIButton) {
-    delegate?.didMenuClick()
+    delegate?.didTapMenu()
   }
 
   // MARK: - Functions

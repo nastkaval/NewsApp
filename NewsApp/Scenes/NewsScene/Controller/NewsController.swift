@@ -51,7 +51,7 @@ extension NewsController: NewsControllable {
     model.loadDataFromApi(withNextPage: false)
   }
 
-  func didMenuClick() {
+  func didTapMenu() {
     view?.showActionSheet()
   }
 
