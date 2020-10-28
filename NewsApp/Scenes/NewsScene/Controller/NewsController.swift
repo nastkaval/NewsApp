@@ -65,7 +65,7 @@ extension NewsController: NewsControllable {
     view?.updateUI(with: filteredResult)
   }
 
-  func didScroll() {
+  func didScrollToEnd() {
     model.loadDataFromApi(withNextPage: true)
   }
 

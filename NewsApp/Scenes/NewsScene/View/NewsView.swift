@@ -14,7 +14,7 @@ protocol NewsControllable: AnyObject {
   func didTapOffline()
   func didTapDetails(at index: IndexPath)
   func didStartFilter(keyWord: String)
-  func didScroll()
+  func didScrollToEnd()
   func didRefresh()
 }
 
@@ -23,7 +23,6 @@ final class NewsView: UIViewController {
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
   private var viewModels: [NewsViewModel] = []
-  // swiftlint:disable weak_delegate
   var controller: NewsControllable?
 
   // MARK: - Outlets
@@ -106,7 +105,7 @@ extension NewsView: UITableViewDataSource {
 extension NewsView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     if indexPath.row == viewModels.count - 1 {
-      controller?.didScroll()
+      controller?.didScrollToEnd()
     }
   }
 }
