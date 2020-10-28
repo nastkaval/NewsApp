@@ -47,34 +47,34 @@ final class NewsController {
 
 // MARK: - NewsControllable
 extension NewsController: NewsControllable {
-  func viewDidLoad() {
+  func didLoadView() {
+    model.loadDataFromApi(withNextPage: false)
+  }
+
+  func didTapOffline() {
+    newsModuleOutput.openOfflineCollectionNews()
+  }
+
+  func didTapDetails(at index: IndexPath) {
+    let news = model.dataSource[index.row]
+    newsModuleOutput.openDetailsNews(news: news)
+  }
+
+  func didStartFilter(keyWord: String) {
+    let filteredResult = model.filteringData(by: keyWord)
+    view?.updateUI(with: filteredResult)
+  }
+
+  func didScroll() {
+    model.loadDataFromApi(withNextPage: true)
+  }
+
+  func didRefresh() {
     model.loadDataFromApi(withNextPage: false)
   }
 
   func didTapMenu() {
     view?.showActionSheet()
-  }
-
-  func didStartFiltering(keyWord: String) {
-    let filteredResult = model.filteringData(by: keyWord)
-    view?.updateUI(with: filteredResult)
-  }
-
-  func didScrollTableView() {
-    model.loadDataFromApi(withNextPage: true)
-  }
-
-  func didSwipeRefresh() {
-    model.loadDataFromApi(withNextPage: false)
-  }
-
-  func didOfflineNewsButtonClick() {
-    newsModuleOutput.openOfflineCollectionNews()
-  }
-
-  func didDetailesNewsButtonClick(at index: IndexPath) {
-    let news = model.dataSource[index.row]
-    newsModuleOutput.openDetailsNews(news: news)
   }
 }
 

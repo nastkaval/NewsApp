@@ -9,13 +9,13 @@
 import UIKit
 
 protocol NewsControllable: AnyObject {
-  func viewDidLoad()
+  func didLoadView()
   func didTapMenu()
-  func didOfflineNewsButtonClick()
-  func didDetailesNewsButtonClick(at index: IndexPath)
-  func didStartFiltering(keyWord: String)
-  func didScrollTableView()
-  func didSwipeRefresh()
+  func didTapOffline()
+  func didTapDetails(at index: IndexPath)
+  func didStartFilter(keyWord: String)
+  func didScroll()
+  func didRefresh()
 }
 
 final class NewsView: UIViewController {
@@ -38,12 +38,12 @@ final class NewsView: UIViewController {
     hideKeyboardWhenTappedAround()
     tableViewSettings()
     refreshControlSettings()
-    delegate?.viewDidLoad()
+    delegate?.didLoadView()
   }
 
   // MARK: - Actions
   @IBAction private func editingChangedSearchTextFiled(_ sender: UITextField) {
-    delegate?.didStartFiltering(keyWord: sender.text ?? "")
+    delegate?.didStartFilter(keyWord: sender.text ?? "")
   }
 
   @IBAction private func menuClicked(_ sender: UIButton) {
@@ -62,7 +62,7 @@ final class NewsView: UIViewController {
   }
 
   @objc private func handleRefresh(_ refreshControl: UIRefreshControl) {
-    delegate?.didSwipeRefresh()
+    delegate?.didRefresh()
   }
 
   private func startAnimation() {
@@ -77,7 +77,7 @@ final class NewsView: UIViewController {
   }
 
   private func clickedShowOfflineCollectionNews(action: UIAlertAction) {
-    delegate?.didOfflineNewsButtonClick()
+    delegate?.didTapOffline()
   }
 }
 
@@ -107,7 +107,7 @@ extension NewsView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     if let newsArray = dataSource {
       if indexPath.row == newsArray.count - 1 {
-        delegate?.didScrollTableView()
+        delegate?.didScroll()
       }
     }
   }
@@ -117,7 +117,7 @@ extension NewsView: UITableViewDelegate {
 extension NewsView: NewsTableViewCellDelegate {
   func showDetailsView(from cell: UITableViewCell) {
     guard let index = newsListTableView.indexPath(for: cell) else { return }
-    delegate?.didDetailesNewsButtonClick(at: index)
+    delegate?.didTapDetails(at: index)
   }
 }
 
