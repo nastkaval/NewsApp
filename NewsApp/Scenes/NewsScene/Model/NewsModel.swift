@@ -9,7 +9,7 @@
 import Foundation
 
 protocol NewsDataSource: AnyObject {
-  var dataSource: [News] { get }
+  var items: [News] { get }
   func loadDataFromApi(withNextPage: Bool)
   func filteringData(by keyWord: String) -> [News]
 }
@@ -32,7 +32,7 @@ final class NewsModel {
 }
 
 extension NewsModel: NewsDataSource {
-  var dataSource: [News] {
+  var items: [News] {
     return newsArray
   }
 

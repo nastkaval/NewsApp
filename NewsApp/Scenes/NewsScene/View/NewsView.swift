@@ -22,7 +22,7 @@ final class NewsView: UIViewController {
   // MARK: - Properties
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
-  private var dataSource: [NewsViewModel]?
+  private var items: [NewsViewModel]?
   // swiftlint:disable weak_delegate
   var delegate: NewsControllable?
 
@@ -88,14 +88,14 @@ extension NewsView: UITableViewDataSource {
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return dataSource?.count ?? 0
+    return items?.count ?? 0
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cellIdentifier = R.nib.newsTableViewCell.identifier
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
-    let news = dataSource?[indexPath.row]
+    let news = items?[indexPath.row]
     cell.delegate = self
     cell.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
     return cell
@@ -105,7 +105,7 @@ extension NewsView: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension NewsView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if let newsArray = dataSource {
+    if let newsArray = items {
       if indexPath.row == newsArray.count - 1 {
         delegate?.didScroll()
       }
@@ -123,7 +123,7 @@ extension NewsView: NewsTableViewCellDelegate {
 
 extension NewsView: NewsViewable {
   func updateUI(with data: [NewsViewModel]) {
-    dataSource = data
+    items = data
     notFoundNewsView.isHidden = !data.isEmpty
     stopAnimation()
     newsListTableView.reloadData()

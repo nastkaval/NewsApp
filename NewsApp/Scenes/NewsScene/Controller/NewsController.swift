@@ -56,7 +56,7 @@ extension NewsController: NewsControllable {
   }
 
   func didTapDetails(at index: IndexPath) {
-    let news = model.dataSource[index.row]
+    let news = model.items[index.row]
     newsModuleOutput.openDetailsNews(news: news)
   }
 
@@ -81,7 +81,7 @@ extension NewsController: NewsControllable {
 // MARK: - NewsDataSourceDelegate
 extension NewsController: NewsDataSourceDelegate {
   func dataLoadSuccess() {
-    view?.updateUI(with: model.dataSource)
+    view?.updateUI(with: model.items)
   }
 
   func dataLoadWithError(_ errorMessage: String) {
