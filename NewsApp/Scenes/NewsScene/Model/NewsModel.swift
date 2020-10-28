@@ -8,17 +8,6 @@
 
 import Foundation
 
-protocol NewsDataSource: AnyObject {
-  var items: [News] { get }
-  func loadDataFromApi(withNextPage: Bool)
-  func filterData(by keyWord: String) -> [News]
-}
-
-protocol NewsDataSourceDelegate: AnyObject {
-  func dataLoadSuccess()
-  func dataLoadWithError(_ errorMessage: String)
-}
-
 final class NewsModel {
   private var session = SessionData()
   var items: [News] = []

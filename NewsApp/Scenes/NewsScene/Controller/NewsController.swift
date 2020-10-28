@@ -8,28 +8,6 @@
 
 import Foundation
 
-protocol NewsViewModel {
-  var urlToImage: URL? { get }
-  var urlNews: URL? { get }
-  var publishedAtDate: Date? { get }
-  var title: String { get }
-  var author: String { get }
-  var descriptionNews: String { get }
-  var isSaved: Bool { get }
-}
-
-protocol NewsViewable: AnyObject {
-  func updateUI(with data: [NewsViewModel])
-  func showAlert(title: String, message: String)
-  func showActionSheet()
-  func showAnimation()
-}
-
-protocol NewsModuleOutput: AnyObject {
-  func openDetailsNews(news: News)
-  func openOfflineCollectionNews()
-}
-
 final class NewsController {
   // MARK: - Properties
   private var model: NewsDataSource

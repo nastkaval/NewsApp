@@ -9,9 +9,6 @@
 import UIKit
 import AlamofireImage
 
-protocol NewsTableViewCellDelegate: AnyObject {
-  func showDetailsView(from cell: UITableViewCell)
-}
 class NewsTableViewCell: UITableViewCell {
   // MARK: - Struct TimeDateFormatters
   private enum TimeDateFormatters {

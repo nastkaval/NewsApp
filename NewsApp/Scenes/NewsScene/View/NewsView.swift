@@ -8,16 +8,6 @@
 
 import UIKit
 
-protocol NewsControllable: AnyObject {
-  func didLoadView()
-  func didTapMenu()
-  func didTapOffline()
-  func didTapDetails(at index: IndexPath)
-  func didStartFilter(keyWord: String)
-  func didScrollToEnd()
-  func didRefresh()
-}
-
 final class NewsView: UIViewController {
   // MARK: - Properties
   private let heightForCell: CGFloat = 280
