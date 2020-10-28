@@ -22,7 +22,7 @@ final class NewsViewCoordinator {
     viewController = view
     let model = NewsModel(loadService: dependencyContainer.resolve(type: ApiManagerProtocol.self))
     let controller = NewsController(model: model, delegate: view, output: self)
-    view.delegate = controller
+    view.controller = controller
     model.delegate = controller
     callback(view)
   }

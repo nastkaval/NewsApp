@@ -24,7 +24,7 @@ final class NewsView: UIViewController {
   private let refreshControl = UIRefreshControl()
   private var viewModels: [NewsViewModel] = []
   // swiftlint:disable weak_delegate
-  var delegate: NewsControllable?
+  var controller: NewsControllable?
 
   // MARK: - Outlets
   @IBOutlet private weak var newsListTableView: UITableView!
@@ -38,16 +38,16 @@ final class NewsView: UIViewController {
     hideKeyboardWhenTappedAround()
     tableViewSettings()
     refreshControlSettings()
-    delegate?.didLoadView()
+    controller?.didLoadView()
   }
 
   // MARK: - Actions
   @IBAction private func editingChangedSearchTextFiled(_ sender: UITextField) {
-    delegate?.didStartFilter(keyWord: sender.text ?? "")
+    controller?.didStartFilter(keyWord: sender.text ?? "")
   }
 
   @IBAction private func menuClicked(_ sender: UIButton) {
-    delegate?.didTapMenu()
+    controller?.didTapMenu()
   }
 
   // MARK: - Functions
@@ -62,7 +62,7 @@ final class NewsView: UIViewController {
   }
 
   @objc private func handleRefresh(_ refreshControl: UIRefreshControl) {
-    delegate?.didRefresh()
+    controller?.didRefresh()
   }
 
   private func startAnimation() {
@@ -77,7 +77,7 @@ final class NewsView: UIViewController {
   }
 
   private func clickedShowOfflineCollectionNews(action: UIAlertAction) {
-    delegate?.didTapOffline()
+    controller?.didTapOffline()
   }
 }
 
@@ -107,7 +107,7 @@ extension NewsView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     if let newsArray = items {
       if indexPath.row == newsArray.count - 1 {
-        delegate?.didScroll()
+        controller?.didScroll()
       }
     }
   }
@@ -117,7 +117,7 @@ extension NewsView: UITableViewDelegate {
 extension NewsView: NewsTableViewCellDelegate {
   func showDetailsView(from cell: UITableViewCell) {
     guard let index = newsListTableView.indexPath(for: cell) else { return }
-    delegate?.didTapDetails(at: index)
+    controller?.didTapDetails(at: index)
   }
 }
 
