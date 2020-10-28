@@ -22,7 +22,7 @@ final class NewsView: UIViewController {
   // MARK: - Properties
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
-  private var items: [NewsViewModel]?
+  private var viewModels: [NewsViewModel] = []
   // swiftlint:disable weak_delegate
   var delegate: NewsControllable?
 
