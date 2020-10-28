@@ -11,7 +11,7 @@ import Foundation
 protocol NewsDataSource: AnyObject {
   var items: [News] { get }
   func loadDataFromApi(withNextPage: Bool)
-  func filteringData(by keyWord: String) -> [News]
+  func filterData(by keyWord: String) -> [News]
 }
 
 protocol NewsDataSourceDelegate: AnyObject {
@@ -53,7 +53,7 @@ extension NewsModel: NewsDataSource {
     }
   }
 
-  func filteringData(by keyWord: String) -> [News] {
+  func filterData(by keyWord: String) -> [News] {
     guard !keyWord.isEmpty, keyWord.count > 2 else {
       return newsArray
     }
