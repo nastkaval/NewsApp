@@ -54,7 +54,7 @@ extension NewsModel: NewsDataSource {
   }
 
   func filterData(by keyWord: String) -> [News] {
-    guard !keyWord.isEmpty, keyWord.count > 2 else {
+    guard keyWord.count > 2 else {
       return newsArray
     }
     let filteredArray = newsArray.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
