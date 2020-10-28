@@ -13,7 +13,7 @@ protocol NewsControllable: AnyObject {
   func didTapMenu()
   func didOfflineNewsButtonClick()
   func didDetailesNewsButtonClick(at index: IndexPath)
-  func didFilteringStart(keyWord: String)
+  func didStartFiltering(keyWord: String)
   func didScrollTableView()
   func didSwipeRefresh()
 }
@@ -43,7 +43,7 @@ final class NewsView: UIViewController {
 
   // MARK: - Actions
   @IBAction private func editingChangedSearchTextFiled(_ sender: UITextField) {
-    delegate?.didFilteringStart(keyWord: sender.text ?? "")
+    delegate?.didStartFiltering(keyWord: sender.text ?? "")
   }
 
   @IBAction private func menuClicked(_ sender: UIButton) {

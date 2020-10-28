@@ -55,7 +55,7 @@ extension NewsController: NewsControllable {
     view?.showActionSheet()
   }
 
-  func didFilteringStart(keyWord: String) {
+  func didStartFiltering(keyWord: String) {
     let filteredResult = model.filteringData(by: keyWord)
     view?.updateUI(with: filteredResult)
   }
