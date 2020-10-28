@@ -21,7 +21,7 @@ final class NewsViewCoordinator {
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.newsView.identifier) as! NewsView
     viewController = view
     let model = NewsModel(loadService: dependencyContainer.resolve(type: ApiManagerProtocol.self))
-    let controller = NewsController(model: model, delegate: view, newsModuleOutput: self)
+    let controller = NewsController(model: model, delegate: view, output: self)
     view.delegate = controller
     model.delegate = controller
     callback(view)

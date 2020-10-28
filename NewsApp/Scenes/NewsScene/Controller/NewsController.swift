@@ -38,10 +38,10 @@ final class NewsController {
 
   private var isFiltering = false
 
-  init(model: NewsDataSource, delegate: NewsViewable, newsModuleOutput: NewsModuleOutput) {
+  init(model: NewsDataSource, delegate: NewsViewable, output: NewsModuleOutput) {
     self.model = model
     self.view = delegate
-    self.newsModuleOutput = newsModuleOutput
+    self.newsModuleOutput = output
   }
 }
 
