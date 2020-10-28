@@ -34,13 +34,13 @@ final class NewsController {
   // MARK: - Properties
   private var model: NewsDataSource
   private let newsModuleOutput: NewsModuleOutput
-  private weak var delegate: NewsViewable?
+  private weak var view: NewsViewable?
 
   private var isFiltering = false
 
   init(model: NewsDataSource, delegate: NewsViewable, newsModuleOutput: NewsModuleOutput) {
     self.model = model
-    self.delegate = delegate
+    self.view = delegate
     self.newsModuleOutput = newsModuleOutput
   }
 }
@@ -52,12 +52,12 @@ extension NewsController: NewsControllable {
   }
 
   func didMenuClick() {
-    delegate?.showActionSheet()
+    view?.showActionSheet()
   }
 
   func didFilteringStart(keyWord: String) {
     let filteredResult = model.filteringData(by: keyWord)
-    delegate?.updateUI(with: filteredResult)
+    view?.updateUI(with: filteredResult)
   }
 
   func didScrollTableView() {
@@ -81,11 +81,11 @@ extension NewsController: NewsControllable {
 // MARK: - NewsDataSourceDelegate
 extension NewsController: NewsDataSourceDelegate {
   func dataLoadSuccess() {
-    delegate?.updateUI(with: model.dataSource)
+    view?.updateUI(with: model.dataSource)
   }
 
   func dataLoadWithError(_ errorMessage: String) {
-    delegate?.showAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
+    view?.showAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
   }
 }
 
