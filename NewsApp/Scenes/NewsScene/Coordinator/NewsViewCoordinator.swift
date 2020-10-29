@@ -31,7 +31,7 @@ extension NewsViewCoordinator: NewsOutput {
   func openDetails(for news: News) {
     let detailsCoordinator = DetailsViewCoordinator(dependencyContainer: dependencyContainer)
     detailsCoordinator.delegate = self
-    detailsCoordinator.show(news: for news) { view in
+    detailsCoordinator.show(news: news) { view in
       self.viewController?.present(view, animated: true)
     }
   }

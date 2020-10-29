@@ -35,10 +35,11 @@ extension NewsController: NewsControllable {
 
   func didTapDetails(at index: IndexPath) {
     let news = model.items(filteredBy: nil)[index.row]
-    output.openDetails(for news: news)
+    output.openDetails(for: news)
   }
 
   func didStartFilter(keyWord: String) {
+    isFiltering = keyWord.count > 2
     let filteredResult = model.items(filteredBy: keyWord)
     view?.updateUI(with: filteredResult)
   }
