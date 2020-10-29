@@ -70,5 +70,4 @@ extension NewsController: NewsDataSourceDelegate {
 }
 
 // MARK: - NewsViewModel
-extension News: NewsViewModel {
-}
+extension News: NewsViewModel {}
