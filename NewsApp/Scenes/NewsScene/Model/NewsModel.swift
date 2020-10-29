@@ -23,11 +23,7 @@ final class NewsModel {
 
 extension NewsModel: NewsDataSource {
   func items(filteredBy: String?) -> [News] {
-    guard let keyWord = filteredBy else {
-      isFiltering = false
-      return items
-    }
-    guard keyWord.count > 2 else {
+    guard let keyWord = filteredBy, keyWord.count > 2 else {
       isFiltering = false
       return items
     }
