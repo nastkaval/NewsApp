@@ -53,6 +53,6 @@ protocol NewsViewable: AnyObject {
 }
 
 protocol NewsOutput: AnyObject {
-  func openDetailsNews(news: News)
+  func openDetails(for news: News)
   func openOfflineCollectionNews()
 }

@@ -35,7 +35,7 @@ extension NewsController: NewsControllable {
 
   func didTapDetails(at index: IndexPath) {
     let news = model.items(filteredBy: nil)[index.row]
-    output.openDetailsNews(news: news)
+    output.openDetails(for news: news)
   }
 
   func didStartFilter(keyWord: String) {
