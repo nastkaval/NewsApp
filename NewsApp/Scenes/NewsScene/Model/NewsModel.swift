@@ -10,8 +10,8 @@ import Foundation
 
 final class NewsModel {
   private var session = SessionData()
-  var items: [News] = []
-  var isFiltering: Bool = false
+  private var items: [News] = []
+  private(set) var isFiltering: Bool = false
 
   weak var delegate: NewsDataSourceDelegate?
   private let apiManager: ApiManagerProtocol
