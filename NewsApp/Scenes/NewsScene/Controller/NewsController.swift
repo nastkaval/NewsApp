@@ -26,7 +26,7 @@ final class NewsController {
 // MARK: - NewsControllable
 extension NewsController: NewsControllable {
   func didLoadView() {
-    model.loadDataFromApi(withNextPage: false)
+    model.loadData(isNextPage: false)
   }
 
   func didTapOffline() {
@@ -34,23 +34,23 @@ extension NewsController: NewsControllable {
   }
 
   func didTapDetails(at index: IndexPath) {
-    let news = model.items[index.row]
+    let news = model.items(filteredBy: nil)[index.row]
     output.openDetailsNews(news: news)
   }
 
   func didStartFilter(keyWord: String) {
-    let filteredResult = model.filterData(by: keyWord)
+    let filteredResult = model.items(filteredBy: keyWord)
     view?.updateUI(with: filteredResult)
   }
 
   func didScrollToEnd() {
     if !isFiltering {
-    model.loadDataFromApi(withNextPage: true)
+    model.loadData(isNextPage: true)
     }
   }
 
   func didRefresh() {
-    model.loadDataFromApi(withNextPage: false)
+    model.loadData(isNextPage: false)
   }
 
   func didTapMenu() {
@@ -61,7 +61,7 @@ extension NewsController: NewsControllable {
 // MARK: - NewsDataSourceDelegate
 extension NewsController: NewsDataSourceDelegate {
   func dataLoadSuccess() {
-    view?.updateUI(with: model.items)
+    view?.updateUI(with: model.items(filteredBy: nil))
   }
 
   func dataLoadWithError(_ errorMessage: String) {

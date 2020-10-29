@@ -10,9 +10,8 @@ import UIKit
 
 // MARK: - Model
 protocol NewsDataSource: AnyObject {
-  var items: [News] { get }
-  func loadDataFromApi(withNextPage: Bool)
-  func filterData(by keyWord: String) -> [News]
+  func items(filteredBy: String?) -> [News]
+  func loadData(isNextPage: Bool)
 }
 
 protocol NewsDataSourceDelegate: AnyObject {

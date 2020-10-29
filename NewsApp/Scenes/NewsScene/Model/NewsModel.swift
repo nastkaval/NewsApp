@@ -21,8 +21,19 @@ final class NewsModel {
 }
 
 extension NewsModel: NewsDataSource {
-  func loadDataFromApi(withNextPage: Bool) {
-    if withNextPage {
+  func items(filteredBy: String?) -> [News] {
+    guard let keyWord = filteredBy else {
+      return items
+    }
+    guard keyWord.count > 2 else {
+      return items
+    }
+    let filteredArray = items.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
+    return filteredArray
+  }
+
+  func loadData(isNextPage: Bool) {
+    if isNextPage {
       session.page += 1
     } else {
       session.page = 1
@@ -36,13 +47,5 @@ extension NewsModel: NewsDataSource {
         self?.delegate?.dataLoadWithError(error.localizableDescription)
       }
     }
-  }
-
-  func filterData(by keyWord: String) -> [News] {
-    guard keyWord.count > 2 else {
-      return items
-    }
-    let filteredArray = items.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
-    return filteredArray
   }
 }
