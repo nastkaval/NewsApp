@@ -27,9 +27,8 @@ extension NewsModel: NewsDataSource {
       isFiltering = false
       return items
     }
-    let filteredArray = items.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
     isFiltering = true
-    return filteredArray
+    return items.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
   }
 
   func loadData(isNextPage: Bool) {
