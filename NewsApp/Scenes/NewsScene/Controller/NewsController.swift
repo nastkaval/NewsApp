@@ -14,8 +14,6 @@ final class NewsController {
   private let output: NewsOutput
   private weak var view: NewsViewable?
 
-  var isFiltering = false
-
   init(model: NewsDataSource, view: NewsViewable, output: NewsOutput) {
     self.model = model
     self.view = view
@@ -30,7 +28,7 @@ extension NewsController: NewsControllable {
   }
 
   func didTapOffline() {
-    output.openOfflineCollectionNews()
+    output.openOfflineNews()
   }
 
   func didTapDetails(at index: IndexPath) {
@@ -44,8 +42,8 @@ extension NewsController: NewsControllable {
   }
 
   func didScrollToEnd() {
-    if !isFiltering {
-    model.loadData(isNextPage: true)
+    if !model.isFiltering {
+      model.loadData(isNextPage: true)
     }
   }
 

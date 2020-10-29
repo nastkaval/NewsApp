@@ -36,7 +36,7 @@ extension NewsViewCoordinator: NewsOutput {
     }
   }
 
-  func openOfflineCollectionNews() {
+  func openOfflineNews() {
     let offlineCollectionNewsCoordinator = OfflineCollectionNewsCoordinator(dependencyContainer: dependencyContainer)
     offlineCollectionNewsCoordinator.delegate = self
     offlineCollectionNewsCoordinator.show { view in

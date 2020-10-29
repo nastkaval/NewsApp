@@ -33,7 +33,7 @@ extension DetailsController: DetailsControllerDelegate {
   }
 
   func openNewsInExternalResource() {
-    let newsUrl = object.urlNews
+    let newsUrl = object.url
     if let url = newsUrl {
       UIApplication.shared.open(url)
     }

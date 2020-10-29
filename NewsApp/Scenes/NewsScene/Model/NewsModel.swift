@@ -11,6 +11,7 @@ import Foundation
 final class NewsModel {
   private var session = SessionData()
   var items: [News] = []
+  var isFiltering: Bool = false
 
   weak var delegate: NewsDataSourceDelegate?
   private let apiManager: ApiManagerProtocol
@@ -23,15 +24,15 @@ final class NewsModel {
 extension NewsModel: NewsDataSource {
   func items(filteredBy: String?) -> [News] {
     guard let keyWord = filteredBy else {
-      delegate?.isFiltering = false
+      isFiltering = false
       return items
     }
     guard keyWord.count > 2 else {
-      delegate?.isFiltering = false
+      isFiltering = false
       return items
     }
     let filteredArray = items.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
-    delegate?.isFiltering = true
+    isFiltering = true
     return filteredArray
   }
 

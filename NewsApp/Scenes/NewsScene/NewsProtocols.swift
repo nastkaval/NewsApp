@@ -10,12 +10,12 @@ import UIKit
 
 // MARK: - Model
 protocol NewsDataSource: AnyObject {
+  var isFiltering: Bool { get }
   func items(filteredBy: String?) -> [News]
   func loadData(isNextPage: Bool)
 }
 
 protocol NewsDataSourceDelegate: AnyObject {
-  var isFiltering: Bool { get set }
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
 }
@@ -37,9 +37,9 @@ protocol NewsTableViewCellDelegate: AnyObject {
 
 // MARK: - Controller
 protocol NewsViewModel {
-  var urlToImage: URL? { get }
-  var urlNews: URL? { get }
-  var publishedAtDate: Date? { get }
+  var imageUrl: URL? { get }
+  var url: URL? { get }
+  var publishedAt: Date? { get }
   var title: String { get }
   var author: String { get }
   var descriptionNews: String { get }
@@ -55,5 +55,5 @@ protocol NewsViewable: AnyObject {
 
 protocol NewsOutput: AnyObject {
   func openDetails(for news: News)
-  func openOfflineCollectionNews()
+  func openOfflineNews()
 }
