@@ -14,7 +14,7 @@ final class NewsController {
   private let output: NewsOutput
   private weak var view: NewsViewable?
 
-  private var isFiltering = false
+  var isFiltering = false
 
   init(model: NewsDataSource, view: NewsViewable, output: NewsOutput) {
     self.model = model
@@ -39,7 +39,6 @@ extension NewsController: NewsControllable {
   }
 
   func didStartFilter(keyWord: String) {
-    isFiltering = keyWord.count > 2
     let filteredResult = model.items(filteredBy: keyWord)
     view?.updateUI(with: filteredResult)
   }

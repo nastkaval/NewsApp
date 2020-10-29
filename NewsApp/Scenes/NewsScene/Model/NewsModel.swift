@@ -23,12 +23,15 @@ final class NewsModel {
 extension NewsModel: NewsDataSource {
   func items(filteredBy: String?) -> [News] {
     guard let keyWord = filteredBy else {
+      delegate?.isFiltering = false
       return items
     }
     guard keyWord.count > 2 else {
+      delegate?.isFiltering = false
       return items
     }
     let filteredArray = items.filter { $0.title.lowercased().contains("\(keyWord.lowercased())") }
+    delegate?.isFiltering = true
     return filteredArray
   }
 

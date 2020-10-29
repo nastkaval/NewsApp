@@ -15,6 +15,7 @@ protocol NewsDataSource: AnyObject {
 }
 
 protocol NewsDataSourceDelegate: AnyObject {
+  var isFiltering: Bool { get set }
   func dataLoadSuccess()
   func dataLoadWithError(_ errorMessage: String)
 }
