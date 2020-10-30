@@ -25,7 +25,7 @@ protocol NewsControllable: AnyObject {
   func didLoadView()
   func didTapMenu()
   func didTapOffline()
-  func didTapDetails(at index: IndexPath)
+  func didTapDetails(at index: Int)
   func didStartFilter(keyWord: String)
   func didScrollToEnd()
   func didRefresh()

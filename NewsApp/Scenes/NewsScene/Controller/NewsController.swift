@@ -31,8 +31,8 @@ extension NewsController: NewsControllable {
     output.openOfflineNews()
   }
 
-  func didTapDetails(at index: IndexPath) {
-    let news = model.items(filteredBy: nil)[index.row]
+  func didTapDetails(at index: Int) {
+    let news = model.items(filteredBy: nil)[index]
     output.openDetails(for: news)
   }
 

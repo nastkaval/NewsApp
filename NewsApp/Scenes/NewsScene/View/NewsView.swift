@@ -104,7 +104,7 @@ extension NewsView: UITableViewDelegate {
 extension NewsView: NewsTableViewCellDelegate {
   func showDetailsView(from cell: UITableViewCell) {
     guard let index = newsListTableView.indexPath(for: cell) else { return }
-    controller?.didTapDetails(at: index)
+    controller?.didTapDetails(at: index.row)
   }
 }
 
