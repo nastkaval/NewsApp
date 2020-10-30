@@ -42,7 +42,7 @@ protocol NewsViewModel {
   var publishedAt: Date? { get }
   var title: String { get }
   var author: String { get }
-  var descriptionNews: String { get }
+  var descriptionText: String { get }
   var isSaved: Bool { get }
 }
 

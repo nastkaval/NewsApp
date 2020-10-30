@@ -32,7 +32,7 @@ final class OfflineCollectionViewCell: SwipeableCollectionViewCell {
   @IBOutlet weak var container: UIView!
   @IBOutlet private weak var imageNews: UIImageView!
   @IBOutlet private weak var titleNews: UILabel!
-  @IBOutlet private weak var descriptionNews: UILabel!
+  @IBOutlet private weak var descriptionText: UILabel!
   @IBOutlet private weak var postTimeNews: UILabel!
   @IBOutlet private weak var authorPostNews: UILabel!
   @IBOutlet private weak var showMoreButton: UIButton!
@@ -40,7 +40,7 @@ final class OfflineCollectionViewCell: SwipeableCollectionViewCell {
   // MARK: - Functions
   func updateUI(title: String?, newsDescription: String?, author: String?, imageUrl: URL?, publishedAt: Date?) {
     titleNews.text = title
-    descriptionNews.text = newsDescription
+    descriptionText.text = newsDescription
     authorPostNews.text = author
     if let url = imageUrl {
       imageNews.af.setImage(withURL: url)

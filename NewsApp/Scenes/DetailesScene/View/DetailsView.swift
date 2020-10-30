@@ -67,7 +67,7 @@ extension DetailsView: DetailsViewDelegate {
     if let date = news?.publishedAt {
     dateLabel.text = DayDateFormattersConverter.dayTimeDateFormatter.string(from: date)
     }
-    descriptionLabel.text = news?.descriptionNews
+    descriptionLabel.text = news?.descriptionText
     if let saved = news?.isSaved {
     savedNewsCheck.isSelected = saved
     }

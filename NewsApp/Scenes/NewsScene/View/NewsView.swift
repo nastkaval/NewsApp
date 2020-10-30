@@ -86,7 +86,7 @@ extension NewsView: UITableViewDataSource {
     cell.selectionStyle = .none
     let news = viewModels[indexPath.row]
     cell.delegate = self
-    cell.updateUI(title: news.title, newsDescription: news.descriptionNews, author: news.author, imageUrl: news.imageUrl, publishedAt: news.publishedAt)
+    cell.updateUI(title: news.title, newsDescription: news.descriptionText, author: news.author, imageUrl: news.imageUrl, publishedAt: news.publishedAt)
     return cell
   }
 }

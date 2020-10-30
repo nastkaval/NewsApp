@@ -11,7 +11,7 @@ import Foundation
 struct News: Decodable {
   var author: String
   var title: String
-  var descriptionNews: String
+  var descriptionText: String
   var content: String
   var urlNewsStr: String
   var urlToImageStr: String
@@ -35,7 +35,7 @@ struct News: Decodable {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     author = try container.decode(String.self, forKey: .author)
     title = try container.decode(String.self, forKey: .title)
-    descriptionNews = try container.decode(String.self, forKey: .description)
+    descriptionText = try container.decode(String.self, forKey: .description)
     content = try container.decode(String.self, forKey: .content)
     urlNewsStr = try container.decode(String.self, forKey: .url)
     url = URL(string: urlNewsStr)
@@ -45,10 +45,10 @@ struct News: Decodable {
     publishedAt = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
   }
 
-  init(author: String, title: String, descriptionNews: String, content: String, urlNewsStr: String, urlToImageStr: String, publishedAtStr: String) {
+  init(author: String, title: String, descriptionText: String, content: String, urlNewsStr: String, urlToImageStr: String, publishedAtStr: String) {
     self.author = author
     self.title = title
-    self.descriptionNews = descriptionNews
+    self.descriptionText = descriptionText
     self.content = content
     self.urlNewsStr = urlNewsStr
     self.urlToImageStr = urlToImageStr
