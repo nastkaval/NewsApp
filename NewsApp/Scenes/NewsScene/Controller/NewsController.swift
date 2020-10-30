@@ -42,8 +42,9 @@ extension NewsController: NewsControllable {
   }
 
   func didScrollToEnd() {
-    if !model.isFiltering {
+    guard model.isFiltering else {
       model.loadData(isNextPage: true)
+      return
     }
   }
 
