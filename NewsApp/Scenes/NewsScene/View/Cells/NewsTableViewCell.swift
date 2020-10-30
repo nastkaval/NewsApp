@@ -9,9 +9,6 @@
 import UIKit
 import AlamofireImage
 
-protocol NewsTableViewCellDelegate: AnyObject {
-  func showDetailsView(from cell: UITableViewCell)
-}
 class NewsTableViewCell: UITableViewCell {
   // MARK: - Struct TimeDateFormatters
   private enum TimeDateFormatters {
@@ -25,7 +22,7 @@ class NewsTableViewCell: UITableViewCell {
   // MARK: - Outlets
   @IBOutlet private weak var imageNews: UIImageView!
   @IBOutlet private weak var titleNews: UILabel!
-  @IBOutlet private weak var descriptionNews: UILabel!
+  @IBOutlet private weak var descriptionText: UILabel!
   @IBOutlet private weak var postTimeNews: UILabel!
   @IBOutlet private weak var authorPostNews: UILabel!
   @IBOutlet private weak var showMoreButton: UIButton!
@@ -46,7 +43,7 @@ class NewsTableViewCell: UITableViewCell {
   // MARK: - Functions
   func updateUI(title: String?, newsDescription: String?, author: String?, imageUrl: URL?, publishedAt: Date?) {
     titleNews.text = title
-    descriptionNews.text = newsDescription
+    descriptionText.text = newsDescription
     authorPostNews.text = author
     if let url = imageUrl {
     imageNews.af.setImage(withURL: url)

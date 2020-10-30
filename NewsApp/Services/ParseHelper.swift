@@ -14,7 +14,7 @@ class ParseHelper {
     do {
       let news = try JSONDecoder().decode(NewsServerModel.self, from: json)
       newsEntities = news.articles.map { item -> News in
-        News(author: item.author ?? "", title: item.title ?? "", descriptionNews: item.articlesDescription ?? "", content: item.content ?? "", urlNewsStr: item.url, urlToImageStr: item.urlToImage ?? "", publishedAtStr: item.publishedAt)
+        News(author: item.author ?? "", title: item.title ?? "", descriptionText: item.articlesDescription ?? "", content: item.content ?? "", urlNewsStr: item.url, urlToImageStr: item.urlToImage ?? "", publishedAtStr: item.publishedAt)
       }
     } catch {
       print("decode error: invalid data from server")

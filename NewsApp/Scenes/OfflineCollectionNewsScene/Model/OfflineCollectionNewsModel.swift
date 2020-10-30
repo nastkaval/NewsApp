@@ -32,7 +32,7 @@ final class OfflineCollectionNewsModel {
       return
     }
     listNews = dataArray.map { item -> News in
-      News(author: item.author, title: item.title, descriptionNews: item.descriptionNews, content: item.content, urlNewsStr: item.urlNewsStr, urlToImageStr: item.urlToImageStr, publishedAtStr: item.publishedAtStr)
+      News(author: item.author, title: item.title, descriptionText: item.descriptionText, content: item.content, urlNewsStr: item.urlNewsStr, urlToImageStr: item.urlToImageStr, publishedAtStr: item.publishedAtStr)
     }
     output?.dataLoadSuccess()
   }

@@ -2,87 +2,71 @@
 //  NewsController.swift
 //  NewsApp
 //
-//  Created by Kovalchuk, Anastasiya on 9/21/20.
+//  Created by Kovalchuk, Anastasiya on 10/27/20.
 //  Copyright © 2020 Nastassia Kavalchuk. All rights reserved.
 //
 
 import Foundation
 
-protocol NewsViewDelegate: AnyObject {
-  func updateUI()
-  func displayAlert(title: String, message: String)
-  func displayActionSheet()
-  func displayLoadAnimation()
-}
-
 final class NewsController {
-  private var modelNews: NewsModel
-  private weak var delegate: NewsViewDelegate?
-  private let coordinator: NewsViewCoordinator
-  private var isFiltering = false
+  // MARK: - Properties
+  private var model: NewsDataSource
+  private let output: NewsOutput
+  private weak var view: NewsViewable?
 
-  init(model: NewsModel, delegate: NewsViewDelegate, coordinator: NewsViewCoordinator) {
-    self.modelNews = model
-    self.delegate = delegate
-    self.coordinator = coordinator
+  init(model: NewsDataSource, view: NewsViewable, output: NewsOutput) {
+    self.model = model
+    self.view = view
+    self.output = output
   }
 }
 
-// MARK: - NewsViewOutput
-extension NewsController: NewsControllerDelegate {
-  func showOfflineCollectionNews() {
-    coordinator.openOfflineCollectionNews()
+// MARK: - NewsControllable
+extension NewsController: NewsControllable {
+  func didLoadView() {
+    model.loadData(isNextPage: false)
   }
 
-  func menuClicked() {
-    delegate?.displayActionSheet()
+  func didTapOffline() {
+    output.openOfflineNews()
   }
 
-  func showDetails(at index: IndexPath) {
-    let newsModel = modelNews.object(index.row)
-    coordinator.openDetailsNews(newsModel: newsModel)
+  func didTapDetails(at index: Int) {
+    let news = model.items(filteredBy: nil)[index]
+    output.openDetails(for: news)
   }
 
-  func loadDataCurrentPage() {
-    modelNews.getData(isNextPage: false)
+  func didStartFilter(keyWord: String) {
+    let filteredResult = model.items(filteredBy: keyWord)
+    view?.updateUI(with: filteredResult)
   }
 
-  func filterNews(keyWord: String) {
-    modelNews.getFilterNews(keyWord: keyWord)
-    isFiltering = true
-  }
-
-  func loadDataNextPage() {
-    if !isFiltering {
-      modelNews.getData(isNextPage: true)
+  func didScrollToEnd() {
+    guard model.isFiltering else {
+      model.loadData(isNextPage: true)
+      return
     }
   }
 
-  func userInterfaceDidLoad() {
-    delegate?.displayLoadAnimation()
-    modelNews.getData(isNextPage: false)
+  func didRefresh() {
+    model.loadData(isNextPage: false)
+  }
+
+  func didTapMenu() {
+    view?.showActionSheet()
   }
 }
 
-// MARK: - NewsModelOutput
-extension NewsController: NewsModelDelegate {
+// MARK: - NewsDataSourceDelegate
+extension NewsController: NewsDataSourceDelegate {
   func dataLoadSuccess() {
-    isFiltering = false
-    delegate?.updateUI()
+    view?.updateUI(with: model.items(filteredBy: nil))
   }
 
   func dataLoadWithError(_ errorMessage: String) {
-    delegate?.displayAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
+    view?.showAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
   }
 }
 
-// MARK: - NewsViewInput
-extension NewsController: NewsViewDataSource {
-  var count: Int {
-    return modelNews.count()
-  }
-
-  func provideObject(at index: IndexPath) -> NewsViewModel {
-    return modelNews.object(index.row)
-  }
-}
+// MARK: - NewsViewModel
+extension News: NewsViewModel {}

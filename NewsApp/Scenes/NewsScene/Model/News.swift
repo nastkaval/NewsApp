@@ -11,15 +11,15 @@ import Foundation
 struct News: Decodable {
   var author: String
   var title: String
-  var descriptionNews: String
+  var descriptionText: String
   var content: String
   var urlNewsStr: String
   var urlToImageStr: String
   var publishedAtStr: String
-  var publishedAtDate: Date?
-  var urlNews: URL?
-  var urlToImage: URL?
-  var isNewsSaved: Bool = false
+  var publishedAt: Date?
+  var url: URL?
+  var imageUrl: URL?
+  var isSaved: Bool = false
 
   enum CodingKeys: String, CodingKey {
     case author
@@ -35,26 +35,26 @@ struct News: Decodable {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     author = try container.decode(String.self, forKey: .author)
     title = try container.decode(String.self, forKey: .title)
-    descriptionNews = try container.decode(String.self, forKey: .description)
+    descriptionText = try container.decode(String.self, forKey: .description)
     content = try container.decode(String.self, forKey: .content)
     urlNewsStr = try container.decode(String.self, forKey: .url)
-    urlNews = URL(string: urlNewsStr)
+    url = URL(string: urlNewsStr)
     urlToImageStr = try container.decode(String.self, forKey: .urlToImage)
-    urlToImage = URL(string: urlToImageStr)
+    imageUrl = URL(string: urlToImageStr)
     publishedAtStr = try container.decode(String.self, forKey: .publishedAt)
-    publishedAtDate = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
+    publishedAt = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
   }
 
-  init(author: String, title: String, descriptionNews: String, content: String, urlNewsStr: String, urlToImageStr: String, publishedAtStr: String) {
+  init(author: String, title: String, descriptionText: String, content: String, urlNewsStr: String, urlToImageStr: String, publishedAtStr: String) {
     self.author = author
     self.title = title
-    self.descriptionNews = descriptionNews
+    self.descriptionText = descriptionText
     self.content = content
     self.urlNewsStr = urlNewsStr
     self.urlToImageStr = urlToImageStr
     self.publishedAtStr = publishedAtStr
-    self.urlNews = URL(string: urlNewsStr)
-    self.urlToImage = URL(string: urlToImageStr)
-    self.publishedAtDate = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
+    self.url = URL(string: urlNewsStr)
+    self.imageUrl = URL(string: urlToImageStr)
+    self.publishedAt = ServerDateFormatterConverter.serverDateFormatter.date(from: publishedAtStr)
   }
 }

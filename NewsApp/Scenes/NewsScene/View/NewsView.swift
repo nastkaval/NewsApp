@@ -1,44 +1,19 @@
 //
-//  NewsView.swift
+//  NewsScreen.swift
 //  NewsApp
 //
-//  Created by Kovalchuk, Anastasiya on 9/17/20.
+//  Created by Kovalchuk, Anastasiya on 10/27/20.
 //  Copyright © 2020 Nastassia Kavalchuk. All rights reserved.
 //
 
 import UIKit
 
-protocol NewsViewModel {
-  var imageUrl: URL? { get }
-  var newsUrl: URL? { get }
-  var publishedAt: Date? { get }
-  var title: String { get }
-  var author: String { get }
-  var descriptionNews: String { get }
-  var isNewsSaved: Bool { get }
-}
-
-protocol NewsControllerDelegate: AnyObject {
-  func userInterfaceDidLoad()
-  func loadDataCurrentPage()
-  func loadDataNextPage()
-  func filterNews(keyWord: String)
-  func showDetails(at index: IndexPath)
-  func menuClicked()
-  func showOfflineCollectionNews()
-}
-
-protocol NewsViewDataSource: AnyObject {
-  func provideObject(at index: IndexPath) -> NewsViewModel
-  var count: Int { get }
-}
-
 final class NewsView: UIViewController {
   // MARK: - Properties
   private let heightForCell: CGFloat = 280
   private let refreshControl = UIRefreshControl()
-  // swiftlint:disable weak_delegate
-  var delegate: (NewsControllerDelegate & NewsViewDataSource)?
+  private var viewModels: [NewsViewModel] = []
+  var controller: NewsControllable?
 
   // MARK: - Outlets
   @IBOutlet private weak var newsListTableView: UITableView!
@@ -52,16 +27,16 @@ final class NewsView: UIViewController {
     hideKeyboardWhenTappedAround()
     tableViewSettings()
     refreshControlSettings()
-    delegate?.userInterfaceDidLoad()
+    controller?.didLoadView()
   }
 
   // MARK: - Actions
   @IBAction private func editingChangedSearchTextFiled(_ sender: UITextField) {
-    delegate?.filterNews(keyWord: sender.text ?? "")
+    controller?.didStartFilter(keyWord: sender.text ?? "")
   }
 
   @IBAction private func menuClicked(_ sender: UIButton) {
-    delegate?.menuClicked()
+    controller?.didTapMenu()
   }
 
   // MARK: - Functions
@@ -76,11 +51,7 @@ final class NewsView: UIViewController {
   }
 
   @objc private func handleRefresh(_ refreshControl: UIRefreshControl) {
-    delegate?.loadDataNextPage()
-  }
-
-  private func checkOperatorTableViewForEmpty() {
-    notFoundNewsView.isHidden = !newsListTableView.visibleCells.isEmpty
+    controller?.didRefresh()
   }
 
   private func startAnimation() {
@@ -94,15 +65,8 @@ final class NewsView: UIViewController {
     refreshControl.endRefreshing()
   }
 
-  private func showActionSheet() {
-    let optionMenu = UIAlertController(title: nil, message: R.string.localizable.chooseOption(), preferredStyle: .actionSheet)
-    optionMenu.addAction(UIAlertAction(title: R.string.localizable.actionSheetShowOfflineCollection(), style: .default, handler: clickedShowOfflineCollectionNews))
-    optionMenu.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
-    present(optionMenu, animated: true)
-  }
-
   private func clickedShowOfflineCollectionNews(action: UIAlertAction) {
-    delegate?.showOfflineCollectionNews()
+    controller?.didTapOffline()
   }
 }
 
@@ -113,16 +77,16 @@ extension NewsView: UITableViewDataSource {
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return delegate?.count ?? 0
+    return viewModels.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cellIdentifier = R.nib.newsTableViewCell.identifier
     let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? NewsTableViewCell ?? NewsTableViewCell(style: .default, reuseIdentifier: cellIdentifier)
     cell.selectionStyle = .none
-    let news = delegate?.provideObject(at: indexPath)
+    let news = viewModels[indexPath.row]
     cell.delegate = self
-    cell.updateUI(title: news?.title, newsDescription: news?.descriptionNews, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
+    cell.updateUI(title: news.title, newsDescription: news.descriptionText, author: news.author, imageUrl: news.imageUrl, publishedAt: news.publishedAt)
     return cell
   }
 }
@@ -130,10 +94,8 @@ extension NewsView: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension NewsView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if let input = delegate {
-      if indexPath.row == input.count - 1 {
-        delegate?.loadDataNextPage()
-      }
+    if indexPath.row == viewModels.count - 1 {
+      controller?.didScrollToEnd()
     }
   }
 }
@@ -142,27 +104,30 @@ extension NewsView: UITableViewDelegate {
 extension NewsView: NewsTableViewCellDelegate {
   func showDetailsView(from cell: UITableViewCell) {
     guard let index = newsListTableView.indexPath(for: cell) else { return }
-    delegate?.showDetails(at: index)
+    controller?.didTapDetails(at: index.row)
   }
 }
 
-// MARK: - NewsControllerOutput
-extension NewsView: NewsViewDelegate {
-  func displayLoadAnimation() {
-    startAnimation()
+extension NewsView: NewsViewable {
+  func updateUI(with data: [NewsViewModel]) {
+    viewModels = data
+    notFoundNewsView.isHidden = !data.isEmpty
+    stopAnimation()
+    newsListTableView.reloadData()
   }
 
-  func displayAlert(title: String, message: String) {
+  func showAlert(title: String, message: String) {
     showAlert(message: message)
   }
 
-  func displayActionSheet() {
-    showActionSheet()
+  func showAnimation() {
+    startAnimation()
   }
 
-  func updateUI() {
-    searchTextField.endEditing(true)
-    stopAnimation()
-    newsListTableView.reloadData()
+  func showActionSheet() {
+    let optionMenu = UIAlertController(title: nil, message: R.string.localizable.chooseOption(), preferredStyle: .actionSheet)
+    optionMenu.addAction(UIAlertAction(title: R.string.localizable.actionSheetShowOfflineCollection(), style: .default, handler: clickedShowOfflineCollectionNews))
+    optionMenu.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+    present(optionMenu, animated: true)
   }
 }

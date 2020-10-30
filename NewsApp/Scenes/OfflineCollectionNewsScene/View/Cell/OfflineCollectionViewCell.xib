@@ -119,7 +119,7 @@
             <connections>
                 <outlet property="authorPostNews" destination="HML-Yq-GB9" id="l2V-ej-sma"/>
                 <outlet property="container" destination="qpQ-Iz-WXQ" id="vcy-NB-YJU"/>
-                <outlet property="descriptionNews" destination="DY6-WU-xGE" id="3gk-yy-Ly9"/>
+                <outlet property="descriptionText" destination="DY6-WU-xGE" id="3gk-yy-Ly9"/>
                 <outlet property="imageNews" destination="fHo-1v-8uF" id="7SU-vX-7RM"/>
                 <outlet property="postTimeNews" destination="6m0-F2-WeZ" id="HUs-oy-YKy"/>
                 <outlet property="showMoreButton" destination="M3u-cQ-alk" id="7MT-sN-CXC"/>

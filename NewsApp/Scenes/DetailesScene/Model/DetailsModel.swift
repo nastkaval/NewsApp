@@ -35,7 +35,7 @@ extension DetailsModel {
       saveNewsToDatabase()
       return
     }
-    news.isNewsSaved = true
+    news.isSaved = true
     output?.dataLoadSuccess()
   }
 
@@ -43,7 +43,7 @@ extension DetailsModel {
     let newsEntity = NewsEntity(
       author: news.author,
       title: news.title,
-      descriptionNews: news.descriptionNews,
+      descriptionText: news.descriptionText,
       urlNewsStr: news.urlNewsStr,
       urlToImageStr: news.urlToImageStr,
       publishedAtStr: news.publishedAtStr,
