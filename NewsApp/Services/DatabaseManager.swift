@@ -30,11 +30,11 @@ enum DatabaseDataError: LocalizedError {
 }
 
 protocol DatabaseProtocol: AnyObject {
-  func saveData(newsEntity: NewsEntity) -> Bool
+  func save(data: NewsEntity) -> Bool
   func loadData() -> [NewsEntity]
-  func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
-  func removeDataBy(id: String) -> Bool
-  func checkObjectIsExistBy(id: String) -> NewsEntity?
+  func filterData(by title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
+  func removeData(by id: String) -> Bool
+  func checkObject(by id: String) -> Bool
 }
 
 final class DatabaseManager: DatabaseProtocol {
@@ -53,17 +53,19 @@ final class DatabaseManager: DatabaseProtocol {
     return newsArray
   }
 
-  func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
+  func filterData(by title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
     let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(title)'").toArray()
     return callBack(.success(newsArray))
   }
 
-  func checkObjectIsExistBy(id: String) -> NewsEntity? {
-    let object = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id).first
-    return object
+  func checkObject(by id: String) -> Bool {
+    guard realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id).first != nil else {
+      return false
+    }
+    return true
   }
 
-  func removeDataBy(id: String) -> Bool {
+  func removeData(by id: String) -> Bool {
     do {
       let objectShouldDelete = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id)
       try realm.write {
@@ -75,10 +77,10 @@ final class DatabaseManager: DatabaseProtocol {
     }
   }
 
-  func saveData(newsEntity: NewsEntity) -> Bool {
+  func save(data: NewsEntity) -> Bool {
     do {
       try realm.write {
-        realm.add(newsEntity)
+        realm.add(data)
       }
       return true
     } catch {

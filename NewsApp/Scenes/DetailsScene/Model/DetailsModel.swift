@@ -8,38 +8,17 @@
 
 import Foundation
 
-protocol DetailsModelOutput: AnyObject {
-  func dataLoadSuccess()
-  func dataLoadWithError(_ errorMessage: String)
-}
-
 final class DetailsModel {
   private var news: News
   private let databaseManager: DatabaseProtocol
-  weak var output: DetailsModelOutput?
+  weak var delegate: DetailsDataSourceDelegate?
 
   init(loadService: DatabaseProtocol, news: News) {
     self.news = news
     self.databaseManager = loadService
   }
-}
 
-extension DetailsModel {
-  func object() -> News {
-    return news
-  }
-
-  func checkIsExistObjectInDatabase() {
-    let lookingObject = databaseManager.checkObjectIsExistBy(id: news.urlNewsStr)
-    guard lookingObject != nil else {
-      saveNewsToDatabase()
-      return
-    }
-    news.isSaved = true
-    output?.dataLoadSuccess()
-  }
-
-  private func saveNewsToDatabase() {
+  private func saveData() {
     let newsEntity = NewsEntity(
       author: news.author,
       title: news.title,
@@ -48,8 +27,25 @@ extension DetailsModel {
       urlToImageStr: news.urlToImageStr,
       publishedAtStr: news.publishedAtStr,
       content: news.content)
-    if databaseManager.saveData(newsEntity: newsEntity) {
-      checkIsExistObjectInDatabase()
+    if databaseManager.save(data: newsEntity) {
+      checkData()
     }
+  }
+}
+
+// MARK: - DetailsDataSource
+extension DetailsModel: DetailsDataSource {
+  var item: News {
+    return news
+  }
+
+  func checkData() {
+    let id = news.urlNewsStr
+    guard databaseManager.checkObject(by: id) else {
+      saveData()
+      return
+    }
+    news.isSaved = true
+    delegate?.dataLoadSuccess()
   }
 }
