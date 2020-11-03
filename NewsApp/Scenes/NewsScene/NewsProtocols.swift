@@ -39,7 +39,8 @@ protocol NewsTableViewCellDelegate: AnyObject {
 protocol NewsViewModel {
   var imageUrl: URL? { get }
   var url: URL? { get }
-  var publishedAt: Date? { get }
+  var publishedAtTime: String { get }
+  var publishedAtDay: String { get }
   var title: String { get }
   var author: String { get }
   var descriptionText: String { get }

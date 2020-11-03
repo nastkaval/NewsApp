@@ -8,6 +8,14 @@
 
 import Foundation
 
+enum TimeDateFormatters {
+  static let hoursMinutesDateFormatter: DateFormatter = {
+    var dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "HH:mm"
+    return dateFormatter
+  }()
+}
+
 final class NewsController {
   // MARK: - Properties
   private var model: NewsDataSource
@@ -69,4 +77,12 @@ extension NewsController: NewsDataSourceDelegate {
 }
 
 // MARK: - NewsViewModel
-extension News: NewsViewModel {}
+extension News: NewsViewModel {
+  var publishedAtTime: String {
+    return TimeDateFormatters.hoursMinutesDateFormatter.string(from: publishedAt ?? Date())
+  }
+
+  var publishedAtDay: String {
+    return DayDateFormattersConverter.dayTimeDateFormatter.string(from: publishedAt ?? Date())
+  }
+}

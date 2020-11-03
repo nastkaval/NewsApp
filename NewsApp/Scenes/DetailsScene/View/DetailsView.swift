@@ -43,16 +43,13 @@ extension DetailsView: DetailsViewable {
   }
 
   func updateUI(with data: NewsViewModel) {
-    let news = data
-    if let url = news.imageUrl {
+    if let url = data.imageUrl {
       imageNews.af.setImage(withURL: url)
     }
-    titleLabel.text = news.title
-    authorLabel.text = news.author
-    if let date = news.publishedAt {
-      dateLabel.text = DayDateFormattersConverter.dayTimeDateFormatter.string(from: date)
-    }
-    descriptionLabel.text = news.descriptionText
-    savedNewsCheck.isSelected = news.isSaved
+    titleLabel.text = data.title
+    authorLabel.text = data.author
+    dateLabel.text = data.publishedAtDay
+    descriptionLabel.text = data.descriptionText
+    savedNewsCheck.isSelected = data.isSaved
   }
 }

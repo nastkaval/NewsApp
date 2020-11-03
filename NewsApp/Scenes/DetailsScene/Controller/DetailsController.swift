@@ -23,7 +23,7 @@ final class DetailsController {
 // MARK: - DetailsControllable
 extension DetailsController: DetailsControllable {
   func didLoadView() {
-    model.checkData()
+    model.saveData()
   }
 
   func didTapOpenUrl() {

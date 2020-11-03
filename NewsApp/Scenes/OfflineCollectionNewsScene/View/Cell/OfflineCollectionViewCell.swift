@@ -38,15 +38,15 @@ final class OfflineCollectionViewCell: SwipeableCollectionViewCell {
   @IBOutlet private weak var showMoreButton: UIButton!
 
   // MARK: - Functions
-  func updateUI(title: String?, newsDescription: String?, author: String?, imageUrl: URL?, publishedAt: Date?) {
+  func updateUI(title: String?, newsDescription: String?, author: String?, imageUrl: URL?, publishedAt: String?) {
     titleNews.text = title
     descriptionText.text = newsDescription
     authorPostNews.text = author
     if let url = imageUrl {
       imageNews.af.setImage(withURL: url)
     }
-    if let date = publishedAt {
-      postTimeNews.text = TimeDateFormatters.hoursMinutesDateFormatter.string(from: date)
+    if let time = publishedAt {
+      postTimeNews.text = publishedAt
     }
   }
 

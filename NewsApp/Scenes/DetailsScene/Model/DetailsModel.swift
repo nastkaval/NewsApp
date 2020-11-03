@@ -18,7 +18,23 @@ final class DetailsModel {
     self.databaseManager = loadService
   }
 
-  private func saveData() {
+  private func successSave() {
+    news.isSaved = true
+    delegate?.dataLoadSuccess()
+  }
+}
+
+// MARK: - DetailsDataSource
+extension DetailsModel: DetailsDataSource {
+  var item: News {
+    return news
+  }
+  func saveData() {
+    let id = news.urlNewsStr
+    guard !databaseManager.checkObject(by: id) else {
+      successSave()
+      return
+    }
     let newsEntity = NewsEntity(
       author: news.author,
       title: news.title,
@@ -28,24 +44,7 @@ final class DetailsModel {
       publishedAtStr: news.publishedAtStr,
       content: news.content)
     if databaseManager.save(data: newsEntity) {
-      checkData()
+      successSave()
     }
-  }
-}
-
-// MARK: - DetailsDataSource
-extension DetailsModel: DetailsDataSource {
-  var item: News {
-    return news
-  }
-
-  func checkData() {
-    let id = news.urlNewsStr
-    guard databaseManager.checkObject(by: id) else {
-      saveData()
-      return
-    }
-    news.isSaved = true
-    delegate?.dataLoadSuccess()
   }
 }

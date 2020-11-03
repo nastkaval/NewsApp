@@ -11,7 +11,7 @@ import Foundation
 // MARK: - Model
 protocol DetailsDataSource: AnyObject {
   var item: News { get }
-  func checkData()
+  func saveData()
 }
 
 protocol DetailsDataSourceDelegate: AnyObject {
