@@ -31,7 +31,7 @@ extension DetailsModel: DetailsDataSource {
   }
   func saveData() {
     let id = news.urlNewsStr
-    guard !databaseManager.checkObject(by: id) else {
+    guard !databaseManager.checkObject(byId: id) else {
       successSave()
       return
     }

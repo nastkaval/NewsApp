@@ -39,7 +39,7 @@ final class OfflineCollectionNewsModel {
 
   func removeDataFromDatabase(from: Int) {
     let removeObjectId = object(from).urlNewsStr
-    guard databaseManager.removeData(by: removeObjectId) else {
+    guard databaseManager.removeData(byId: removeObjectId) else {
       output?.dataRemovedFailed()
       return
     }
