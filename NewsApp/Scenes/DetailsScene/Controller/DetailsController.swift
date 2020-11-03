@@ -44,6 +44,6 @@ extension DetailsController: DetailsDataSourceDelegate {
   }
 
   func dataLoadWithError(_ errorMessage: String) {
-    view?.showAlert(title: R.string.localizable.errorMessagesErrorTitle(), message: errorMessage)
+    view?.showAlert(message: errorMessage)
   }
 }

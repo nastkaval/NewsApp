@@ -29,7 +29,7 @@ protocol DetailsControllable: AnyObject {
 // MARK: - Controller
 protocol DetailsViewable: AnyObject {
   func updateUI(with data: NewsViewModel)
-  func showAlert(title: String, message: String)
+  func showAlert(message: String)
 }
 
 // MARK: - Coordinator

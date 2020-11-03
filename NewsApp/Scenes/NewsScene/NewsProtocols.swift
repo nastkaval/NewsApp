@@ -49,7 +49,7 @@ protocol NewsViewModel {
 
 protocol NewsViewable: AnyObject {
   func updateUI(with data: [NewsViewModel])
-  func showAlert(title: String, message: String)
+  func showAlert(message: String)
   func showActionSheet()
   func showAnimation()
 }
