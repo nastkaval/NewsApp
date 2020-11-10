@@ -9,10 +9,6 @@
 import UIKit
 import RealmSwift
 
-protocol DetailsViewCoordinatorDelegate: AnyObject {
-  func closeDetailsView()
-}
-
 final class DetailsViewCoordinator {
   private let dependencyContainer: DependeciesContainer
   weak var delegate: DetailsViewCoordinatorDelegate?
@@ -25,9 +21,9 @@ final class DetailsViewCoordinator {
     // swiftlint:disable force_cast
     let view = R.storyboard.main().instantiateViewController(withIdentifier: R.storyboard.main.detailsView.identifier) as! DetailsView
     let model = DetailsModel(loadService: dependencyContainer.resolve(type: DatabaseProtocol.self), news: news)
-    let controller = DetailsController(model: model, delegate: view, coordinator: self)
-    model.output = controller
-    view.delegate = controller
+    let controller = DetailsController(model: model, view: view, output: self)
+    model.delegate = controller
+    view.controller = controller
     callback(view)
   }
 

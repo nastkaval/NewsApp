@@ -29,12 +29,13 @@ enum DatabaseDataError: LocalizedError {
   }
 }
 
+typealias ID = String
 protocol DatabaseProtocol: AnyObject {
-  func saveData(newsEntity: NewsEntity) -> Bool
+  func save(data: NewsEntity) -> Bool
   func loadData() -> [NewsEntity]
-  func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
-  func removeDataBy(id: String) -> Bool
-  func checkObjectIsExistBy(id: String) -> NewsEntity?
+  func filterData(byTitle: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void)
+  func removeData(byId: ID) -> Bool
+  func checkObject(byId: ID) -> Bool
 }
 
 final class DatabaseManager: DatabaseProtocol {
@@ -53,19 +54,21 @@ final class DatabaseManager: DatabaseProtocol {
     return newsArray
   }
 
-  func filterDataByTitle(title: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
-    let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(title)'").toArray()
+  func filterData(byTitle: String, callBack: (Result<[NewsEntity], DatabaseDataError>) -> Void) {
+    let newsArray = realm.objects(NewsEntity.self).filter("title contains '\(byTitle)'").toArray()
     return callBack(.success(newsArray))
   }
 
-  func checkObjectIsExistBy(id: String) -> NewsEntity? {
-    let object = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id).first
-    return object
+  func checkObject(byId: ID) -> Bool {
+    guard realm.objects(NewsEntity.self).filter("urlNewsStr == %@", byId).first != nil else {
+      return false
+    }
+    return true
   }
 
-  func removeDataBy(id: String) -> Bool {
+  func removeData(byId: ID) -> Bool {
     do {
-      let objectShouldDelete = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", id)
+      let objectShouldDelete = realm.objects(NewsEntity.self).filter("urlNewsStr == %@", byId)
       try realm.write {
         realm.delete(objectShouldDelete)
       }
@@ -75,10 +78,10 @@ final class DatabaseManager: DatabaseProtocol {
     }
   }
 
-  func saveData(newsEntity: NewsEntity) -> Bool {
+  func save(data: NewsEntity) -> Bool {
     do {
       try realm.write {
-        realm.add(newsEntity)
+        realm.add(data)
       }
       return true
     } catch {

@@ -63,7 +63,7 @@ extension OfflineCollectionNewsView: UICollectionViewDataSource {
     return UICollectionViewCell()
     }
     let news = delegate?.provideObject(at: indexPath)
-    item.updateUI(title: news?.title, newsDescription: news?.descriptionText, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAt)
+    item.updateUI(title: news?.title, newsDescription: news?.descriptionText, author: news?.author, imageUrl: news?.imageUrl, publishedAt: news?.publishedAtTime)
     item.delegate = self
     return item
   }
